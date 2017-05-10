@@ -507,12 +507,10 @@ function exibir_projetos_com_sala_definida($projeto,$id){
             echo $titulo;
                 $professor = consultarProfessores($projeto->id_projeto);
                 $orientadores = consultar_nome_professor($professor);   
-
             echo'<td><a>'.$orientadores.'</a></td>';
             echo '<td>'.$projeto->local_apresentacao.'</td>';
             echo '<td>'.'</td>';
             echo '<td>'.'</td>';
-
                 $btnEditar = html_writer::start_tag('td');
                 $btnEditar .= html_writer::start_tag('input', array('type'=>'submit', 'id'=> 'editar', 'value'=>get_string('editarsala','sepex'), 'class' => 'btn btn-primary' ));                                                                                                                     
                 $btnEditar .= html_writer::end_tag('td');
@@ -525,19 +523,17 @@ function exibir_formulario_definicao_sala($projeto,$id){
     echo '<tbody>';
         echo '<tr>';
             echo'<td><a>'.$projeto->cod_projeto.'</a></td>';
-
             $titulo  = html_writer::start_tag('td');
             $titulo .= html_writer::start_tag('a', array('href'=> 'cadastro_sepex.php?id='.$id.'&data='.$projeto->id_projeto,));
             $titulo .= $projeto->titulo;
             $titulo .= html_writer::end_tag('a'); 
             $titulo .= html_writer::end_tag('td'); 
-            echo $titulo;
-            
+            echo $titulo;         
             $professor = consultarProfessores($projeto->id_projeto);
-            $orientadores = consultar_nome_professor($professor);
-            
+            $orientadores = consultar_nome_professor($professor);            
             echo'<td><a>'.$orientadores.'</a></td>';
-            $formulario  = html_writer::start_tag('form', array('id' => 'formularioSepex', 'action'=> "local_apresentacao.php?id={$id}", 'method'=>"post", 'class'=> 'col-lg-9 col-md-9 col-sm-12'));                                    
+            
+            $formulario  = html_writer::start_tag('form', array('id' => 'formularioSepex', 'action'=> "definir_local.php?id={$id}", 'method'=>"post", 'class'=> 'col-lg-9 col-md-9 col-sm-12'));                                                    
                 $locais = $DB->get_records('sepex_local_apresentacao');
                 $locais_apresentacao = array(''=>'Escolher',);
                 foreach($locais as $local){                    
@@ -573,7 +569,7 @@ function exibir_formulario_definicao_sala($projeto,$id){
                     $btnSubmit = html_writer::start_tag('td');
                         $btnSubmit .= html_writer::start_tag('input', array('type'=>'submit', 'value'=>get_string('criarsala','sepex'), 'class' => 'btn btn-primary' ));                                                                                                                     
                     $btnSubmit .= html_writer::end_tag('td');
-
+     
                 $formulario .= $apresentacao;
                 $formulario .= $dia;
                 $formulario .= $hora;
@@ -598,11 +594,6 @@ function projetos_filtrados($dados,$id){
     global $PAGE, $OUTPUT;    
     
     $projetos = filtrar_projetos($dados);
-//    echo '<pre>';
-//    print_r(  );
-//    //print_r($projetos);
-//    echo '</pre>';
-    
     if($projetos):        
         echo '<table class="forumheaderlist table table-striped">';
             echo '<thead>';
@@ -620,7 +611,7 @@ function projetos_filtrados($dados,$id){
             $local_vazio = listar_projetos_sem_local_apresentacao($projetos);            
             exibir_formulario_definicao_sala($local_vazio[0],$id);            
             
-            foreach($projetos as $indice => $projeto){
+            foreach($projetos as $projeto){
                 if($projeto->local_apresentacao != '' ||$projeto->local_apresentacao != null){
                     exibir_projetos_com_sala_definida($projeto,$id);
                 }
@@ -631,5 +622,30 @@ function projetos_filtrados($dados,$id){
         echo '</table>';                            
     else:            
            echo $OUTPUT->notification(get_string('semprojeto', 'sepex')); 
-    endif;   
+    endif;
+    return $local_vazio[0];
+}
+
+function exibir_formulario_inscricao($sepex,$cm,$mform){
+    global $OUTPUT;
+    // Primeira exibição do formulário.
+        echo $OUTPUT->header();
+        //Titulo
+        echo $OUTPUT->heading(format_string($sepex->name), 2);
+        echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
+        
+        $mform->display(); // exibe o formulário        
+
+        echo $OUTPUT->footer();
+}
+
+function guardar_local_apresentacao($id_projeto, $local,$dia,$hora){
+    global $DB;
+    
+    $projeto = new stdClass();
+    $projeto->local_apresentacao = $local;
+    $projeto->dia_apresentacao = $dia;
+    $projeto->hora_apresentacao = $hora;    
+    $DB->insert_record("sepex_projeto", $projeto, array('id_projeto'=>$id_projeto));
+    
 }

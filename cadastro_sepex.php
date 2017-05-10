@@ -78,25 +78,14 @@ $id_projeto = htmlspecialchars($_GET['idp']);
 $codigo_projeto = htmlspecialchars($_GET['cod']);
 //Esse numero 10 vem da instanciacao do formulario.
 if($acao == 10){
-    if ($mform->is_cancelled()):
-      // Manipular a operação de cancelamento do formulário, se o botão Cancelar estiver presente no formulário
-    elseif($dados = $mform->get_data()):        
+    // Manipular a operação de cancelamento do formulário, se o botão Cancelar estiver presente no formulário
+    if($dados = $mform->get_data()):        
     
        atualizar_projeto($dados,$id_projeto);
 
        header("Location:". VIEW_URL_LINK);
     else:
-      // este ramo é executado se o formulário é enviado, mas os dados não são validados eo formulário deve ser exibido novamente
-      // ou na primeira exibição do formulário.
-        echo $OUTPUT->header();
-        //Titulo
-        echo $OUTPUT->heading(format_string($sepex->name), 2);
-        echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
-
-        $mform->set_data($toform); // Definir dados padrão (se houver)
-        $mform->display(); // exibe o formulário        
-
-        echo $OUTPUT->footer();
+        exibir_formulario_inscricao($sepex,$cm,$mform);
     endif;
 }else{
     //Envio dos dados do formulario para a função que irá guardar esses dados no banco de dados.
@@ -106,15 +95,7 @@ if($acao == 10){
        enviar_email($USER);
        header("Location:". VIEW_URL_LINK);
     else:     
-      // Primeira exibição do formulário.
-        echo $OUTPUT->header();
-        //Titulo
-        echo $OUTPUT->heading(format_string($sepex->name), 2);
-        echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
-        
-        $mform->display(); // exibe o formulário        
-
-        echo $OUTPUT->footer();
+        exibir_formulario_inscricao($sepex,$cm,$mform);
     endif;
 }
 
