@@ -52,8 +52,12 @@ $PAGE->set_heading($course->fullname);
         $dados = $mform->get_data(); 
         
         $id_projeto = projetos_filtrados($dados,$id);
+<<<<<<< HEAD
       
         if($local != null){    
+=======
+        if($id_projeto != null){    
+>>>>>>> 402fd64bc3e92526c050600d0a471a64ede296e7
             guardar_local_apresentacao($id_projeto,$local,$dia,$hora);
         }
     echo $OUTPUT->footer();
