@@ -61,9 +61,9 @@ if($codProjeto == ''){
 }
 else{
     //Para alterar um projeto estamos obtendo os dados do projeto    
-    $projeto = consultarProjeto($codProjeto);
-    $alunos = consultarAlunos($codProjeto);
-    $professores = consultarProfessores($codProjeto);
+    $projeto = listar_projeto_por_id($codProjeto);
+    $alunos = listar_matricula_alunos_por_id_projeto($codProjeto);
+    $professores = listar_professor_por_id_projeto($codProjeto);
     $modcontext    = context_module::instance($cm->id);
     $coursecontext = context_course::instance($course->id);
     
