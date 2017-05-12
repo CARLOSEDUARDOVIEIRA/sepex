@@ -359,11 +359,7 @@ function apagar_formulario($id_projeto){
     $DB->delete_records('sepex_projeto', array("id_projeto" => $id_projeto));
 }
 
-<<<<<<< HEAD
-/** Método responsável por consultar um projeto pelo id do projeto
-=======
-/** Método responsável por consultar um projeto pelo código do projeto
->>>>>>> 402fd64bc3e92526c050600d0a471a64ede296e7
+/**
  * @global type $DB
  * @param type $codProjeto
  * @return type
@@ -509,37 +505,9 @@ function obter_projetos_por_area_turno_categoria($dados){
             INNER JOIN mdl_sepex_projeto_curso spc ON spc.projeto_id_projeto  = sp.id_projeto
             INNER JOIN mdl_sepex_projeto_professor spp ON spp.id_projeto = sp.id_projeto            
             WHERE sp.area_curso=? AND sp.turno =? AND sp.cod_categoria = ?", array($dados->area_curso, $dados->turno, $dados->cod_categoria));
-<<<<<<< HEAD
     return $projeto;
-=======
-
-    echo '<pre>';
-    print_r($projeto);
-    echo '</pre>';
-       // projetos_filtrados($projeto, $orientador,$id);
 }
-function exibir_projetos_em_espera($projeto,$id){
-    echo '<tbody>';
-        echo '<tr>';
-            echo'<td><a>'.$projeto->cod_projeto.'</a></td>';
-                $titulo  = html_writer::start_tag('td');
-                $titulo .= html_writer::start_tag('a', array('href'=> 'cadastro_sepex.php?id='.$id.'&data='.$projeto->id_projeto,));
-                $titulo .= $projeto->titulo;
-                $titulo .= html_writer::end_tag('a'); 
-                $titulo .= html_writer::end_tag('td'); 
-            echo $titulo;
-                $professor = listar_professor_por_id_projeto($projeto->id_projeto);
-                $orientadores = consultar_nome_professor($professor);   
 
-            echo'<td><a>'.$orientadores.'</a></td>';
-            echo '<td>'.'</td>';
-            echo '<td>'.'</td>';
-            echo '<td>'.'</td>';
-            echo '<td>'.'</td>';
-        echo '</tr>';
-    echo '</tbody>';
->>>>>>> 402fd64bc3e92526c050600d0a471a64ede296e7
-}
 
 function listar_projetos_filtrados($projeto,$id){
     $apresentacao = obter_dados_apresentacao($projeto->id_projeto);
@@ -629,8 +597,7 @@ function exibir_formulario_definicao_sala($projeto,$id){
 }
 
 function projetos_filtrados($dados,$id){   
-    global $PAGE, $OUTPUT;    
-<<<<<<< HEAD
+    global $OUTPUT;    
     $projetos = obter_projetos_por_area_turno_categoria($dados);    
     if($projetos):        
         echo '<table class="forumheaderlist table table-striped">';
@@ -653,41 +620,8 @@ function projetos_filtrados($dados,$id){
     else:            
            echo $OUTPUT->notification(get_string('semprojeto', 'sepex')); 
     endif;    
-=======
-    $projetos = filtrar_projetos($dados);    
-//    if($projetos):        
-//        echo '<table class="forumheaderlist table table-striped">';
-//            echo '<thead>';
-//                echo '<tr>';
-//                    echo '<th>'.get_string('cod_projeto', 'sepex').'</th>';
-//                    echo '<th>'.get_string('titulo_projeto', 'sepex').'</th>';                    
-//                    echo '<th>'.get_string('orientadores', 'sepex').'</th>';
-//                    echo '<th>'.get_string('localapresentacao', 'sepex').'</th>';
-//                    echo '<th>'.get_string('dia', 'sepex').'</th>';
-//                    echo '<th>'.get_string('horario', 'sepex').'</th>';
-//                    echo '<th>'.'</th>';
-//                echo '</tr>';
-//            echo '</thead>';    
-//            
-//            $local_vazio = listar_projetos_sem_local_apresentacao($projetos);            
-//            exibir_formulario_definicao_sala($local_vazio[0],$id);            
-//            
-//            foreach($projetos as $projeto){
-//                if($projeto->local_apresentacao != '' ||$projeto->local_apresentacao != null){
-//                    exibir_projetos_com_sala_definida($projeto,$id);
-//                }
-//                elseif($projeto->local_apresentacao == null && $projeto->id_projeto != $local_vazio[0]->id_projeto){
-//                    exibir_projetos_em_espera($projeto,$id);
-//                }                           
-//            }            
-//        echo '</table>';                            
-//    else:            
-//           echo $OUTPUT->notification(get_string('semprojeto', 'sepex')); 
-//    endif;
-//    return $local_vazio[0];
->>>>>>> 402fd64bc3e92526c050600d0a471a64ede296e7
 }
-
+                    
 function exibir_formulario_inscricao($sepex,$cm,$mform){
     global $OUTPUT;
     // Primeira exibição do formulário.

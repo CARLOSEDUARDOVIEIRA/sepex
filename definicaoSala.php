@@ -1,13 +1,13 @@
 <?php
 
-/* Nesta página serão definidos os locais de apresentação de cada projeto
+/* Página criada para definicao de salas após o envio do projeto
  */
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/locallib.php');
 require_once('./classes/FiltroProjeto.class.php');
 
-global $DB, $PAGE;
+global $DB, $CFG, $PAGE;
 
 $id = required_param('id', PARAM_INT); // Modulo do curso
 $s  = optional_param('s', 0, PARAM_INT);  // ... Sepex instance ID - deve ser nomeado como o primeiro caractere do módulo.
@@ -36,25 +36,26 @@ $event->add_record_snapshot('course', $PAGE->course);
 $event->add_record_snapshot($PAGE->cm->modname, $sepex);
 $event->trigger();
 
-$PAGE->set_url('/mod/sepex/cadastro_sepex.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/sepex/cad-form.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($sepex->name));
 $PAGE->set_heading($course->fullname);
 
-    echo $OUTPUT->header();        
-    echo $OUTPUT->heading(format_string('Definição de salas'), 2);
-    echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
+echo $OUTPUT->header();        
+echo $OUTPUT->heading(format_string('Definição de salas'), 2);
+echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
 
-        $local = htmlspecialchars($_POST['local_apresentacao']);
-        $dia = htmlspecialchars($_POST['dia_apresentacao']);
-        $hora = htmlspecialchars($_POST['hora_apresentacao']);
-        
-        $mform = new FiltroProjeto();
-        $dados = $mform->get_data(); 
-        
-        $id_projeto = projetos_filtrados($dados,$id);
-     
-        if($local != null){    
-            guardar_local_apresentacao($id_projeto,$local,$dia,$hora);
-        }
-    echo $OUTPUT->footer();
+    $mform = new FiltroProjeto("definicaoSala.php?id={$id}");
 
+    if($dados = $mform->get_data()):        
+
+        $mform->display();  
+        projetos_filtrados($dados,$id);
+        
+    else:
+            $mform->display();             
+    endif;
+
+echo $OUTPUT->footer();
+
+
+ 
