@@ -432,7 +432,7 @@ function consultar_nome_professor($array_professores){
 
 function exibir_botao_cadastrar_local_apresentacao($id){
     $criarLocalApresentacao  = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-    $criarLocalApresentacao .= html_writer::start_tag('a', array('href'=> 'cadastro_sepex.php?id='.$id, ));
+    $criarLocalApresentacao .= html_writer::start_tag('a', array('href'=> 'cad_local_apresentacao.php?id='.$id, ));
     $criarLocalApresentacao .= html_writer::start_tag('submit',array('class'=>'btn btn-secondary', 'style' => 'margin-bottom:1%;'));
     $criarLocalApresentacao .= get_string('criar_local_apresentacao', 'sepex');
     $criarLocalApresentacao .= html_writer::end_tag('a'); 
@@ -527,7 +527,7 @@ function listar_projetos_filtrados($projeto,$id){
             echo '<td>'.$apresentacao[$projeto->id_projeto]->data_apresentacao.'</td>';
             echo '<td>'.$apresentacao[$projeto->id_projeto]->hora_apresentacao.'</td>';
                 $btnEditar = html_writer::start_tag('td');
-                $btnEditar .= html_writer::start_tag('input', array('type'=>'submit', 'id'=> 'editar', 'value'=>get_string('editarsala','sepex'), 'class' => 'btn btn-primary' ));                                                                                                                     
+                $btnEditar .= html_writer::start_tag('input', array('type'=>'submit', 'id'=> 'editar', 'value'=>get_string('editar','sepex'), 'class' => 'btn btn-primary' ));                                                                                                                     
                 $btnEditar .= html_writer::end_tag('td');
             echo $btnEditar;
         echo '</tr>';
@@ -583,7 +583,7 @@ function exibir_formulario_definicao_sala($projeto,$id){
                     $hora .= html_writer::end_tag('td'); 
 
                     $btnSubmit = html_writer::start_tag('td');
-                        $btnSubmit .= html_writer::start_tag('input', array('type'=>'submit', 'value'=>get_string('criarsala','sepex'), 'class' => 'btn btn-primary' ));                                                                                                                     
+                        $btnSubmit .= html_writer::start_tag('input', array('type'=>'submit', 'value'=>get_string('criar','sepex'), 'class' => 'btn btn-primary' ));                                                                                                                     
                     $btnSubmit .= html_writer::end_tag('td');
      
                 $formulario .= $apresentacao;
@@ -649,7 +649,47 @@ function obter_dados_apresentacao($id_projeto){
             WHERE sp.id_projeto = ?", array($id_projeto));
     return $projeto;
 }
+/**Metodo responsável por criar os locais de apresentação
+ * @param type $nome
+ */
+function criar_local_apresentacao($nome){
+    global $DB;
+    $local_apresentacao = new stdClass();
+    $local_apresentacao->nome_local_apresentacao = $nome;
+    $DB->insert_record("sepex_local_apresentacao", $local_apresentacao);    
+}
 
+/**Metodo responsavel por listar todos os locais de apresentacao cadastrados no sistema.
+ * @global type $DB
+ * @return array com os locais de apresentacao cadastrados no sistema.
+ */
+function listar_locais_apresentacao(){
+    global $DB;    
+    $lista_locais = $DB->get_records("sepex_local_apresentacao",array());
+    $locais = array();    
+    foreach($lista_locais as $local){                        
+        array_push($locais, $local);                
+    }     
+    return $locais;
+}
+
+function editar_local_apresentacao($id,$nome){
+    global $DB;
+    
+    $DB->execute("
+            UPDATE mdl_sepex_local_apresentacao sla
+                SET sp.nome_local_apresentacao = ?,                
+                WHERE sla.id_local_apresentacao = {$id} ",array($nome));
+    
+}
+
+/**Metodo responsavel por inserir projetos nos lugares de apresentação 
+ * @global type $DB
+ * @param type $id_projeto
+ * @param type $local
+ * @param type $dia
+ * @param type $hora
+ */
 function guardar_local_apresentacao($id_projeto, $local,$dia,$hora){
     global $DB;
     
@@ -657,6 +697,20 @@ function guardar_local_apresentacao($id_projeto, $local,$dia,$hora){
     $projeto->local_apresentacao = $local;
     $projeto->dia_apresentacao = $dia;
     $projeto->hora_apresentacao = $hora;    
-    $DB->insert_record("sepex_projeto", $projeto, array('id_projeto'=>$id_projeto));
-    
+    $DB->insert_record("sepex_projeto", $projeto, array('id_projeto'=>$id_projeto));    
 }
+
+/**Metodo responsavel por listar todos os projetos cadastrados no sistema
+ * @global type $DB
+ * @return array com os projetos cadastrados no sistema
+ */
+function listar_projetos_cadastrados(){
+     global $DB;
+    $lista_projetos = $DB->get_records("sepex_projeto",array());
+    $projetos = array();    
+    foreach($lista_projetos as $projeto){                        
+        array_push($projetos, $projeto);                
+    }     
+    return $projetos;
+}
+

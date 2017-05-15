@@ -1,0 +1,93 @@
+<?php
+
+/* Página criada para definicao de salas após o envio do projeto
+ */
+
+require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
+require_once(dirname(__FILE__).'/locallib.php');
+require_once('./classes/FiltroProjeto.class.php');
+
+global $DB, $CFG, $PAGE;
+
+$id = required_param('id', PARAM_INT); // Modulo do curso
+$s  = optional_param('s', 0, PARAM_INT);  // ... Sepex instance ID - deve ser nomeado como o primeiro caractere do módulo.
+
+if ($id) {
+    $cm         = get_coursemodule_from_id('sepex', $id, 0, false, MUST_EXIST);
+    $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+    $sepex  = $DB->get_record('sepex', array('id' => $cm->instance), '*', MUST_EXIST);
+} else if ($s) {
+    $sepex  = $DB->get_record('sepex', array('id' => $s), '*', MUST_EXIST);
+    $course     = $DB->get_record('course', array('id' => $sepex->course), '*', MUST_EXIST);
+    $cm         = get_coursemodule_from_instance('sepex', $sepex->id, $course->id, false, MUST_EXIST);
+} else {
+    error('Você deve especificar um course_module ID ou um ID de instância');
+}
+
+$lang = current_language();
+require_login($course, true, $cm);
+
+$event = \mod_sepex\event\course_module_viewed::create(array(
+    'objectid' => $PAGE->cm->instance,
+    'context' => $PAGE->context,
+));
+
+$event->add_record_snapshot('course', $PAGE->course);
+$event->add_record_snapshot($PAGE->cm->modname, $sepex);
+$event->trigger();
+
+$PAGE->set_url('/mod/sepex/cad_local_apresentacao.php', array('id' => $cm->id));
+$PAGE->set_title(format_string($sepex->name));
+$PAGE->set_heading($course->fullname);
+
+echo $OUTPUT->header();        
+echo $OUTPUT->heading(format_string('Gerenciar locais de apresentação SEPEX'), 2);
+echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
+
+$formulario  = html_writer::start_tag('form', array('id' => 'formularioSepex', 'action'=> "cadastrar.php?id={$id}", 'method'=>"post", 'class'=> 'col-lg-5 col-md-5 col-sm-5'));                                                                                   
+        $nome =  html_writer::start_tag('label', array('class'=> 'control-label')).format_string('Adicionar local de apresentacao').html_writer::end_tag('label');;
+        $nome .= html_writer::start_tag('input', array('name'=> 'local_apresentacao', 'class'=> 'form-control', 'placeholder'=> 'Nome do local de apresentação','style' => 'margin-bottom:3%;'));   
+        $btnSubmit = html_writer::start_tag('input', array('type'=>'submit', 'value'=>get_string('criar','sepex'), 'class' => 'btn btn-primary','style' => 'margin-bottom:5%;'));                                                                                                                         
+    $formulario .=$nome;
+    $formulario .=$btnSubmit;
+$formulario .= html_writer::end_tag('form');
+echo $formulario;
+
+$locais = listar_locais_apresentacao();
+echo '<table class="forumheaderlist table table-striped">';
+            echo '<thead>';
+                echo '<tr>';
+                    echo '<th>'.get_string('localapresentacao', 'sepex').'</th>';
+                    echo '<th>'.get_string('qtd_projetos', 'sepex').'</th>';                    
+                    echo '<th>'.get_string('editar', 'sepex').'</th>';
+                    echo '<th>'.get_string('apagar', 'sepex').'</th>';
+                echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+                foreach($locais as $local){                                                               
+                   echo '<tr>';                
+                        echo'<td><a>'.$local->nome_local_apresentacao.'</a></td>';                    
+                        echo'<td><a>'.'</a></td>';
+
+                        $editar  = html_writer::start_tag('td');                                       
+                        $editar .= html_writer::start_tag('a', array('id'=> 'btnEdit','href'=> 'cad_local_apresentacao.php?id='.$id,));
+                        $editar .= get_string('editar', 'sepex');
+                        $editar .= html_writer::end_tag('a'); 
+                        $editar .= html_writer::end_tag('td');
+                        echo $editar;
+
+                        $delete  = html_writer::start_tag('td');
+                        $delete .= html_writer::start_tag('a', array('href'=> 'cad_local_apresentacao.php?id='.$id, ));
+                        $delete .= get_string('apagar', 'sepex');
+                        $delete .= html_writer::end_tag('a'); 
+                        $delete .= html_writer::end_tag('td');
+                        echo $delete;
+                    echo '</tr>';
+                }
+            echo '</tbody>';
+        echo '</table>';
+
+echo $OUTPUT->footer();
+
+
+ 
