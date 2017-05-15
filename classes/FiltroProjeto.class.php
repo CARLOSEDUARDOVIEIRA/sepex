@@ -9,7 +9,7 @@
   * @author Carlos Eduardo Vieira. Linkedin<>.
  */
 
-require_once ("../../config.php");
+require_once ("../../../config.php");
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 
 

@@ -3,10 +3,9 @@
 /* Página criada para definicao de salas após o envio do projeto
  */
 
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once(dirname(__FILE__).'/locallib.php');
-require_once('./classes/FiltroProjeto.class.php');
-
+require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
+require_once('../locallib.php');
+require_once '../classes/FiltroProjeto.class.php';
 global $DB, $CFG, $PAGE;
 
 $id = required_param('id', PARAM_INT); // Modulo do curso
@@ -48,8 +47,7 @@ $PAGE->set_heading($course->fullname);
 
     if($dados = $mform->get_data()):        
         
-        $mform->display();
-        exibir_botao_cadastrar_local_apresentacao($id);
+        $mform->display();        
         projetos_filtrados($dados,$id);
         
     else:

@@ -27,7 +27,6 @@
  */
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
-require_once('./classes/Projeto.class.php');
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -224,7 +223,7 @@ function atualizar_projeto($dados, $id_projeto)
  */
 function criar_link_formulario($id){  
     $linkForm  = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:10%;'));
-    $linkForm .= html_writer::start_tag('a', array('href'=> 'cadastro_sepex.php?id='.$id, ));
+    $linkForm .= html_writer::start_tag('a', array('href'=> './cadastro_sepex/cadastro_sepex.php?id='.$id, ));
     $linkForm .= html_writer::start_tag('submit',array('class'=>'btn btn-secondary', 'style' => 'margin-bottom:5%;'));
     $linkForm .= get_string('inscricao', 'sepex');
     $linkForm .= html_writer::end_tag('a'); 
@@ -314,7 +313,7 @@ function listar_projetos_aluno($usuario,$id){
                     echo'<td><a>'.$projeto->cod_projeto.'</a></td>';
                     
                     $titulo  = html_writer::start_tag('td');
-                    $titulo .= html_writer::start_tag('a', array('href'=> 'cadastro_sepex.php?id='.$id.'&data='.$projeto->id_projeto,));
+                    $titulo .= html_writer::start_tag('a', array('href'=> './cadastro_sepex/cadastro_sepex.php?id='.$id.'&data='.$projeto->id_projeto,));
                     $titulo .= $projeto->titulo;
                     $titulo .= html_writer::end_tag('a'); 
                     $titulo .= html_writer::end_tag('td'); 
@@ -327,14 +326,14 @@ function listar_projetos_aluno($usuario,$id){
                     echo'<td><a>'.$projeto->data_cadastro.'</a></td>';
                     
                     $editar  = html_writer::start_tag('td');                                       
-                    $editar .= html_writer::start_tag('a', array('id'=> 'btnEdit','href'=> 'cadastro_sepex.php?id='.$id.'&data='.$projeto->id_projeto,));
+                    $editar .= html_writer::start_tag('a', array('id'=> 'btnEdit','href'=> './cadastro_sepex/cadastro_sepex.php?id='.$id.'&data='.$projeto->id_projeto,));
                     $editar .= html_writer::start_tag('img',array('src'=>'pix/edit.png'));
                     $editar .= html_writer::end_tag('a'); 
                     $editar .= html_writer::end_tag('td');
                     echo $editar;
                     
                     $delete  = html_writer::start_tag('td');
-                    $delete .= html_writer::start_tag('a', array('href'=> 'acao_form.php?id='.$id.'&proj='.$projeto->id_projeto.'&acao=2', ));
+                    $delete .= html_writer::start_tag('a', array('href'=> './cadastro_sepex/acao.php?id='.$id.'&proj='.$projeto->id_projeto.'&acao=2', ));
                     $delete .= html_writer::start_tag('img',array('src'=>'pix/delete.png'));
                     $delete .= html_writer::end_tag('a'); 
                     $delete .= html_writer::end_tag('td');
@@ -430,21 +429,17 @@ function consultar_nome_professor($array_professores){
     return $orientador;
 }
 
-function exibir_botao_cadastrar_local_apresentacao($id){
+function viewGerente($id){        
+    
     $criarLocalApresentacao  = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-    $criarLocalApresentacao .= html_writer::start_tag('a', array('href'=> 'cad_local_apresentacao.php?id='.$id, ));
+    $criarLocalApresentacao .= html_writer::start_tag('a', array('href'=> './local_apresentacao/view.php?id='.$id, ));
     $criarLocalApresentacao .= html_writer::start_tag('submit',array('class'=>'btn btn-secondary', 'style' => 'margin-bottom:1%;'));
     $criarLocalApresentacao .= get_string('criar_local_apresentacao', 'sepex');
     $criarLocalApresentacao .= html_writer::end_tag('a'); 
-    $criarLocalApresentacao .= html_writer::end_tag('div'); 
-    echo $criarLocalApresentacao;
-}
-
-
-function viewGerente($id){        
-
+    $criarLocalApresentacao .= html_writer::end_tag('div');       
+    
     $localApresentacao  = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-    $localApresentacao .= html_writer::start_tag('a', array('href'=> 'local_apresentacao.php?id='.$id, ));
+    $localApresentacao .= html_writer::start_tag('a', array('href'=> './local_apresentacao/local_apresentacao.php?id='.$id, ));
     $localApresentacao .= html_writer::start_tag('submit',array('class'=>'btn btn-secondary', 'style' => 'margin-bottom:1%;'));
     $localApresentacao .= get_string('definir_local_apresentacao', 'sepex');
     $localApresentacao .= html_writer::end_tag('a'); 
@@ -463,6 +458,8 @@ function viewGerente($id){
     $cadEditProfessor .= get_string('cad_edit_professor', 'sepex');
     $cadEditProfessor .= html_writer::end_tag('a'); 
     $cadEditProfessor .= html_writer::end_tag('div');    
+    
+    echo $criarLocalApresentacao;
     echo $localApresentacao;
     echo $listarProjetos;
     echo $cadEditProfessor;
@@ -523,9 +520,15 @@ function listar_projetos_filtrados($projeto,$id){
                 $professor = listar_professor_por_id_projeto($projeto->id_projeto);
                 $orientadores = consultar_nome_professor($professor);   
             echo'<td><a>'.$orientadores.'</a></td>';
-            echo '<td>'.$apresentacao[$projeto->id_projeto]->nome_local_apresentacao.'</td>';
-            echo '<td>'.$apresentacao[$projeto->id_projeto]->data_apresentacao.'</td>';
-            echo '<td>'.$apresentacao[$projeto->id_projeto]->hora_apresentacao.'</td>';
+            if (isset($apresentacao[$projeto->id_projeto]->nome_local_apresentacao)){
+                echo '<td>'.$apresentacao[$projeto->id_projeto]->nome_local_apresentacao.'</td>';
+                echo '<td>'.$apresentacao[$projeto->id_projeto]->data_apresentacao.'</td>';
+                echo '<td>'.$apresentacao[$projeto->id_projeto]->hora_apresentacao.'</td>';
+            }else{
+                echo '<td>'.'</td>';
+                echo '<td>'.'</td>';
+                echo '<td>'.'</td>';
+            }
                 $btnEditar = html_writer::start_tag('td');
                 $btnEditar .= html_writer::start_tag('input', array('type'=>'submit', 'id'=> 'editar', 'value'=>get_string('editar','sepex'), 'class' => 'btn btn-primary' ));                                                                                                                     
                 $btnEditar .= html_writer::end_tag('td');
@@ -678,9 +681,15 @@ function editar_local_apresentacao($id,$nome){
     
     $DB->execute("
             UPDATE mdl_sepex_local_apresentacao sla
-                SET sp.nome_local_apresentacao = ?,                
+                SET sla.nome_local_apresentacao = ?,                
                 WHERE sla.id_local_apresentacao = {$id} ",array($nome));
     
+}
+
+function apagar_local_apresentacao($id){
+    global $DB;
+    $DB->delete_records('sepex_local_apresentacao', array("id_local_apresentacao" => $id));
+    $DB->delete_records('sepex_projeto_apresentacao', array("id_local_apresentacao" => $id));    
 }
 
 /**Metodo responsavel por inserir projetos nos lugares de apresentação 

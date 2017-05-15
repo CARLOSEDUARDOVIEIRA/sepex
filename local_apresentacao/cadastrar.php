@@ -3,9 +3,8 @@
 /* Pagina criada apenas para cadastro
  */
 
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once(dirname(__FILE__).'/locallib.php');
-require_once('./classes/FiltroProjeto.class.php');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
+require_once('../locallib.php');
 
 global $DB, $CFG, $PAGE;
 
@@ -29,5 +28,5 @@ require_login($course, true, $cm);
     $nome = htmlspecialchars($_POST['local_apresentacao']);
     if($nome != '' && $nome != null){
         criar_local_apresentacao($nome);
-        header("Location: cad_local_apresentacao.php?id={$id}");
+        header("Location: view.php?id={$id}");
     }
