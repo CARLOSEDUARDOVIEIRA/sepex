@@ -6,7 +6,11 @@
  * @author Carlos Eduardo Vieira. Linkedin<>.
  */
 
+<<<<<<< HEAD
 require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
+=======
+require_once ("../../config.php");
+>>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 
 
@@ -15,7 +19,12 @@ class Formulario extends moodleform {
     function definition() {
         global $DB, $PAGE;
         
+<<<<<<< HEAD
         $mform = $this->_form;         
+=======
+        $mform = $this->_form; 
+        $coursecontext = $this->_customdata['coursecontext'];
+>>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         $modcontext = $this->_customdata['modcontext'];
         
         //CURSO
@@ -46,7 +55,11 @@ class Formulario extends moodleform {
         $mform->addElement('select', 'cod_curso', get_string('curso', 'sepex'), $cursos);
         $mform->addRule('cod_curso', get_string('cursovazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('cod_curso', get_string('curso', 'sepex'), 'maxlength', 255, 'client');
+<<<<<<< HEAD
         $mform->addHelpButton('cod_curso', 'curso', 'sepex');
+=======
+        $mform->addHelpButton('cod_curso', 'curso_help', 'sepex');
+>>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         $mform->setDefault('cod_curso',$this->_customdata['cod_curso']);
         
         //PERIODO
@@ -66,7 +79,11 @@ class Formulario extends moodleform {
         $mform->addElement('select', 'periodo', get_string('periodo', 'sepex'), $periodos);
         $mform->addRule('periodo', get_string('periodovazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('periodo', get_string('periodo', 'sepex', 255), 'maxlength', 255, 'client');
+<<<<<<< HEAD
         $mform->addHelpButton('periodo', 'periodo', 'sepex');
+=======
+        $mform->addHelpButton('periodo', 'periodo_help', 'sepex');
+>>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         $mform->setDefault('periodo',$this->_customdata['cod_periodo']);
         
         //TURNO
@@ -78,7 +95,11 @@ class Formulario extends moodleform {
         $mform->addElement('select', 'turno', get_string('turno', 'sepex'), $turnos);
         $mform->addRule('turno', get_string('turnovazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('turno', get_string('turno', 'sepex', 255), 'maxlength', 255, 'client');
+<<<<<<< HEAD
         $mform->addHelpButton('turno', 'turno', 'sepex');
+=======
+        $mform->addHelpButton('turno', 'turno_help', 'sepex');
+>>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         $mform->setDefault('turno',$this->_customdata['turno']);
         
         //CATEGORIA
@@ -98,23 +119,39 @@ class Formulario extends moodleform {
         $mform->addElement('select', 'cod_categoria', get_string('categoria', 'sepex'), $categorias);
         $mform->addRule('cod_categoria',get_string('categoriavazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('cod_categoria', get_string('categoria', 'sepex', 255), 'maxlength', 255, 'client');
+<<<<<<< HEAD
         $mform->addHelpButton('cod_categoria', 'categoria', 'sepex');
+=======
+        $mform->addHelpButton('cod_categoria', 'categoria_help', 'sepex');
+>>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         $mform->setDefault('cod_categoria',$this->_customdata['cod_categoria']);
               
         //TITULO DO TRABALHO
         $mform->addElement('text', 'titulo', get_string('titulo', 'sepex'), array('size' => '64'));
+<<<<<<< HEAD
         $mform->setType('titulo', PARAM_RAW); 
         $mform->addRule('titulo', get_string('titulovazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('titulo', get_string('titulo', 'sepex', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('titulo', 'titulo', 'sepex');
+=======
+        $mform->addRule('titulo', get_string('titulovazio', 'sepex'), 'required', null, 'client');
+        $mform->addRule('titulo', get_string('titulo', 'sepex', 255), 'maxlength', 255, 'client');
+        $mform->addHelpButton('titulo', 'titulo_help', 'sepex');
+>>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         $mform->setDefault('titulo',$this->_customdata['titulo']);
         
         //MATRICULA DO ALUNO
         $mform->addElement('text', 'aluno_matricula', get_string('integrantes', 'sepex'), array('size' => '64'));
+<<<<<<< HEAD
         $mform->setType('aluno_matricula', PARAM_RAW);
         $mform->addRule('aluno_matricula', get_string('integrantevazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('aluno_matricula', get_string('integrantes', 'sepex', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('aluno_matricula', 'integrantes', 'sepex');
+=======
+        $mform->addRule('aluno_matricula', get_string('integrantevazio', 'sepex'), 'required', null, 'client');
+        $mform->addRule('aluno_matricula', get_string('integrantes', '', 255), 'integrantes', 255, 'client');
+        $mform->addHelpButton('aluno_matricula', 'integrantes_help', 'sepex');
+>>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         $mform->setDefault('aluno_matricula',$this->_customdata['aluno_matricula']);
               
         //ORIENTADOR        
@@ -127,7 +164,11 @@ class Formulario extends moodleform {
         $mform->addElement('select', 'cod_professor', get_string('orientador', 'sepex'), $professores);
         $mform->addElement('select', 'cod_professor2', get_string('orientador2', 'sepex'), $professores);
         $mform->addRule('cod_professor', get_string('orientadorvazio', 'sepex'), 'required', null, 'client');
+<<<<<<< HEAD
         $mform->addHelpButton('cod_professor', 'orientador', 'sepex');
+=======
+        $mform->addHelpButton('cod_professor', 'orientador_help', 'sepex');
+>>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         $mform->setDefault('cod_professor',$this->_customdata['cod_professor']);
         $mform->setDefault('cod_professor2',$this->_customdata['cod_professor2']);
         
@@ -135,15 +176,25 @@ class Formulario extends moodleform {
         $resumo = $this->_customdata['resumo'];
         $mform->addElement('editor', 'resumo', get_string('resumo', 'sepex'), null, array('context' => $modcontext))->setValue( array('text' => $resumo));        
         $mform->addRule('resumo', get_string('resumovazio', 'sepex'), 'required', null, 'client');
+<<<<<<< HEAD
         $mform->addHelpButton('resumo', 'resumo', 'sepex');
+=======
+        $mform->addHelpButton('resumo', 'resumo_help', 'sepex');
+>>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         $mform->setType('resumo', PARAM_RAW);
         
         //TAGS       
         $mform->addElement('text', 'tags', get_string('tags', 'sepex'), array('size' => '64'));
+<<<<<<< HEAD
         $mform->setType('tags', PARAM_RAW);
         $mform->addRule('tags', get_string('tagsvazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('tags', get_string('tags', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('tags', 'tags', 'sepex');
+=======
+        $mform->addRule('tags', get_string('tagsvazio', 'sepex'), 'required', null, 'client');
+        $mform->addRule('tags', get_string('tags', '', 255), 'tags', 255, 'client');
+        $mform->addHelpButton('tags', 'tags_help', 'sepex');
+>>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         $mform->setDefault('tags',$this->_customdata['tags']);
        
         //ALOCA MESA
@@ -155,7 +206,11 @@ class Formulario extends moodleform {
         $mform->addElement('select', 'aloca_mesa', get_string('alocamesa', 'sepex'), $mesa);
         $mform->addRule('aloca_mesa', get_string('alocamesavazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('aloca_mesa', get_string('alocamesa', 'sepex', 255), 'maxlength', 255, 'client');
+<<<<<<< HEAD
         $mform->addHelpButton('aloca_mesa', 'alocamesa', 'sepex');
+=======
+        $mform->addHelpButton('aloca_mesa', 'alocamesa_help', 'sepex');
+>>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         $mform->setDefault('aloca_mesa',$this->_customdata['aloca_mesa']);
         
         
