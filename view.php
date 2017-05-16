@@ -25,10 +25,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once('./classes/Formulario.class.php');
-<<<<<<< HEAD
-=======
-require_once('./classes/Projeto.class.php');
->>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
@@ -50,14 +46,7 @@ if ($id) {
 
 $lang = current_language();
 require_login($course, true, $cm);
-<<<<<<< HEAD
 $context_course = context_course::instance($course -> id);       
-=======
-//$context = context_module::instance($cm->id);
-$context_course = context_course::instance($course -> id);
-$PAGE->set_context($context);
-        
->>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
 $event = \mod_sepex\event\course_module_viewed::create(array(
     'objectid' => $PAGE->cm->instance,
     'context' => $PAGE->context,
@@ -90,7 +79,6 @@ echo $OUTPUT->header();
           //Se for aluno redireciono para o formulario.            
             $usuario = $USER->username;
             listar_projetos_aluno($usuario, $id);
-<<<<<<< HEAD
             if (isset($_POST['acao'])){
                 $acao =  htmlspecialchars($_POST['acao']);
                 $proj =  htmlspecialchars($_POST['proj']);
@@ -99,27 +87,12 @@ echo $OUTPUT->header();
                     echo "<meta HTTP-EQUIV='refresh' CONTENT='0;URL=view.php?id=$id'>";
                 }
             }
-=======
-            
-            $acao =  htmlspecialchars($_POST['acao']);
-            $proj =  htmlspecialchars($_POST['proj']);
-            if($acao==2){
-                apagar_formulario($proj);
-                echo "<meta HTTP-EQUIV='refresh' CONTENT='0;URL=view.php?id=$id'>";
-            }else{
-                $acao =  '';
-                $proj =  $acao;
-            }            
->>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         }
         //-------------------------------- PROFESSOR
         else if (has_capability('mod/sepex:openprofessor', $context_course)) {            
             echo 'JesusVem!';                          
         }
-<<<<<<< HEAD
         //-------------------------------- GERENTE
-=======
->>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
         else {
             echo $OUTPUT->heading(format_string('Organização sepex'), 2);
             echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');

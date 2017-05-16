@@ -43,7 +43,6 @@ $string['pluginname'] = 'sepex';
 $string['notopenyet'] = 'Sorry, this activity is not available until {$a}';
 $string['expired'] = 'Sorry, this activity closed on {$a} and is no longer available';
 $string['integrantes'] = 'Matricula dos autor(es)/apresentador(es)';
-<<<<<<< HEAD
 $string['integrantes_help'] = 'Informe a matricula dos autor(es)/apresentador(es) do projeto em seguida pressione [Enter] do seu teclado e aguarde aparecer o nome do aluno';
 $string['curso'] = 'Curso';
 $string['curso_help'] = 'Informe o curso em que estão matriculados os integrantes do projeto';
@@ -59,23 +58,6 @@ $string['email'] = 'Email';
 $string['email_help'] = 'Informe o email de um dos integrantes do seu projeto. Exemplo "meuemail@provedor.com"';
 $string['orientador'] = 'Selecione os professor(es) orientador(es) do projeto:';
 $string['orientador_help'] = 'Selecione os professores orientadores';
-=======
-$string['integrantes_help_help'] = 'Informe a matricula dos autor(es)/apresentador(es) do projeto em seguida pressione [Enter] do seu teclado e aguarde aparecer o nome do aluno';
-$string['curso'] = 'Curso';
-$string['curso_help_help'] = 'Informe o curso em que estão matriculados os integrantes do projeto';
-$string['periodo'] = 'Período';
-$string['periodo_help_help'] = 'Informe o período dos integrantes do projeto';
-$string['turno'] = 'Turno';
-$string['turno_help_help'] = 'Informe o turno em que se encontram matriculados os integrantes do projeto';
-$string['categoria'] = 'Categoria';
-$string['categoria_help_help'] = 'Informe a Categoria do projeto';
-$string['titulo'] = 'Título';
-$string['titulo_help_help'] = 'Informe o título do seu projeto utilizando apenas a letra inicial em maiusculo. Exemplo: Meu projeto sepex';
-$string['email'] = 'Email';
-$string['email_help_help'] = 'Informe o email de um dos integrantes do seu projeto. Exemplo "meuemail@provedor.com"';
-$string['orientador'] = 'Selecione os professor(es) orientador(es) do projeto:';
-$string['orientador_help_help'] = 'Selecione os professores orientadores';
->>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
 $string['btnEnviar'] = 'Enviar';
 $string['cursovazio'] = 'Campo curso vazio clique em (?) em caso de dúvidas';
 $string['periodovazio'] = 'Campo periodo vazio clique em (?) em caso de dúvidas';
@@ -89,15 +71,9 @@ $string['resumovazio'] = 'Campo resumo vazio clique em (?) em caso de dúvidas';
 $string['tagsvazio'] = 'Campo tags vazio clique em (?) em caso de dúvidas';
 $string['inscricao'] = 'Preencher formulário de inscrição';
 $string['resumo'] = 'Resumo do projeto';
-<<<<<<< HEAD
 $string['resumo_help'] = 'Formate aqui o resumo de seu projeto.';
 $string['tags'] = 'Palavras Chave (use 3)';
 $string['tags_help'] = 'Insira no máximo 3 palavras chave do seu resumo separadas por (;) exemplo: palavra;chave;use 3.';
-=======
-$string['resumo_help_help'] = 'Formate aqui o resumo de seu projeto.';
-$string['tags'] = 'Palavras Chave (use 3)';
-$string['tags_help_help'] = 'Insira no máximo 3 palavras chave do seu resumo separadas por (;) exemplo: palavra;chave;use 3.';
->>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
 $string['add'] = 'Adicionar';
 $string['orientador2'] = '';
 $string['autor'] = 'Autor(es)';
@@ -108,7 +84,6 @@ $string['apagar'] = 'Excluir';
 $string['cod_projeto'] = 'Código do projeto';
 $string['categoria_projeto'] = 'Categoria do projeto';
 $string['delete'] = 'Tem certeza de que deseja excluir esta postagem e todas as informações?';
-<<<<<<< HEAD
 $string['delete_local'] = 'Tem certeza de que deseja excluir este local de apresentação? Os projetos que estiverem com este local definido para apresentação perderão essa definição';
 $string['definir_local_apresentacao'] = 'Definir local de apresentação para os projetos';
 $string['criar_local_apresentacao'] = 'Cadastrar Locais de Apresentação';
@@ -119,28 +94,13 @@ $string['area_help'] = 'Informe a àrea dos cursos que deseja filtrar.';
 $string['alocamesa'] = 'Alocar mesa para apresentação';
 $string['alocamesavazio'] = 'Favor especificar se seu projeto precisa de uma mesa!';
 $string['alocamesa_help'] = 'Marque esta opção caso seu projeto necessite de uma mesa para apresentação, exemplo: (Para sua apresentação irá utilizar notebook, maquete, algum produto, etc...).';
-=======
-$string['definir_local_apresentacao'] = 'Definir local de apresentação para os projetos';
-$string['criar_local_apresentacao'] = 'Criar locais de apresentação';
-$string['listar_projetos'] = 'Listar projetos';
-$string['cad_edit_professor'] = 'Cadastrar/Editar professor';
-$string['area'] = 'Área dos cursos';
-$string['area_help_help'] = 'Informe a àrea dos cursos que deseja filtrar.';
-$string['alocamesa'] = 'Alocar mesa para apresentação';
-$string['alocamesavazio'] = 'Favor especificar se seu projeto precisa de uma mesa!';
-$string['alocamesa_help_help'] = 'Marque esta opção caso seu projeto necessite de uma mesa para apresentação, exemplo: (Para sua apresentação irá utilizar notebook, maquete, algum produto, etc...).';
->>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
 $string['listarprojetos'] = 'Listar projetos';
 $string['localapresentacao'] = 'Local Apresentação';
 $string['dia'] = 'Dia';
 $string['horario'] = 'Hora';
 $string['orientadores'] = 'Orientadores';
 $string['semprojeto'] = 'Não encontramos nenhum projeto com esse filtro! ;(';
-<<<<<<< HEAD
 $string['criar'] = 'Criar';
 $string['editar'] = 'Editar';
 $string['qtd_projetos'] = 'Quantidade de Projetos';
-=======
-$string['criarsala'] = 'Criar';
-$string['editarsala'] = 'Editar';
->>>>>>> 8343b778cd04ab99ad3b0b60342a6df9f3bf18db
+
