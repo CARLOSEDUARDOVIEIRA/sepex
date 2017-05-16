@@ -96,11 +96,13 @@ $string['alocamesavazio'] = 'Favor especificar se seu projeto precisa de uma mes
 $string['alocamesa_help'] = 'Marque esta opção caso seu projeto necessite de uma mesa para apresentação, exemplo: (Para sua apresentação irá utilizar notebook, maquete, algum produto, etc...).';
 $string['listarprojetos'] = 'Listar projetos';
 $string['localapresentacao'] = 'Local Apresentação';
-$string['dia'] = 'Dia';
-$string['horario'] = 'Hora';
 $string['orientadores'] = 'Orientadores';
 $string['semprojeto'] = 'Não encontramos nenhum projeto com esse filtro! ;(';
 $string['criar'] = 'Criar';
 $string['editar'] = 'Editar';
 $string['qtd_projetos'] = 'Quantidade de Projetos';
-
+$string['dia'] = 'Dia';
+$string['horario'] = 'Hora';
+$string['avaliadores'] = 'Avaliadores';
+$string['data_apresentacao'] = 'Data de Apresentação';
+$string['data_definida'] = 'Data definida';

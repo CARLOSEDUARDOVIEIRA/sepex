@@ -367,58 +367,6 @@ function obter_projetos_por_area_turno_categoria($dados){
             WHERE sp.area_curso = ? AND sp.turno = ? AND sp.cod_categoria = ?", array($dados->area_curso, $dados->turno, $dados->cod_categoria));
     return $projeto;
 }
-
-function projetos_filtrados($dados,$id){   
-    global $OUTPUT;    
-    $projetos = obter_projetos_por_area_turno_categoria($dados);    
-    if($projetos):        
-        echo '<table class="forumheaderlist table table-striped">';
-            echo '<thead>';
-                echo '<tr>';
-                    echo '<th>'.get_string('cod_projeto', 'sepex').'</th>';
-                    echo '<th>'.get_string('titulo_projeto', 'sepex').'</th>';                    
-                    echo '<th>'.get_string('orientadores', 'sepex').'</th>';
-                    echo '<th>'.get_string('localapresentacao', 'sepex').'</th>';
-                    echo '<th>'.get_string('dia', 'sepex').'</th>';
-                    echo '<th>'.get_string('horario', 'sepex').'</th>';
-                    echo '<th>'.'</th>';
-                echo '</tr>';
-            echo '</thead>';                
-            foreach($projetos as $projeto){
-                $apresentacao = obter_dados_apresentacao($projeto);
-                echo '<tbody>';
-                    echo '<tr>';
-                        echo'<td><a>'.$projeto->cod_projeto.'</a></td>';
-                            $titulo  = html_writer::start_tag('td');
-                            $titulo .= html_writer::start_tag('a', array('href'=> 'cadastro_sepex.php?id='.$id.'&data='.$projeto->id_projeto,));
-                            $titulo .= $projeto->titulo;
-                            $titulo .= html_writer::end_tag('a'); 
-                            $titulo .= html_writer::end_tag('td'); 
-                        echo $titulo;
-                            $professor = listar_professor_por_id_projeto($projeto);
-                            $orientadores = consultar_nome_professor($professor);   
-                        echo'<td><a>'.$orientadores.'</a></td>';
-                        if (isset($apresentacao[$projeto->id_projeto]->nome_local_apresentacao)){
-                            echo '<td>'.$apresentacao[$projeto->id_projeto]->nome_local_apresentacao.'</td>';
-                            echo '<td>'.$apresentacao[$projeto->id_projeto]->data_apresentacao.'</td>';
-                            echo '<td>'.$apresentacao[$projeto->id_projeto]->hora_apresentacao.'</td>';
-                        }else{
-                            echo '<td>'.'</td>';
-                            echo '<td>'.'</td>';
-                            echo '<td>'.'</td>';
-                        }
-                            $btnEditar = html_writer::start_tag('td');
-                            $btnEditar .= html_writer::start_tag('input', array('type'=>'submit', 'id'=> 'editar', 'value'=>get_string('editar','sepex'), 'class' => 'btn btn-primary' ));                                                                                                                     
-                            $btnEditar .= html_writer::end_tag('td');
-                        echo $btnEditar;
-                    echo '</tr>';
-                echo '</tbody>';                        
-            }            
-        echo '</table>';                            
-    else:            
-           echo $OUTPUT->notification(get_string('semprojeto', 'sepex')); 
-    endif;    
-}
                     
 function exibir_formulario_inscricao($sepex,$cm,$mform){
     global $OUTPUT;
@@ -470,7 +418,7 @@ function select_projetos_professor($professor){
 
 function listar_professor_por_id_projeto($projeto){
     global $DB;         
-    $query = $DB->get_records("sepex_projeto_professor",array("id_projeto" =>$projeto->id_projeto));
+    $query = $DB->get_records("sepex_projeto_professor",array("id_projeto" =>$projeto));
        
     $orientadores = array();
     $i = 0;
@@ -550,7 +498,7 @@ function viewGerente($id){
     $criarLocalApresentacao .= html_writer::end_tag('div');       
     
     $localApresentacao  = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-    $localApresentacao .= html_writer::start_tag('a', array('href'=> './projeto_apresentacao/view.php?id='.$id, ));
+    $localApresentacao .= html_writer::start_tag('a', array('href'=> './definicoes_projeto/view.php?id='.$id, ));
     $localApresentacao .= html_writer::start_tag('submit',array('class'=>'btn btn-secondary', 'style' => 'margin-bottom:1%;'));
     $localApresentacao .= get_string('definir_local_apresentacao', 'sepex');
     $localApresentacao .= html_writer::end_tag('a'); 
@@ -590,69 +538,6 @@ function enviar_email($USER){
     
 }
 
-function exibir_formulario_definicao_sala($projeto,$id){
-    global $DB;
-    echo '<tbody>';
-        echo '<tr>';
-            echo'<td><a>'.$projeto->cod_projeto.'</a></td>';
-            $titulo  = html_writer::start_tag('td');
-            $titulo .= html_writer::start_tag('a', array('href'=> 'cadastro_sepex.php?id='.$id.'&data='.$projeto->id_projeto,));
-            $titulo .= $projeto->titulo;
-            $titulo .= html_writer::end_tag('a'); 
-            $titulo .= html_writer::end_tag('td'); 
-            echo $titulo;         
-            $professor = listar_professor_por_id_projeto($projeto);
-            $orientadores = consultar_nome_professor($professor);            
-            echo'<td><a>'.$orientadores.'</a></td>';
-            
-            $formulario  = html_writer::start_tag('form', array('id' => 'formularioSepex', 'action'=> "definir_local.php?id={$id}", 'method'=>"post", 'class'=> 'col-lg-9 col-md-9 col-sm-12'));                                                    
-                $locais = $DB->get_records('sepex_local_apresentacao');
-                $locais_apresentacao = array(''=>'Escolher',);
-                foreach($locais as $local){                    
-                    $locais_apresentacao[$local->id_local_apresentacao] =  $local->nome_local_apresentacao;
-                }
-            
-                $apresentacao  = html_writer::start_tag('td');                                                     
-                $apresentacao .= html_writer::select($locais_apresentacao, 'local_apresentacao', '','', array('class'=> 'col-sm-12'));
-                $apresentacao .= html_writer::end_tag('td');
-
-
-                    $dia  = html_writer::start_tag('td');                               
-                        $options = array( 
-                            '' => 'Escolher',
-                            '2' => 'Segunda feira',
-                            '3' => 'Terça feira',
-                            '4' => 'Quarta feira',
-                            '5' => 'Quinta feira',
-                            '6' => 'Sexta feira'                                   
-                        );
-                        $dia .= html_writer::select($options, 'dia_apresentacao', 0,'', array('class'=> 'col-sm-12'));
-                    $dia .= html_writer::end_tag('td');
-
-                    $hora = html_writer::start_tag('td');                               
-                        $optionshora = array(                                    
-                            '' => 'Escolher',
-                            '1' => '18:40 - 20:20',
-                            '2' => '20:40 - 22:20'                                                                       
-                        );
-                        $hora .= html_writer::select($optionshora, 'hora_apresentacao', 0,'', array('class'=> 'col-sm-12'));
-                    $hora .= html_writer::end_tag('td'); 
-
-                    $btnSubmit = html_writer::start_tag('td');
-                        $btnSubmit .= html_writer::start_tag('input', array('type'=>'submit', 'value'=>get_string('criar','sepex'), 'class' => 'btn btn-primary' ));                                                                                                                     
-                    $btnSubmit .= html_writer::end_tag('td');
-     
-                $formulario .= $apresentacao;
-                $formulario .= $dia;
-                $formulario .= $hora;
-                $formulario .= $btnSubmit;
-            $formulario .= html_writer::end_tag('form');
-            echo $formulario;
-        echo '</tr>';
-    echo '</tbody>';
-}
-
-
 function obter_dados_apresentacao($projeto){
     global $DB;
     $projetos = $DB->get_records_sql("
@@ -664,7 +549,7 @@ function obter_dados_apresentacao($projeto){
             FROM mdl_sepex_projeto sp
             INNER JOIN mdl_sepex_projeto_apresentacao spa ON spa.id_projeto  = sp.id_projeto
             INNER JOIN mdl_sepex_local_apresentacao sla ON sla.id_local_apresentacao = spa.id_local_apresentacao    
-            WHERE sp.id_projeto = ?", array($projeto->id_projeto));
+            WHERE sp.id_projeto = ?", array($projeto));
     return $projetos;
 }
 /**Metodo responsável por criar os locais de apresentação

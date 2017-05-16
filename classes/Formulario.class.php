@@ -6,9 +6,7 @@
  * @author Carlos Eduardo Vieira. Linkedin<>.
  */
 
-
-require_once ("../../config.php");
-
+require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 
 
@@ -16,8 +14,8 @@ class Formulario extends moodleform {
     
     function definition() {
         global $DB, $PAGE;
-
-        $mform = $this->_form; 
+        
+        $mform = $this->_form;         
         $modcontext = $this->_customdata['modcontext'];
         
         //CURSO
@@ -159,7 +157,9 @@ class Formulario extends moodleform {
         $mform->addRule('aloca_mesa', get_string('alocamesa', 'sepex', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('aloca_mesa', 'alocamesa', 'sepex');
         $mform->setDefault('aloca_mesa',$this->_customdata['aloca_mesa']);
-                        
+        
+        
+        
         $mform->addElement('submit', 'btnEnviar', get_string("btnEnviar", 'sepex'));
         
         
