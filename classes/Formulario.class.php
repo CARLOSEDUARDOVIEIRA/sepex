@@ -15,8 +15,7 @@ class Formulario extends moodleform {
     function definition() {
         global $DB, $PAGE;
         
-        $mform = $this->_form; 
-        $coursecontext = $this->_customdata['coursecontext'];
+        $mform = $this->_form;         
         $modcontext = $this->_customdata['modcontext'];
         
         //CURSO

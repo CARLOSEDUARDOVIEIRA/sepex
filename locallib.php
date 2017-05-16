@@ -153,20 +153,6 @@ function guardar_projeto($dados, $codigo, $USER)
         guardar_professor($id,$dados->cod_professor2,$tipo);
     }
 }
-/**Faz a gravação dos professores dos projetos
- * @global type $DB
- * @param type $id - Id do projeto no qual se deseja atribuir um professor. 
- * @param type $dados
- * @param type $tipo 
- */
-function guardar_professor($id,$dados,$tipo){
-    global $DB;
-    $professor = new stdClass();
-    $professor->id_projeto = $id;
-    $professor->professor_cod_professor = $dados;
-    $professor->tipo = $tipo;    
-    $DB->insert_record("sepex_projeto_professor", $professor);    
-}
 
 /**
  * Método responsável por atualizar as tabelas de cadastro de resumo sepex
@@ -215,20 +201,47 @@ function atualizar_projeto($dados, $id_projeto)
     if($dados->cod_professor2!=0){
         guardar_professor($id_projeto,$dados->cod_professor2,$tipo);
     }              
-}   
+} 
+
+/**Metodo responsavel por listar todos os projetos cadastrados no sistema
+ * @global type $DB
+ * @return array com os projetos cadastrados no sistema
+ */
+function listar_projetos_cadastrados(){
+     global $DB;
+    $lista_projetos = $DB->get_records("sepex_projeto",array());
+    $projetos = array();    
+    foreach($lista_projetos as $projeto){                        
+        array_push($projetos, $projeto);                
+    }     
+    return $projetos;
+}
 
 /**
- * método responsável por exibir um botão que irá redirecionar para o formulário de inscrição 
- * @return button link
+ * @global type $DB
+ * @param type $codProjeto
+ * @return type
  */
-function criar_link_formulario($id){  
-    $linkForm  = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:10%;'));
-    $linkForm .= html_writer::start_tag('a', array('href'=> './cadastro_sepex/cadastro_sepex.php?id='.$id, ));
-    $linkForm .= html_writer::start_tag('submit',array('class'=>'btn btn-secondary', 'style' => 'margin-bottom:5%;'));
-    $linkForm .= get_string('inscricao', 'sepex');
-    $linkForm .= html_writer::end_tag('a'); 
-    $linkForm .= html_writer::end_tag('div');
-    return $linkForm;
+function listar_projeto_por_id($id_projeto){
+    global $DB;     
+    //Exibir os projetos do aluno
+    $query = $DB->get_records_sql("
+            SELECT
+            sp.id_projeto,
+            sp.cod_projeto,
+            sp.titulo,
+            sp.resumo,
+            sp.email,
+            sp.tags,
+            sp.cod_periodo,
+            sp.turno,
+            sp.aloca_mesa,
+            sp.cod_categoria,
+            spc.curso_cod_curso
+            FROM mdl_sepex_projeto sp
+            INNER JOIN mdl_sepex_projeto_curso spc ON spc.projeto_id_projeto  = sp.id_projeto
+            WHERE sp.id_projeto=?", array($id_projeto));
+    return $query;
 }
 
 /**Método responsável por trazer do banco as informações sobre os projetos de um aluno
@@ -250,36 +263,6 @@ function select_projetos_aluno($aluno){
             WHERE sap.aluno_matricula=?", array($aluno));  
     return $resultado;
 }
-/**Método responsável por listar os projetos pelo código do professor. 
- * @global type $DB
- * @param type $professor
- * @return type projetos por professor.
- */
-function select_projetos_professor($professor){
- global $DB;     
-    $resultado = $DB->get_records_sql("
-            SELECT
-            sp.id_projeto,
-            sp.titulo,
-            sp.cod_projeto,
-            sp.cod_categoria,
-            sp.data_cadastro
-            FROM mdl_sepex_aluno_projeto sap
-            INNER JOIN mdl_sepex_projeto sp ON sp.id_projeto = sap.id_projeto
-            WHERE sap.aluno_matricula=?", array($professor));    
-    return $resultado;
-}
-
-/**Método responsável por obter o código da categoria de um projeto 
- * @global type $DB
- * @param type $cod_categoria
- * @return type categoria do projeto
- */
-function retorna_categoria($cod_categoria){
-    global $DB; 
-    $query = $DB->get_records("sepex_categoria",array("cod_categoria" =>$cod_categoria));
-    return $query;
-}    
 
 
 /**
@@ -358,16 +341,15 @@ function apagar_formulario($id_projeto){
     $DB->delete_records('sepex_projeto', array("id_projeto" => $id_projeto));
 }
 
-/**
+/**Exibe os projetos de acordo com um filtro de area, turno, categoria.
  * @global type $DB
- * @param type $codProjeto
- * @return type
+ * @param type $dados
  */
-function listar_projeto_por_id($id_projeto){
-    global $DB;     
-    //Exibir os projetos do aluno
-    $query = $DB->get_records_sql("
-            SELECT
+function obter_projetos_por_area_turno_categoria($dados){
+     global $DB;     
+    
+    $projeto = $DB->get_records_sql("
+            SELECT            
             sp.id_projeto,
             sp.cod_projeto,
             sp.titulo,
@@ -378,32 +360,120 @@ function listar_projeto_por_id($id_projeto){
             sp.turno,
             sp.aloca_mesa,
             sp.cod_categoria,
-            spc.curso_cod_curso
+            spc.curso_cod_curso            
             FROM mdl_sepex_projeto sp
             INNER JOIN mdl_sepex_projeto_curso spc ON spc.projeto_id_projeto  = sp.id_projeto
-            WHERE sp.id_projeto=?", array($id_projeto));
-    return $query;
+            INNER JOIN mdl_sepex_projeto_professor spp ON spp.id_projeto = sp.id_projeto            
+            WHERE sp.area_curso=? AND sp.turno =? AND sp.cod_categoria = ?", array($dados->area_curso, $dados->turno, $dados->cod_categoria));
+    return $projeto;
 }
-/** Lista os alunos por id de projeto
+
+function listar_projetos_filtrados($projeto,$id){
+    $apresentacao = obter_dados_apresentacao($projeto->id_projeto);
+        echo '<tbody>';
+        echo '<tr>';
+            echo'<td><a>'.$projeto->cod_projeto.'</a></td>';
+                $titulo  = html_writer::start_tag('td');
+                $titulo .= html_writer::start_tag('a', array('href'=> 'cadastro_sepex.php?id='.$id.'&data='.$projeto->id_projeto,));
+                $titulo .= $projeto->titulo;
+                $titulo .= html_writer::end_tag('a'); 
+                $titulo .= html_writer::end_tag('td'); 
+            echo $titulo;
+                $professor = listar_professor_por_id_projeto($projeto->id_projeto);
+                $orientadores = consultar_nome_professor($professor);   
+            echo'<td><a>'.$orientadores.'</a></td>';
+            if (isset($apresentacao[$projeto->id_projeto]->nome_local_apresentacao)){
+                echo '<td>'.$apresentacao[$projeto->id_projeto]->nome_local_apresentacao.'</td>';
+                echo '<td>'.$apresentacao[$projeto->id_projeto]->data_apresentacao.'</td>';
+                echo '<td>'.$apresentacao[$projeto->id_projeto]->hora_apresentacao.'</td>';
+            }else{
+                echo '<td>'.'</td>';
+                echo '<td>'.'</td>';
+                echo '<td>'.'</td>';
+            }
+                $btnEditar = html_writer::start_tag('td');
+                $btnEditar .= html_writer::start_tag('input', array('type'=>'submit', 'id'=> 'editar', 'value'=>get_string('editar','sepex'), 'class' => 'btn btn-primary' ));                                                                                                                     
+                $btnEditar .= html_writer::end_tag('td');
+            echo $btnEditar;
+        echo '</tr>';
+    echo '</tbody>';
+}
+
+
+function projetos_filtrados($dados,$id){   
+    global $OUTPUT;    
+    $projetos = obter_projetos_por_area_turno_categoria($dados);    
+    if($projetos):        
+        echo '<table class="forumheaderlist table table-striped">';
+            echo '<thead>';
+                echo '<tr>';
+                    echo '<th>'.get_string('cod_projeto', 'sepex').'</th>';
+                    echo '<th>'.get_string('titulo_projeto', 'sepex').'</th>';                    
+                    echo '<th>'.get_string('orientadores', 'sepex').'</th>';
+                    echo '<th>'.get_string('localapresentacao', 'sepex').'</th>';
+                    echo '<th>'.get_string('dia', 'sepex').'</th>';
+                    echo '<th>'.get_string('horario', 'sepex').'</th>';
+                    echo '<th>'.'</th>';
+                echo '</tr>';
+            echo '</thead>';    
+            
+            foreach($projetos as $projeto){
+              listar_projetos_filtrados($projeto,$id);                          
+            }            
+        echo '</table>';                            
+    else:            
+           echo $OUTPUT->notification(get_string('semprojeto', 'sepex')); 
+    endif;    
+}
+                    
+function exibir_formulario_inscricao($sepex,$cm,$mform){
+    global $OUTPUT;
+    // Primeira exibição do formulário.
+        echo $OUTPUT->header();
+        //Titulo
+        echo $OUTPUT->heading(format_string($sepex->name), 2);
+        echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
+        
+        $mform->display(); // exibe o formulário        
+
+        echo $OUTPUT->footer();
+}
+
+/**Faz a gravação dos professores dos projetos
  * @global type $DB
- * @param type $id_projeto
- * @return type string
+ * @param type $id - Id do projeto no qual se deseja atribuir um professor. 
+ * @param type $dados
+ * @param type $tipo 
  */
-function listar_matricula_alunos_por_id_projeto($id_projeto){
-    global $DB;         
-    $query = $DB->get_records("sepex_aluno_projeto",array("id_projeto" => $id_projeto));        
-    $alunos = array();
-    foreach($query as $aluno){
-            $alunos[$aluno->id_aluno_projeto] =  $aluno->aluno_matricula;
-    }     
-    $resultado =  implode(";", $alunos);        
+function guardar_professor($id,$dados,$tipo){
+    global $DB;
+    $professor = new stdClass();
+    $professor->id_projeto = $id;
+    $professor->professor_cod_professor = $dados;
+    $professor->tipo = $tipo;    
+    $DB->insert_record("sepex_projeto_professor", $professor);    
+}
+
+/**Método responsável por listar os projetos pelo código do professor. 
+ * @global type $DB
+ * @param type $professor
+ * @return type projetos por professor.
+ */
+function select_projetos_professor($professor){
+ global $DB;     
+    $resultado = $DB->get_records_sql("
+            SELECT
+            sp.id_projeto,
+            sp.titulo,
+            sp.cod_projeto,
+            sp.cod_categoria,
+            sp.data_cadastro
+            FROM mdl_sepex_aluno_projeto sap
+            INNER JOIN mdl_sepex_projeto sp ON sp.id_projeto = sap.id_projeto
+            WHERE sap.aluno_matricula=?", array($professor));    
     return $resultado;
 }
-/** Listar codigo dos professores por id projeto.
- * @global type $DB
- * @param type $id_projeto
- * @return type cod_professor
- */
+
 function listar_professor_por_id_projeto($id_projeto){
     global $DB;         
     $query = $DB->get_records("sepex_projeto_professor",array("id_projeto" =>$id_projeto));
@@ -429,6 +499,53 @@ function consultar_nome_professor($array_professores){
     return $orientador;
 }
 
+
+/**
+ * método responsável por exibir um botão que irá redirecionar para o formulário de inscrição 
+ * @return button link
+ */
+function criar_link_formulario($id){  
+    $linkForm  = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:10%;'));
+    $linkForm .= html_writer::start_tag('a', array('href'=> './cadastro_sepex/cadastro_sepex.php?id='.$id, ));
+    $linkForm .= html_writer::start_tag('submit',array('class'=>'btn btn-secondary', 'style' => 'margin-bottom:5%;'));
+    $linkForm .= get_string('inscricao', 'sepex');
+    $linkForm .= html_writer::end_tag('a'); 
+    $linkForm .= html_writer::end_tag('div');
+    return $linkForm;
+}
+
+/**Método responsável por obter o código da categoria de um projeto 
+ * @global type $DB
+ * @param type $cod_categoria
+ * @return type categoria do projeto
+ */
+function retorna_categoria($cod_categoria){
+    global $DB; 
+    $query = $DB->get_records("sepex_categoria",array("cod_categoria" =>$cod_categoria));
+    return $query;
+}    
+
+/** Lista os alunos por id de projeto
+ * @global type $DB
+ * @param type $id_projeto
+ * @return type string
+ */
+function listar_matricula_alunos_por_id_projeto($id_projeto){
+    global $DB;         
+    $query = $DB->get_records("sepex_aluno_projeto",array("id_projeto" => $id_projeto));        
+    $alunos = array();
+    foreach($query as $aluno){
+            $alunos[$aluno->id_aluno_projeto] =  $aluno->aluno_matricula;
+    }     
+    $resultado =  implode(";", $alunos);        
+    return $resultado;
+}
+/** Listar codigo dos professores por id projeto.
+ * @global type $DB
+ * @param type $id_projeto
+ * @return type cod_professor
+ */
+
 function viewGerente($id){        
     
     $criarLocalApresentacao  = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
@@ -439,7 +556,7 @@ function viewGerente($id){
     $criarLocalApresentacao .= html_writer::end_tag('div');       
     
     $localApresentacao  = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-    $localApresentacao .= html_writer::start_tag('a', array('href'=> './local_apresentacao/local_apresentacao.php?id='.$id, ));
+    $localApresentacao .= html_writer::start_tag('a', array('href'=> './projeto_apresentacao/view.php?id='.$id, ));
     $localApresentacao .= html_writer::start_tag('submit',array('class'=>'btn btn-secondary', 'style' => 'margin-bottom:1%;'));
     $localApresentacao .= get_string('definir_local_apresentacao', 'sepex');
     $localApresentacao .= html_writer::end_tag('a'); 
@@ -477,64 +594,6 @@ function enviar_email($USER){
         die("Erro no envio do email!");
     }
     
-}
-/**Exibe os projetos de acordo com um filtro de area, turno, categoria.
- * @global type $DB
- * @param type $dados
- */
-function obter_projetos_por_area_turno_categoria($dados){
-     global $DB;     
-    
-    $projeto = $DB->get_records_sql("
-            SELECT            
-            sp.id_projeto,
-            sp.cod_projeto,
-            sp.titulo,
-            sp.resumo,
-            sp.email,
-            sp.tags,
-            sp.cod_periodo,
-            sp.turno,
-            sp.aloca_mesa,
-            sp.cod_categoria,
-            spc.curso_cod_curso            
-            FROM mdl_sepex_projeto sp
-            INNER JOIN mdl_sepex_projeto_curso spc ON spc.projeto_id_projeto  = sp.id_projeto
-            INNER JOIN mdl_sepex_projeto_professor spp ON spp.id_projeto = sp.id_projeto            
-            WHERE sp.area_curso=? AND sp.turno =? AND sp.cod_categoria = ?", array($dados->area_curso, $dados->turno, $dados->cod_categoria));
-    return $projeto;
-}
-
-
-function listar_projetos_filtrados($projeto,$id){
-    $apresentacao = obter_dados_apresentacao($projeto->id_projeto);
-        echo '<tbody>';
-        echo '<tr>';
-            echo'<td><a>'.$projeto->cod_projeto.'</a></td>';
-                $titulo  = html_writer::start_tag('td');
-                $titulo .= html_writer::start_tag('a', array('href'=> 'cadastro_sepex.php?id='.$id.'&data='.$projeto->id_projeto,));
-                $titulo .= $projeto->titulo;
-                $titulo .= html_writer::end_tag('a'); 
-                $titulo .= html_writer::end_tag('td'); 
-            echo $titulo;
-                $professor = listar_professor_por_id_projeto($projeto->id_projeto);
-                $orientadores = consultar_nome_professor($professor);   
-            echo'<td><a>'.$orientadores.'</a></td>';
-            if (isset($apresentacao[$projeto->id_projeto]->nome_local_apresentacao)){
-                echo '<td>'.$apresentacao[$projeto->id_projeto]->nome_local_apresentacao.'</td>';
-                echo '<td>'.$apresentacao[$projeto->id_projeto]->data_apresentacao.'</td>';
-                echo '<td>'.$apresentacao[$projeto->id_projeto]->hora_apresentacao.'</td>';
-            }else{
-                echo '<td>'.'</td>';
-                echo '<td>'.'</td>';
-                echo '<td>'.'</td>';
-            }
-                $btnEditar = html_writer::start_tag('td');
-                $btnEditar .= html_writer::start_tag('input', array('type'=>'submit', 'id'=> 'editar', 'value'=>get_string('editar','sepex'), 'class' => 'btn btn-primary' ));                                                                                                                     
-                $btnEditar .= html_writer::end_tag('td');
-            echo $btnEditar;
-        echo '</tr>';
-    echo '</tbody>';
 }
 
 function exibir_formulario_definicao_sala($projeto,$id){
@@ -599,44 +658,6 @@ function exibir_formulario_definicao_sala($projeto,$id){
     echo '</tbody>';
 }
 
-function projetos_filtrados($dados,$id){   
-    global $OUTPUT;    
-    $projetos = obter_projetos_por_area_turno_categoria($dados);    
-    if($projetos):        
-        echo '<table class="forumheaderlist table table-striped">';
-            echo '<thead>';
-                echo '<tr>';
-                    echo '<th>'.get_string('cod_projeto', 'sepex').'</th>';
-                    echo '<th>'.get_string('titulo_projeto', 'sepex').'</th>';                    
-                    echo '<th>'.get_string('orientadores', 'sepex').'</th>';
-                    echo '<th>'.get_string('localapresentacao', 'sepex').'</th>';
-                    echo '<th>'.get_string('dia', 'sepex').'</th>';
-                    echo '<th>'.get_string('horario', 'sepex').'</th>';
-                    echo '<th>'.'</th>';
-                echo '</tr>';
-            echo '</thead>';    
-            
-            foreach($projetos as $projeto){
-              listar_projetos_filtrados($projeto,$id);                          
-            }            
-        echo '</table>';                            
-    else:            
-           echo $OUTPUT->notification(get_string('semprojeto', 'sepex')); 
-    endif;    
-}
-                    
-function exibir_formulario_inscricao($sepex,$cm,$mform){
-    global $OUTPUT;
-    // Primeira exibição do formulário.
-        echo $OUTPUT->header();
-        //Titulo
-        echo $OUTPUT->heading(format_string($sepex->name), 2);
-        echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
-        
-        $mform->display(); // exibe o formulário        
-
-        echo $OUTPUT->footer();
-}
 
 function obter_dados_apresentacao($id_projeto){
     global $DB;
@@ -709,17 +730,4 @@ function guardar_local_apresentacao($id_projeto, $local,$dia,$hora){
     $DB->insert_record("sepex_projeto", $projeto, array('id_projeto'=>$id_projeto));    
 }
 
-/**Metodo responsavel por listar todos os projetos cadastrados no sistema
- * @global type $DB
- * @return array com os projetos cadastrados no sistema
- */
-function listar_projetos_cadastrados(){
-     global $DB;
-    $lista_projetos = $DB->get_records("sepex_projeto",array());
-    $projetos = array();    
-    foreach($lista_projetos as $projeto){                        
-        array_push($projetos, $projeto);                
-    }     
-    return $projetos;
-}
 

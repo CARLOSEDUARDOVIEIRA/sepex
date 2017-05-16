@@ -59,7 +59,7 @@ define('VIEW_URL_LINK', "../view.php?id=" . $id);
         $coursecontext = context_course::instance($course->id);
 
         //Instanciação de um novo formulario passando como parametro: (destino_formulario, array(informe aqui os campos e os valores dos campos)        
-        $mform = new Formulario("cadastro_sepex.php?id={$id}&acao=1&idp={$codProjeto}&cod={$projeto[$codProjeto]->cod_projeto}", array('coursecontext'=>$context_course, 'modcontext'=>$modcontext, 'cod_curso'=>$projeto[$codProjeto]->curso_cod_curso,'titulo' => $projeto[$codProjeto]->titulo, 'resumo' => $projeto[$codProjeto]->resumo, 'tags' => $projeto[$codProjeto]->tags, 'aloca_mesa' => $projeto[$codProjeto]->aloca_mesa, 'cod_periodo' => $projeto[$codProjeto]->cod_periodo, 'turno' => $projeto[$codProjeto]->turno, 'cod_categoria' => $projeto[$codProjeto]->cod_categoria, 'aluno_matricula' => $alunos, 'cod_professor'=> $professores[1],'cod_professor2'=> $professores[2] ));
+        $mform = new Formulario("cadastro_sepex.php?id={$id}&acao=1&idp={$codProjeto}&cod={$projeto[$codProjeto]->cod_projeto}", array('modcontext'=>$modcontext, 'cod_curso'=>$projeto[$codProjeto]->curso_cod_curso,'titulo' => $projeto[$codProjeto]->titulo, 'resumo' => $projeto[$codProjeto]->resumo, 'tags' => $projeto[$codProjeto]->tags, 'aloca_mesa' => $projeto[$codProjeto]->aloca_mesa, 'cod_periodo' => $projeto[$codProjeto]->cod_periodo, 'turno' => $projeto[$codProjeto]->turno, 'cod_categoria' => $projeto[$codProjeto]->cod_categoria, 'aluno_matricula' => $alunos, 'cod_professor'=> $professores[1],'cod_professor2'=> $professores[2] ));
     }
     else{
         $mform = new Formulario("cadastro_sepex.php?id={$id}");

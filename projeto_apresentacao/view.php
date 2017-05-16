@@ -1,16 +1,14 @@
 <?php
 
-/* Página criada para definicao de salas após o envio do projeto
+/* EXIBE O RESULTADO DO FILTRO DE PROJETOS -- CONTÉM UM LINK PARA CADASTRO DE LOCAL DE APRESENTAÇÃO POR PROJETO.
  */
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
 require_once('../locallib.php');
-require_once '../classes/FiltroProjeto.class.php';
+require_once '../classes/FormularioFiltro.class.php';
 global $DB, $CFG, $PAGE;
-
-$id = required_param('id', PARAM_INT); // Modulo do curso
-$s  = optional_param('s', 0, PARAM_INT);  // ... Sepex instance ID - deve ser nomeado como o primeiro caractere do módulo.
-
+$id = required_param('id', PARAM_INT);
+$s  = optional_param('s', 0, PARAM_INT);
 if ($id) {
     $cm         = get_coursemodule_from_id('sepex', $id, 0, false, MUST_EXIST);
     $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
@@ -30,20 +28,18 @@ $event = \mod_sepex\event\course_module_viewed::create(array(
     'objectid' => $PAGE->cm->instance,
     'context' => $PAGE->context,
 ));
-
 $event->add_record_snapshot('course', $PAGE->course);
 $event->add_record_snapshot($PAGE->cm->modname, $sepex);
 $event->trigger();
-
-$PAGE->set_url('/mod/sepex/cadastro_sepex.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/sepex/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($sepex->name));
 $PAGE->set_heading($course->fullname);
       
     echo $OUTPUT->header();         
-    echo $OUTPUT->heading(format_string('Definição de salas'), 2);
+    echo $OUTPUT->heading(format_string('Filtro de projetos'), 2);
     echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');   
                    
-    $mform = new FiltroProjeto("local_apresentacao.php?id={$id}");
+    $mform = new FormularioFiltro("filtro_projetos.php?id={$id}");
 
     if($dados = $mform->get_data()):        
         
@@ -51,8 +47,7 @@ $PAGE->set_heading($course->fullname);
         projetos_filtrados($dados,$id);
         
     else:
-        $mform->display(); 
-        exibir_botao_cadastrar_local_apresentacao($id);
+        $mform->display();         
     endif;
             
     echo $OUTPUT->footer();
