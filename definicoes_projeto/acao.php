@@ -23,12 +23,17 @@ if ($id) {
 
 require_login($course, true, $cm);
 
+if(isset($_GET['data'])){
+    $id_projeto = htmlspecialchars($_GET['data']);                    
+}
   
 $mform = new FormularioDefinicaoProjeto();
 
 if ($data = $mform->get_data()) {
-      
-    print_r($data);
-    echo date("d/m/Y H:i:s", $data->data_apresentacao);
-                
+    $tipo = 'avaliador';
+    guardar_professor($id_projeto,$data->avaliador,$tipo);
+    guardar_professor($id_projeto,$data->avaliador2,$tipo);
+    guardar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);    
 }
+
+header("Location: filtro_projetos.php?id={$id}");

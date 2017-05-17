@@ -387,11 +387,11 @@ function exibir_formulario_inscricao($sepex,$cm,$mform){
  * @param type $dados
  * @param type $tipo 
  */
-function guardar_professor($id,$dados,$tipo){
+function guardar_professor($id,$cod_professor,$tipo){
     global $DB;
     $professor = new stdClass();
     $professor->id_projeto = $id;
-    $professor->professor_cod_professor = $dados;
+    $professor->professor_cod_professor = $cod_professor;
     $professor->tipo = $tipo;    
     $DB->insert_record("sepex_projeto_professor", $professor);    
 }
@@ -544,14 +544,14 @@ function obter_dados_apresentacao($projeto){
         SELECT            
             sp.id_projeto,
             sla.nome_local_apresentacao,
-            spa.data_apresentacao,
-            spa.hora_apresentacao            
+            spd.data_apresentacao            
             FROM mdl_sepex_projeto sp
-            INNER JOIN mdl_sepex_projeto_apresentacao spa ON spa.id_projeto  = sp.id_projeto
-            INNER JOIN mdl_sepex_local_apresentacao sla ON sla.id_local_apresentacao = spa.id_local_apresentacao    
+            INNER JOIN mdl_sepex_projeto_definicao spd ON spd.id_projeto  = sp.id_projeto
+            INNER JOIN mdl_sepex_local_apresentacao sla ON sla.id_local_apresentacao = spd.id_local_apresentacao    
             WHERE sp.id_projeto = ?", array($projeto));
     return $projetos;
 }
+
 /**Metodo responsável por criar os locais de apresentação
  * @param type $nome
  */
@@ -576,20 +576,10 @@ function listar_locais_apresentacao(){
     return $locais;
 }
 
-function editar_local_apresentacao($id,$nome){
-    global $DB;
-    
-    $DB->execute("
-            UPDATE mdl_sepex_local_apresentacao sla
-                SET sla.nome_local_apresentacao = ?,                
-                WHERE sla.id_local_apresentacao = {$id} ",array($nome));
-    
-}
-
 function apagar_local_apresentacao($id){
     global $DB;
     $DB->delete_records('sepex_local_apresentacao', array("id_local_apresentacao" => $id));
-    $DB->delete_records('sepex_projeto_apresentacao', array("id_local_apresentacao" => $id));    
+    $DB->delete_records('sepex_projeto_definicao', array("id_local_apresentacao" => $id));    
 }
 
 /**Metodo responsavel por inserir projetos nos lugares de apresentação 
@@ -599,14 +589,14 @@ function apagar_local_apresentacao($id){
  * @param type $dia
  * @param type $hora
  */
-function guardar_local_apresentacao($id_projeto, $local,$dia,$hora){
+function guardar_definicao_projeto($id_projeto, $local, $data){
     global $DB;
     
     $projeto = new stdClass();
-    $projeto->local_apresentacao = $local;
-    $projeto->dia_apresentacao = $dia;
-    $projeto->hora_apresentacao = $hora;    
-    $DB->insert_record("sepex_projeto", $projeto, array('id_projeto'=>$id_projeto));    
+    $projeto->id_projeto = $id_projeto;     
+    $projeto->data_apresentacao = $data;
+    $projeto->id_local_apresentacao = $local;
+    $DB->insert_record("sepex_projeto_definicao", $projeto);    
 }
 
 

@@ -62,7 +62,7 @@ $PAGE->set_heading($course->fullname);
     $header .= html_writer::end_tag('div');
     echo $header;
     
-    $mform = new FormularioDefinicaoProjeto("acao.php?id={$id}");
+    $mform = new FormularioDefinicaoProjeto("acao.php?id={$id}&data={$id_projeto}");
   
     $mform->display();
 

@@ -36,12 +36,65 @@ $PAGE->set_title(format_string($sepex->name));
 $PAGE->set_heading($course->fullname);
       
     echo $OUTPUT->header();         
-    echo $OUTPUT->heading(format_string('Filtro de projetos'), 2);
-    echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');   
+    echo $OUTPUT->heading(format_string('DEFINIÇÕES DE APRESENTAÇÃO PROJETO'), 2);
+    echo $OUTPUT->box(format_string(''), 2);   
                    
-    $mform = new FormularioFiltro("filtro_projetos.php?id={$id}");
+    $mform = new FormularioFiltro("view.php?id={$id}");
+    
     $mform->display();         
                 
+    if($dados = $mform->get_data()){    
+        $projetos = obter_projetos_por_area_turno_categoria($dados);
+        
+        //------------------------------VIEW---------------------------
+        if($projetos):        
+            echo '<table class="forumheaderlist table table-striped">';
+                echo '<thead>';
+                    echo '<tr>';
+                        echo '<th>'.get_string('cod_projeto', 'sepex').'</th>';
+                        echo '<th>'.get_string('titulo_projeto', 'sepex').'</th>';                    
+                        echo '<th>'.get_string('orientadores', 'sepex').'</th>';
+                        echo '<th>'.get_string('local', 'sepex').'</th>';
+                        echo '<th>'.get_string('horario', 'sepex').'</th>';
+                        echo '<th>'.'</th>';
+                    echo '</tr>';
+                echo '</thead>';                
+                foreach($projetos as $projeto){
+                    $apresentacao = obter_dados_apresentacao($projeto->id_projeto);
+                    echo '<tbody>';
+                        echo '<tr>';
+                            echo'<td><a>'.$projeto->cod_projeto.'</a></td>';
+                                $titulo  = html_writer::start_tag('td');
+                                $titulo .= html_writer::start_tag('a', array('href'=> 'definicao_projeto.php?id='.$id.'&data='.$projeto->id_projeto,));
+                                $titulo .= $projeto->titulo;
+                                $titulo .= html_writer::end_tag('a'); 
+                                $titulo .= html_writer::end_tag('td'); 
+                            echo $titulo;
+                                $professor = listar_professor_por_id_projeto($projeto->id_projeto);
+                                $orientadores = consultar_nome_professor($professor);   
+                            echo'<td><a>'.$orientadores.'</a></td>';
+                            if (isset($apresentacao[$projeto->id_projeto]->nome_local_apresentacao)){
+                                echo '<td>'.$apresentacao[$projeto->id_projeto]->nome_local_apresentacao.'</td>';
+                                echo '<td>'.date("d/m/Y H:i:s", $apresentacao[$projeto->id_projeto]->data_apresentacao).'</td>';                                
+                            }else{                                
+                                echo '<td>'.'</td>';
+                                echo '<td>'.'</td>';
+                            }
+                                $btnEditar = html_writer::start_tag('td');
+                                $btnEditar .= html_writer::start_tag('a', array('href'=> 'definicao_projeto.php?id='.$id.'&data='.$projeto->id_projeto,));
+                                $btnEditar .= html_writer::start_tag('input', array('type'=>'button', 'id'=> 'editar', 'value'=>get_string('editar','sepex'), 'class' => 'btn btn-default' ));                                                                                                                     
+                                $btnEditar .= html_writer::end_tag('td');
+                                echo $btnEditar;
+                        echo '</tr>';
+                    echo '</tbody>';                        
+                }            
+            echo '</table>';                            
+        else:            
+               echo $OUTPUT->notification(get_string('semprojeto', 'sepex')); 
+        endif;                        
+    }
+    
+    
     echo $OUTPUT->footer();
 
 
