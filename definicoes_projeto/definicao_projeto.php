@@ -50,8 +50,7 @@ $PAGE->set_heading($course->fullname);
         $locais_apresentacao[$local->id_local_apresentacao] =  $local->nome_local_apresentacao;
     }
                       
-    //VIEW      
-    
+    //VIEW          
     echo $OUTPUT->header();         
     echo $OUTPUT->heading(format_string('Definições do projeto'), 2);
     echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');   
@@ -63,22 +62,10 @@ $PAGE->set_heading($course->fullname);
     $header .= html_writer::end_tag('div');
     echo $header;
     
-    $mform = new FormularioDefinicaoProjeto("definicao_projeto.php?id={$id}");
-    
-    if ($data = $mform->get_data()) {
-        echo '<pre>';
-        print_r($data);
-        echo '<pre>';
-    } else {
-    
-        $mform->set_data($toform);
+    $mform = new FormularioDefinicaoProjeto("acao.php?id={$id}");
   
-        $mform->display();
-    }
-       
-    
+    $mform->display();
 
     echo $OUTPUT->footer();
-
 
  
