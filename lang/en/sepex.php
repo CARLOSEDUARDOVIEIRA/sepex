@@ -110,6 +110,6 @@ $string['avaliador'] = 'Selecione o(s) professor(es) avaliador(es) do projeto:';
 $string['avaliadorvazio'] = 'Campo de professor avaliador vazio. Clique (?) em caso de dúvidas.';
 $string['avaliador_help'] = 'Campo para seleção dos professores que serão avaliadores do projeto.';
 $string['apresentacaovazio'] = 'Campo de data e hora da apresentação vazio. Clique (?) em caso de dúvidas.';
-$string['data_apresentacao_help'] = 'Campo para definição de data e hora para apresentação do projeto';
+$string['dataapresentacao_help'] = 'Campo para definição de data e hora para apresentação do projeto';
 $string['localapresentacao_help'] = 'Campo para definição do local onde o projeto será apresentado';
 $string['localapresentacaovazio'] = 'Campo de local de apresentação vazio. Clique (?) em caso de dúvidas';

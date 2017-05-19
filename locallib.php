@@ -194,14 +194,21 @@ function atualizar_projeto($dados, $id_projeto)
         $aluno->id_projeto = $id_projeto;
         $DB->insert_record("sepex_aluno_projeto", $aluno);          
     }
-    
-    $DB->delete_records('sepex_projeto_professor', array("id_projeto" => $id_projeto));   
+           
     $tipo='orientador';
+    delete_professor_projeto($id_projeto, $tipo);
     guardar_professor($id_projeto,$dados->cod_professor,$tipo);
     if($dados->cod_professor2!=0){
         guardar_professor($id_projeto,$dados->cod_professor2,$tipo);
     }              
 } 
+function delete_professor_projeto($id_projeto, $tipo){
+    global $DB;
+    $DB->delete_records_select('sepex_projeto_professor', $DB->sql_like('id_projeto', '?', 'tipo','?'), array($id_projeto, $tipo));
+    
+}
+
+
 
 /**Metodo responsavel por listar todos os projetos cadastrados no sistema
  * @global type $DB
@@ -358,12 +365,8 @@ function obter_projetos_por_area_turno_categoria($dados){
             sp.tags,
             sp.cod_periodo,
             sp.turno,
-            sp.aloca_mesa,
-            sp.cod_categoria,
-            spc.curso_cod_curso            
-            FROM mdl_sepex_projeto sp
-            INNER JOIN mdl_sepex_projeto_curso spc ON spc.projeto_id_projeto  = sp.id_projeto
-            INNER JOIN mdl_sepex_projeto_professor spp ON spp.id_projeto = sp.id_projeto            
+            sp.aloca_mesa                    
+            FROM mdl_sepex_projeto sp            
             WHERE sp.area_curso = ? AND sp.turno = ? AND sp.cod_categoria = ?", array($dados->area_curso, $dados->turno, $dados->cod_categoria));
     return $projeto;
 }
@@ -415,7 +418,12 @@ function select_projetos_professor($professor){
             WHERE sap.aluno_matricula=?", array($professor));    
     return $resultado;
 }
-
+/**LISTAR ID PROFESSOR - Método responsável por listar os professores que fazem parte de um projeto.
+ * Não foi possível realizar um JOIN para trazer o nome dos professores porque a função get_records_sql só trouxe 1 professor.
+ * @global type $DB
+ * @param type $projeto
+ * @return type
+ */
 function listar_professor_por_id_projeto($projeto){
     global $DB;         
     $query = $DB->get_records("sepex_projeto_professor",array("id_projeto" =>$projeto));
@@ -429,17 +437,25 @@ function listar_professor_por_id_projeto($projeto){
     return $orientadores;
 }
 
-function consultar_nome_professor($array_professores){
-    global $DB;
-       
+function listar_nome_professores($id_projeto, $tipo){
+    global $DB;         
+    $resultado = $DB->get_records_sql("
+           SELECT
+                spp.professor_cod_professor,
+                spr.nome_professor  
+                FROM mdl_sepex_projeto sp
+                INNER JOIN mdl_sepex_projeto_professor spp ON spp.id_projeto = sp.id_projeto
+                INNER JOIN mdl_sepex_professor spr ON spr.cod_professor = spp.professor_cod_professor
+                WHERE sp.id_projeto = 1 AND spp.tipo = 'orientador'", array($id_projeto,$tipo));    
+     
     $orientadores = array();    
-    foreach($array_professores as $orientador){                
-        $query = $DB->get_records("sepex_professor",array("cod_professor" =>$orientador));
-        array_push($orientadores, $query[$orientador]->nome_professor);                
+    foreach($resultado as $orientador){                
+        array_push($orientadores, $orientador->nome_professor);                
     }     
     $orientador = implode(", ", $orientadores);
     return $orientador;
 }
+
 
 
 /**
@@ -599,4 +615,16 @@ function guardar_definicao_projeto($id_projeto, $local, $data){
     $DB->insert_record("sepex_projeto_definicao", $projeto);    
 }
 
-
+function alterar_definicao_projeto($id_projeto, $local, $data){
+    global $DB;
+    
+    $DB->execute("
+        UPDATE sepex_projeto_definicao spd                                          
+            SET spd.data_apresentacao = ?,                 
+            spd.id_local_apresentacao = ?                 
+            WHERE spd.id_projeto = {$id_projeto} ",array($data, $local));
+    
+       
+    $tipo='avaliador';
+    delete_professor_projeto($id_projeto, $tipo);                                       
+}

@@ -58,7 +58,8 @@ $PAGE->set_heading($course->fullname);
                         echo '<th>'.get_string('horario', 'sepex').'</th>';
                         echo '<th>'.'</th>';
                     echo '</tr>';
-                echo '</thead>';                
+                echo '</thead>';
+                $tipo = 'orientador';    
                 foreach($projetos as $projeto){
                     $apresentacao = obter_dados_apresentacao($projeto->id_projeto);
                     echo '<tbody>';
@@ -69,9 +70,8 @@ $PAGE->set_heading($course->fullname);
                                 $titulo .= $projeto->titulo;
                                 $titulo .= html_writer::end_tag('a'); 
                                 $titulo .= html_writer::end_tag('td'); 
-                            echo $titulo;
-                                $professor = listar_professor_por_id_projeto($projeto->id_projeto);
-                                $orientadores = consultar_nome_professor($professor);   
+                            echo $titulo;                            
+                            $orientadores = listar_nome_professores($projeto->id_projeto, $tipo);
                             echo'<td><a>'.$orientadores.'</a></td>';
                             if (isset($apresentacao[$projeto->id_projeto]->nome_local_apresentacao)){
                                 echo '<td>'.$apresentacao[$projeto->id_projeto]->nome_local_apresentacao.'</td>';

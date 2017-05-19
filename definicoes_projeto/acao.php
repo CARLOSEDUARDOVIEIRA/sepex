@@ -34,6 +34,10 @@ if ($data = $mform->get_data()) {
     guardar_professor($id_projeto,$data->avaliador,$tipo);
     guardar_professor($id_projeto,$data->avaliador2,$tipo);
     guardar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);    
+}else{    
+    alterar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);
+    guardar_professor($id_projeto,$data->avaliador,$tipo);
+    guardar_professor($id_projeto,$data->avaliador2,$tipo);
 }
 
-header("Location: filtro_projetos.php?id={$id}");
+header("Location: view.php?id={$id}");

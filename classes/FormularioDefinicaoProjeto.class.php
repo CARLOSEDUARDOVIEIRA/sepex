@@ -20,7 +20,7 @@ class FormularioDefinicaoProjeto extends moodleform {
         // -------------------- DATA PARA APRESENTAÇÃO DO PROJETO -------------------------
         $mform->addElement('header', 'apresentacao', get_string('dataapresentacao','sepex'));
         $mform->addElement('date_time_selector', 'data_apresentacao', get_string('data_definida', 'sepex'));        
-        $mform->addHelpButton('data_apresentacao', 'data_apresentacao', 'sepex');
+        $mform->addHelpButton('data_apresentacao', 'dataapresentacao', 'sepex');
         $mform->setDefault('data_apresentacao',$this->_customdata['data_apresentacao']);
         
                         

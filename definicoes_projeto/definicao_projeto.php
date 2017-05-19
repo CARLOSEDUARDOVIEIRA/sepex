@@ -42,8 +42,8 @@ $PAGE->set_heading($course->fullname);
     
     $projeto = listar_projeto_por_id($id_projeto);
     $dados_apresentacao = obter_dados_apresentacao($id_projeto);           
-    $professor = listar_professor_por_id_projeto($id_projeto);
-    $orientadores = consultar_nome_professor($professor);            
+    $tipo = 'orientador';
+    $orientadores = listar_nome_professores($id_projeto, $tipo);                   
     $locais = $DB->get_records('sepex_local_apresentacao');        
     $locais_apresentacao = array(''=>'Escolher',);
     foreach($locais as $local){                    
@@ -58,10 +58,12 @@ $PAGE->set_heading($course->fullname);
         $header .= html_writer::start_tag('h5', array('class'=>'page-header'));
             $header.= $projeto[$id_projeto]->cod_projeto.' - '.$projeto[$id_projeto]->titulo;
         $header .= html_writer::end_tag('h5');
+        $header.= '<b>'.get_string('curso', 'sepex').'</b>'.': '.$projeto[$id_projeto]->curso_cod_curso.'</br>';
         $header.= '<b>'.get_string('orientadores', 'sepex').'</b>'.': '.$orientadores;
     $header .= html_writer::end_tag('div');
     echo $header;
     
+       
     $mform = new FormularioDefinicaoProjeto("acao.php?id={$id}&data={$id_projeto}");
   
     $mform->display();
