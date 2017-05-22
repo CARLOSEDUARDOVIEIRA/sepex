@@ -54,12 +54,13 @@ define('VIEW_URL_LINK', "../view.php?id=" . $id);
         $codProjeto = htmlspecialchars($_GET['data']);        
         $projeto = listar_projeto_por_id($codProjeto);
         $alunos = listar_matricula_alunos_por_id_projeto($codProjeto);
-        $professores = listar_professor_por_id_projeto($codProjeto);
+        $tipo = 'orientador';
+        $professores = listar_professor_por_id_projeto($codProjeto, $tipo);
         $modcontext    = context_module::instance($cm->id);
         $coursecontext = context_course::instance($course->id);
 
         //Instanciação de um novo formulario passando como parametro: (destino_formulario, array(informe aqui os campos e os valores dos campos)        
-        $mform = new Formulario("cadastro_sepex.php?id={$id}&acao=1&idp={$codProjeto}&cod={$projeto[$codProjeto]->cod_projeto}", array('modcontext'=>$modcontext, 'cod_curso'=>$projeto[$codProjeto]->curso_cod_curso,'titulo' => $projeto[$codProjeto]->titulo, 'resumo' => $projeto[$codProjeto]->resumo, 'tags' => $projeto[$codProjeto]->tags, 'aloca_mesa' => $projeto[$codProjeto]->aloca_mesa, 'cod_periodo' => $projeto[$codProjeto]->cod_periodo, 'turno' => $projeto[$codProjeto]->turno, 'cod_categoria' => $projeto[$codProjeto]->cod_categoria, 'aluno_matricula' => $alunos, 'cod_professor'=> $professores[1],'cod_professor2'=> $professores[2] ));
+        $mform = new Formulario("cadastro_sepex.php?id={$id}&acao=1&idp={$codProjeto}&cod={$projeto[$codProjeto]->cod_projeto}", array('modcontext'=>$modcontext, 'cod_curso'=>$projeto[$codProjeto]->curso_cod_curso,'titulo' => $projeto[$codProjeto]->titulo, 'resumo' => $projeto[$codProjeto]->resumo, 'tags' => $projeto[$codProjeto]->tags, 'aloca_mesa' => $projeto[$codProjeto]->aloca_mesa, 'cod_periodo' => $projeto[$codProjeto]->cod_periodo, 'turno' => $projeto[$codProjeto]->turno, 'cod_categoria' => $projeto[$codProjeto]->cod_categoria, 'aluno_matricula' => $alunos, 'cod_professor'=> $professores[0],'cod_professor2'=> $professores[1] ));
     }
     else{
         $mform = new Formulario("cadastro_sepex.php?id={$id}");

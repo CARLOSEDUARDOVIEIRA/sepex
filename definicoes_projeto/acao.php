@@ -24,20 +24,27 @@ if ($id) {
 require_login($course, true, $cm);
 
 if(isset($_GET['data'])){
-    $id_projeto = htmlspecialchars($_GET['data']);                    
+    $id_projeto = htmlspecialchars($_GET['data']);
+    $acao = htmlspecialchars($_GET['acao']);    
 }
   
 $mform = new FormularioDefinicaoProjeto();
 
-if ($data = $mform->get_data()) {
-    $tipo = 'avaliador';
-    guardar_professor($id_projeto,$data->avaliador,$tipo);
-    guardar_professor($id_projeto,$data->avaliador2,$tipo);
-    guardar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);    
-}else{    
-    alterar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);
-    guardar_professor($id_projeto,$data->avaliador,$tipo);
-    guardar_professor($id_projeto,$data->avaliador2,$tipo);
-}
+$tipo = 'avaliador';
+if ($data = $mform->get_data() && $acao == 1):    
+    echo '<pre>';
+    print_r($data);
+    echo '</pre>';
+//    guardar_professor($id_projeto,$data->avaliador,$tipo);
+//    guardar_professor($id_projeto,$data->avaliador2,$tipo);
+//    guardar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);    
+elseif($data = $mform->get_data() && $acao == 2):    
+    echo '<pre>';
+    print_r($data);
+    echo '</pre>';
+//    alterar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);
+//    guardar_professor($id_projeto,$data->avaliador,$tipo);
+//    guardar_professor($id_projeto,$data->avaliador2,$tipo);
+endif;
 
-header("Location: view.php?id={$id}");
+//header("Location: view.php?id={$id}");

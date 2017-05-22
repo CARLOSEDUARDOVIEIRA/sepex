@@ -201,11 +201,13 @@ function atualizar_projeto($dados, $id_projeto)
     if($dados->cod_professor2!=0){
         guardar_professor($id_projeto,$dados->cod_professor2,$tipo);
     }              
-} 
+}
+
 function delete_professor_projeto($id_projeto, $tipo){
     global $DB;
-    $DB->delete_records_select('sepex_projeto_professor', $DB->sql_like('id_projeto', '?', 'tipo','?'), array($id_projeto, $tipo));
-    
+     $DB->execute("
+            DELETE FROM mdl_sepex_projeto_professor            
+                WHERE id_projeto = {$id_projeto} AND tipo = '{$tipo}'");     
 }
 
 
@@ -293,12 +295,15 @@ function listar_projetos_aluno($usuario,$id){
                     echo '<th>'.get_string('titulo_projeto', 'sepex').'</th>';                    
                     echo '<th>'.get_string('categoria_projeto', 'sepex').'</th>';
                     echo '<th>'.get_string('envio', 'sepex').'</th>';
+                    echo '<th>'.get_string('local', 'sepex').'</th>';
+                    echo '<th>'.get_string('apresentacao', 'sepex').'</th>';
                     echo '<th>'.get_string('editar', 'sepex').'</th>';
                     echo '<th>'.get_string('apagar', 'sepex').'</th>';
                 echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
             foreach($resultado as $projeto){
+                $apresentacao = obter_dados_apresentacao($projeto->id_projeto);
                 echo '<tr>';
                     echo'<td><a>'.$projeto->cod_projeto.'</a></td>';
                     
@@ -315,6 +320,14 @@ function listar_projetos_aluno($usuario,$id){
                     
                     echo'<td><a>'.$projeto->data_cadastro.'</a></td>';
                     
+                    if (isset($apresentacao[$projeto->id_projeto]->nome_local_apresentacao)){
+                            echo '<td>'.$apresentacao[$projeto->id_projeto]->nome_local_apresentacao.'</td>';
+                            echo '<td>'.date("d/m/Y H:i:s", $apresentacao[$projeto->id_projeto]->data_apresentacao).'</td>';                                
+                        }else{                                
+                        echo '<td>'.'</td>';
+                        echo '<td>'.'</td>';
+                    }
+                            
                     $editar  = html_writer::start_tag('td');                                       
                     $editar .= html_writer::start_tag('a', array('id'=> 'btnEdit','href'=> './cadastro_sepex/cadastro_sepex.php?id='.$id.'&data='.$projeto->id_projeto,));
                     $editar .= html_writer::start_tag('img',array('src'=>'pix/edit.png'));
@@ -424,15 +437,18 @@ function select_projetos_professor($professor){
  * @param type $projeto
  * @return type
  */
-function listar_professor_por_id_projeto($projeto){
+function listar_professor_por_id_projeto($id_projeto,$tipo){
     global $DB;         
-    $query = $DB->get_records("sepex_projeto_professor",array("id_projeto" =>$projeto));
-       
+        
+    $table = 'sepex_projeto_professor';
+    $select = "id_projeto = {$id_projeto} AND tipo = '{$tipo}'";
+    $query = $DB->get_records_select($table,$select);
+        
     $orientadores = array();
     $i = 0;
-    foreach($query as $orientador){
-        $i++;
+    foreach($query as $orientador){        
           $orientadores[$i] =  $orientador->professor_cod_professor;
+          $i++;
     }       
     return $orientadores;
 }
@@ -446,7 +462,7 @@ function listar_nome_professores($id_projeto, $tipo){
                 FROM mdl_sepex_projeto sp
                 INNER JOIN mdl_sepex_projeto_professor spp ON spp.id_projeto = sp.id_projeto
                 INNER JOIN mdl_sepex_professor spr ON spr.cod_professor = spp.professor_cod_professor
-                WHERE sp.id_projeto = 1 AND spp.tipo = 'orientador'", array($id_projeto,$tipo));    
+                WHERE sp.id_projeto = {$id_projeto} AND spp.tipo = '{$tipo}'", array($id_projeto,$tipo));    
      
     $orientadores = array();    
     foreach($resultado as $orientador){                
@@ -560,7 +576,8 @@ function obter_dados_apresentacao($projeto){
         SELECT            
             sp.id_projeto,
             sla.nome_local_apresentacao,
-            spd.data_apresentacao            
+            spd.data_apresentacao,
+            spd.id_local_apresentacao
             FROM mdl_sepex_projeto sp
             INNER JOIN mdl_sepex_projeto_definicao spd ON spd.id_projeto  = sp.id_projeto
             INNER JOIN mdl_sepex_local_apresentacao sla ON sla.id_local_apresentacao = spd.id_local_apresentacao    
@@ -619,7 +636,7 @@ function alterar_definicao_projeto($id_projeto, $local, $data){
     global $DB;
     
     $DB->execute("
-        UPDATE sepex_projeto_definicao spd                                          
+        UPDATE mdl_sepex_projeto_definicao spd                                          
             SET spd.data_apresentacao = ?,                 
             spd.id_local_apresentacao = ?                 
             WHERE spd.id_projeto = {$id_projeto} ",array($data, $local));
@@ -627,4 +644,25 @@ function alterar_definicao_projeto($id_projeto, $local, $data){
        
     $tipo='avaliador';
     delete_professor_projeto($id_projeto, $tipo);                                       
+}
+
+function header_definicao_projeto($sepex, $cm, $projeto, $orientadores, $id_projeto, $mform){
+    global $OUTPUT;
+    
+        echo $OUTPUT->header();         
+        echo $OUTPUT->heading(format_string('Definições do projeto'), 2);
+        echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');   
+        $header  = html_writer::start_tag('div', array('style' => 'margin-bottom:5%;'));                                                     
+            $header .= html_writer::start_tag('h5', array('class'=>'page-header'));
+                $header.= $projeto[$id_projeto]->cod_projeto.' - '.$projeto[$id_projeto]->titulo;
+            $header .= html_writer::end_tag('h5');
+            $header.= '<b>'.get_string('curso', 'sepex').'</b>'.': '.$projeto[$id_projeto]->curso_cod_curso.'</br>';
+            $header.= '<b>'.get_string('turno', 'sepex').'</b>'.': '.$projeto[$id_projeto]->turno.'</br>';
+            $header.= '<b>'.get_string('orientadores', 'sepex').'</b>'.': '.$orientadores;
+        $header .= html_writer::end_tag('div');
+        echo $header;
+        
+        $mform->display(); 
+        
+        echo $OUTPUT->footer();
 }
