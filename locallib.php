@@ -543,17 +543,9 @@ function viewGerente($id){
     $listarProjetos .= html_writer::end_tag('a'); 
     $listarProjetos .= html_writer::end_tag('div');
     
-    $cadEditProfessor  = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-    $cadEditProfessor .= html_writer::start_tag('a', array('href'=> 'cadastro_sepex.php?id='.$id, ));
-    $cadEditProfessor .= html_writer::start_tag('submit',array('class'=>'btn btn-secondary', 'style' => 'margin-bottom:1%;'));
-    $cadEditProfessor .= get_string('cad_edit_professor', 'sepex');
-    $cadEditProfessor .= html_writer::end_tag('a'); 
-    $cadEditProfessor .= html_writer::end_tag('div');    
-    
     echo $criarLocalApresentacao;
     echo $localApresentacao;
-    echo $listarProjetos;
-    echo $cadEditProfessor;
+    echo $listarProjetos;    
 }
 
 function enviar_email($USER){
@@ -665,4 +657,23 @@ function header_definicao_projeto($sepex, $cm, $projeto, $orientadores, $id_proj
         $mform->display(); 
         
         echo $OUTPUT->footer();
+}
+
+/** RETORNA A MATRICULA DOS ALUNOS POR ID DO PROJETO
+ * @global type $DB
+ * @param type $id_projeto
+ * @return objeto com lista dos alunos por id do projeto
+ */
+function listarMatriculaAlunos($id_projeto){
+    global $DB;
+
+    $query = $DB->get_records("sepex_aluno_projeto", array("id_projeto" => $id_projeto));
+
+    $alunos = array();
+    foreach($query as $aluno){
+        $alunos[$aluno->id_aluno_projeto] = $aluno->aluno_matricula;
+    }
+
+    return $alunos;
+
 }
