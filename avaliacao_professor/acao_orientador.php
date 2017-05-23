@@ -29,14 +29,27 @@ if ($id) {
 $lang = current_language();
 require_login($course, true, $cm);
 $context_course = context_course::instance($course -> id);
-$event = \mod_sepex\event\course_module_viewed::create(array(
-    'objectid' => $PAGE->cm->instance,
-    'context' => $PAGE->context,
-));
-$event->add_record_snapshot('course', $PAGE->course);
-$event->add_record_snapshot($PAGE->cm->modname, $sepex);
-$event->trigger();
-$PAGE->set_url('/mod/sepex/acao_orientador.php', array('id' => $cm->id));
-$PAGE->set_title(format_string($sepex->name));
-$PAGE->set_heading(format_string($sepex->name));
-$acao = htmlspecialchars($_POST['acao']);
+
+//    if(isset($_GET['acao'])){
+    //        if($mform->is_cancelled()):
+    //            redirect("view.php?id={$id}&are={$area}&tur={$turno}&cat={$categoria}");        
+    //        elseif ($data = $mform->get_data()):
+    //            alterar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);
+    //            guardar_professor($id_projeto,$data->avaliador,$tipo2);
+    //            guardar_professor($id_projeto,$data->avaliador2,$tipo2);
+    //            header("Location: view.php?id={$id}&are={$area}&tur={$turno}&cat={$categoria}");
+    //        else:
+    //            header_definicao_projeto($sepex, $cm, $projeto, $orientadores, $id_projeto, $mform);
+    //        endif;        
+    //    }else{
+    //        if($mform->is_cancelled()):
+    //            redirect("view.php?id={$id}&are={$area}&tur={$turno}&cat={$categoria}");        
+    //        elseif ($data = $mform->get_data()):           
+    //            guardar_professor($id_projeto,$data->avaliador,$tipo2);
+    //            guardar_professor($id_projeto,$data->avaliador2,$tipo2);
+    //            guardar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);
+    //            header("Location: view.php?id={$id}&are={$area}&tur={$turno}&cat={$categoria}");
+    //        else:
+    //            header_definicao_projeto($sepex, $cm, $projeto, $orientadores, $id_projeto, $mform);
+    //        endif;
+    //    } 

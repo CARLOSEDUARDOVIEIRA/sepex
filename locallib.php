@@ -349,6 +349,65 @@ function listar_projetos_aluno($usuario,$id){
     endif;
     
 }
+function header_projetos_professor(){
+    echo '<table class="forumheaderlist table table-striped">';
+        echo '<thead>';           
+            echo '<tr>';
+                echo '<th>' . get_string('responsabilidade', 'sepex').'</th>';
+                echo '<th>' . strtoupper(get_string('categoria', 'sepex')).'</th>';
+                echo '<th>' . strtoupper(get_string('curso', 'sepex')) . '</th>';
+                echo '<th>' . get_string('cod_projeto', 'sepex') . '</th>';                      
+                echo '<th>' . get_string('titulo_projeto', 'sepex') . '</th>';                
+                echo '<th>' . get_string('avaliar', 'sepex') . '</th>';            
+            echo '</tr>';
+        echo '</thead>';
+}
+
+function listar_projetos_professor($usuario, $id) {
+    global $PAGE;
+    $resultado = select_projetos_professor($usuario);
+    if ($resultado != null || $resultado != ''):
+        header_projetos_professor();
+        echo '<tbody>';
+        foreach ($resultado as $projeto) {                
+                echo '<tr>';
+                echo'<td><a>' . $projeto->tipo. '</a></td>';
+                $categoria = retorna_categoria($projeto->cod_categoria);
+                   
+                echo'<td><a>'.$categoria[$projeto->cod_categoria]->nome_categoria.'</a></td>';
+                echo'<td><a>' . $projeto->curso_cod_curso . '</a></td>';
+                echo'<td><a>' . $projeto->cod_projeto . '</a></td>';                
+                
+                $titulo = html_writer::start_tag('td');
+                if($projeto->tipo == 'avaliador'){
+                    $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './avaliacao_professor/Avaliacao.php?id=' . $id . '&data=' . $projeto->id_projeto,));
+                }else{
+                    $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './avaliacao_professor/avaliacao_orientador.php?id=' . $id . '&data=' . $projeto->id_projeto,));
+                }                
+                $titulo .= $projeto->titulo;
+                $titulo .= html_writer::end_tag('a');
+                $titulo .= html_writer::end_tag('td');                
+                $avaliar = html_writer::start_tag('td');
+                if($projeto->tipo == 'avaliador'){
+                    $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './avaliacao_professor/Avaliacao.php?id=' . $id . '&data=' . $projeto->id_projeto,));
+                }else{
+                    $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './avaliacao_professor/avaliacao_orientador.php?id=' . $id . '&data=' . $projeto->id_projeto,));
+                }
+                $avaliar .= html_writer::start_tag('img', array('src' => 'pix/edit.png'));
+                $avaliar .= html_writer::end_tag('a');
+                $avaliar .= html_writer::end_tag('td');
+                echo $titulo;                                                                                                                          
+                echo $avaliar;
+            echo '</tr>';
+            
+        }
+        echo '</tbody>';
+       
+        echo '</table>';
+    endif;
+}
+
+
 /** Método responsável por apagar um formulário sepex 
  * @global type $DB
  * @param type $id_projeto
@@ -417,18 +476,22 @@ function guardar_professor($id,$cod_professor,$tipo){
  * @param type $professor
  * @return type projetos por professor.
  */
-function select_projetos_professor($professor){
- global $DB;     
+function select_projetos_professor($usuario) {
+    global $DB;
+//Exibir os projetos do aluno
     $resultado = $DB->get_records_sql("
             SELECT
             sp.id_projeto,
             sp.titulo,
             sp.cod_projeto,
             sp.cod_categoria,
-            sp.data_cadastro
-            FROM mdl_sepex_aluno_projeto sap
-            INNER JOIN mdl_sepex_projeto sp ON sp.id_projeto = sap.id_projeto
-            WHERE sap.aluno_matricula=?", array($professor));    
+            sp.data_cadastro,
+            spp.tipo,
+            spc.curso_cod_curso
+            FROM mdl_sepex_projeto sp
+            INNER JOIN mdl_sepex_projeto_professor spp ON sp.id_projeto = spp.id_projeto
+            INNER JOIN mdl_sepex_projeto_curso spc ON sp.id_projeto = spc.projeto_id_projeto
+            WHERE spp.professor_cod_professor= ? ORDER BY spp.tipo", array($usuario));
     return $resultado;
 }
 /**LISTAR ID PROFESSOR - Método responsável por listar os professores que fazem parte de um projeto.

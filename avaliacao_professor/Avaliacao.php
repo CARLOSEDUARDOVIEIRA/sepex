@@ -36,8 +36,9 @@ $event->trigger();
 $PAGE->set_url('/mod/sepex/Avaliacao.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($sepex->name));
 $PAGE->set_heading(format_string($sepex->name));
-
-$idProjeto = 29;
+if(isset($_GET['data'])){
+        $idProjeto = htmlspecialchars($_GET['data']);         
+}
 
 $projeto = listar_projeto_por_id($idProjeto);
 $categoria = retorna_categoria($projeto[$idProjeto]->cod_categoria);

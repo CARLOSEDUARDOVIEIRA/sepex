@@ -14,15 +14,16 @@ class FormularioOrientador extends moodleform {
     function definition() {
         global $DB, $PAGE;
         
-        $mform = $this->_form;
+        $mform = $this->_form;         
         $modcontext = $this->_customdata['modcontext'];
         
         // -------------------- RESUMO -------------------------
-        $mform->addElement('header', 'resumo', get_string('resumo','sepex'));
-        //$resumo = $this->_customdata['resumo'];
-        $mform->addElement('editor', 'resumo', get_string('resumo', 'sepex'));//, null, array('context' => $modcontext))->setValue( array('text' => $resumo));        
-        $mform->addHelpButton('resumo', 'resumo', 'sepex');
+        $mform->addElement('header', 'resumo_header', get_string('resumo','sepex'));
+        $resumo = $this->_customdata['resumo'];
+        $mform->addElement('editor', 'resumo', get_string('resumo', 'sepex'), null, array('context' => $modcontext))->setValue( array('text' => $resumo));                
+        $mform->addHelpButton('resumo', 'resumo_orientador', 'sepex');
         $mform->setType('resumo', PARAM_RAW);
+        
         
         // -------------------- AVALIAÇÃO -------------------------
         $mform->addElement('header', 'avaliacao', get_string('avaliacao','sepex'));
@@ -32,11 +33,10 @@ class FormularioOrientador extends moodleform {
         $mform->addGroup($radioarray, 'radioar', '', array(' '), false);
         $mform->setDefault('condicao', 0);
         
-        // -------------------- COMENTARIO SOBRE AVALIAÇÃO -------------------------
-        $mform->addElement('header', 'comentarioOrientador', get_string('comentario','sepex'));
-        $mform->addHelpButton('comentarioOrientador', 'comentarioOrientador', 'sepex');
         $mform->addElement('textarea', 'comentario', get_string("comentario", "sepex"), 'wrap="virtual" rows="5" cols="60"');
-        
+        $mform->addRule('comentario', get_string('comentario', 'sepex'), 'required', null, 'client');
+        $mform->addHelpButton('comentario', 'comentario', 'sepex');
+        $mform->setType('comentario', PARAM_RAW);
         
         $this->add_action_buttons();
                 
