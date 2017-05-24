@@ -20,7 +20,7 @@ class FormularioOrientador extends moodleform {
         // -------------------- RESUMO -------------------------
         $mform->addElement('header', 'resumo_header', get_string('resumo','sepex'));
         $resumo = $this->_customdata['resumo'];
-        $mform->addElement('editor', 'resumo', get_string('resumo', 'sepex'), null, array('context' => $modcontext))->setValue( array('text' => $resumo));                
+        $mform->addElement('editor', 'resumo', get_string('resumo_orientador', 'sepex'), null, array('context' => $modcontext))->setValue( array('text' => $resumo));                
         $mform->addHelpButton('resumo', 'resumo_orientador', 'sepex');
         $mform->setType('resumo', PARAM_RAW);
         

@@ -10,6 +10,7 @@
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
 require_once('../locallib.php');
+require_once ('../classes/FormularioOrientador.class.php');
 
 global $DB, $CFG, $PAGE;
 $id = required_param('id', PARAM_INT);
@@ -29,27 +30,26 @@ if ($id) {
 $lang = current_language();
 require_login($course, true, $cm);
 $context_course = context_course::instance($course -> id);
+    
+    $mform = new FormularioOrientador();
+    
+    if(isset($_GET['data'])){
+        $id_projeto = htmlspecialchars($_GET['data']);                
+    }
 
-//    if(isset($_GET['acao'])){
-    //        if($mform->is_cancelled()):
-    //            redirect("view.php?id={$id}&are={$area}&tur={$turno}&cat={$categoria}");        
-    //        elseif ($data = $mform->get_data()):
-    //            alterar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);
-    //            guardar_professor($id_projeto,$data->avaliador,$tipo2);
-    //            guardar_professor($id_projeto,$data->avaliador2,$tipo2);
-    //            header("Location: view.php?id={$id}&are={$area}&tur={$turno}&cat={$categoria}");
-    //        else:
-    //            header_definicao_projeto($sepex, $cm, $projeto, $orientadores, $id_projeto, $mform);
-    //        endif;        
-    //    }else{
-    //        if($mform->is_cancelled()):
-    //            redirect("view.php?id={$id}&are={$area}&tur={$turno}&cat={$categoria}");        
-    //        elseif ($data = $mform->get_data()):           
-    //            guardar_professor($id_projeto,$data->avaliador,$tipo2);
-    //            guardar_professor($id_projeto,$data->avaliador2,$tipo2);
-    //            guardar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);
-    //            header("Location: view.php?id={$id}&are={$area}&tur={$turno}&cat={$categoria}");
-    //        else:
-    //            header_definicao_projeto($sepex, $cm, $projeto, $orientadores, $id_projeto, $mform);
-    //        endif;
-    //    } 
+    if(isset($_GET['acao'])){
+        if($mform->is_cancelled()):
+            redirect("../view.php?id={$id}&data={$id_projeto}");        
+        elseif ($data = $mform->get_data()):
+            
+            
+            
+            header("Location: ../view.php?id={$id}&data={$id_projeto}");        
+        endif;    
+    }else{
+        if($mform->is_cancelled()):
+            redirect("../view.php?id={$id}&data={$id_projeto}");
+        elseif ($data = $mform->get_data()):                           
+            header("Location: ../view.php?id={$id}&data={$id_projeto}");        
+        endif;
+    } 

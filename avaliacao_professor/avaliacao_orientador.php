@@ -37,13 +37,14 @@ $PAGE->set_url('/mod/sepex/avaliacao_orientador.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($sepex->name));
 $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();         
-echo $OUTPUT->heading(format_string('AVALIAÇÃO DO PROJETO'), 2);
+echo $OUTPUT->heading(format_string('AVALIAR RESUMO DO PROJETO'), 2);
 echo $OUTPUT->box(format_string(''), 2);  
 
 //CHAMADA MODEL       
     if(isset($_GET['data'])){
         $id_projeto = htmlspecialchars($_GET['data']);
-        $projeto = listar_projeto_por_id($id_projeto);        
+        $projeto = listar_projeto_por_id($id_projeto);
+        
     }
     $tipo = 'orientador';
     $orientadores = listar_nome_professores($id_projeto, $tipo);
@@ -60,7 +61,7 @@ echo $OUTPUT->box(format_string(''), 2);
     echo $header;
     
     
-    $mform = new FormularioOrientador("acao_orientador.php?id={$id}",array('modcontext' => $modcontext, 'resumo' => $projeto[$id_projeto]->resumo ));  
+    $mform = new FormularioOrientador("acao_orientador.php?id={$id}&data={$id_projeto}",array('modcontext' => $modcontext, 'resumo' => $projeto[$id_projeto]->resumo ));  
     
     $mform->display(); 
     
