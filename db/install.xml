@@ -119,10 +119,10 @@
       <FIELDS>
         <FIELD NAME="id_projeto_professor" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>  
         <FIELD NAME="id_projeto" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="data_avaliacao" TYPE="char" LENGTH="50" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="status_resumo" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="nota_apresentacao" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
         <FIELD NAME="professor_cod_professor" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true"/>
+        <FIELD NAME="data_avaliacao" TYPE="char" LENGTH="50" NOTNULL="false"/>
+        <FIELD NAME="status_resumo" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
+        <FIELD NAME="obs_orientador" TYPE="char" LENGTH="300" NOTNULL="false"/>               
         <FIELD NAME="tipo" TYPE="char" LENGTH="15" NOTNULL="true" COMMENT="avaliador-orientador"/>
       </FIELDS>
       <KEYS>

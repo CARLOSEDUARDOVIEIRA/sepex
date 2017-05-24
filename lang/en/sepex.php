@@ -122,5 +122,5 @@ $string['reprovado'] = 'Reprovado';
 $string['comentario'] = 'Comentário sobre avaliação';
 $string['comentario_help'] = 'Informar um feedback sobre a situação atribuida ao resumo do projeto';
 $string['resumo_orientador_help'] = 'O campo de resumo do projeto permite que o orientador realize modificações no resumo original postado pelos alunos. O moodle não possui nenhum backup do resumo. É importante que ao editar o resumo insira o feedback no campo de observações para que tenha um registro das modificações realizadas.';
-$string['responsabilidade'] = 'RESPONSÁBILIDADE';
+$string['responsabilidade'] = 'RESPONSABILIDADE';
 $string['resumo_orientador'] = 'Avaliar resumo';
