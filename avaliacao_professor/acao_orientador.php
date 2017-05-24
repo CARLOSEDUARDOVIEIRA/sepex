@@ -37,19 +37,13 @@ $context_course = context_course::instance($course -> id);
         $id_projeto = htmlspecialchars($_GET['data']);                
     }
 
-    if(isset($_GET['acao'])){
-        if($mform->is_cancelled()):
-            redirect("../view.php?id={$id}&data={$id_projeto}");        
-        elseif ($data = $mform->get_data()):
-            
-            
-            
-            header("Location: ../view.php?id={$id}&data={$id_projeto}");        
-        endif;    
-    }else{
-        if($mform->is_cancelled()):
+    if($mform->is_cancelled()):
             redirect("../view.php?id={$id}&data={$id_projeto}");
-        elseif ($data = $mform->get_data()):                           
+    elseif ($data = $mform->get_data()):
+            guardar_avaliacao_orientador($data,$id_projeto, $USER->username);                      
             header("Location: ../view.php?id={$id}&data={$id_projeto}");        
-        endif;
-    } 
+//            echo '<pre>';
+//            print_r($data);
+//            echo '<pre>';
+    endif;
+    

@@ -740,3 +740,34 @@ function listarMatriculaAlunos($id_projeto){
     return $alunos;
 
 }
+
+function guardar_avaliacao_orientador($dados,$id_projeto, $cod_professor){    
+    global $DB;
+      
+    $date = new DateTime("now", core_date::get_user_timezone_object());
+    $dataAtual = userdate($date->getTimestamp());
+    
+    $DB->execute("
+        UPDATE mdl_sepex_projeto sp
+        INNER JOIN mdl_sepex_projeto_professor spp
+        ON sp.id_projeto = spp.id_projeto
+        SET sp.resumo = ?,
+        spp.status_resumo = ?, 
+        spp.obs_orientador = ?,
+        spp.data_avaliacao = ?
+        WHERE sp.id_projeto = {$id_projeto} AND professor_cod_professor = {$cod_professor} AND tipo = 'orientador' ",array($dados->resumo[text], $dados->condicao, $dados->comentario, $dataAtual));
+                        
+}
+
+function listar_dados_avaliacao_orientador($id_projeto, $cod_professor){
+    global $DB;
+    
+    $avaliacao_orientador = $DB->get_records_sql("
+        SELECT            
+            spp.id_projeto,
+            spp.status_resumo,
+            spp.obs_orientador
+            FROM mdl_sepex_projeto_professor spp            
+            WHERE spp.id_projeto = ? AND spp.professor_cod_professor = ? AND spp.tipo = 'orientador'", array($id_projeto, $cod_professor));
+    return $avaliacao_orientador;
+}

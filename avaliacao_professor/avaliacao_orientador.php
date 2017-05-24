@@ -44,7 +44,7 @@ echo $OUTPUT->box(format_string(''), 2);
     if(isset($_GET['data'])){
         $id_projeto = htmlspecialchars($_GET['data']);
         $projeto = listar_projeto_por_id($id_projeto);
-        
+        $dados_orientador = listar_dados_avaliacao_orientador($id_projeto, $USER->username);
     }
     $tipo = 'orientador';
     $orientadores = listar_nome_professores($id_projeto, $tipo);
@@ -60,8 +60,11 @@ echo $OUTPUT->box(format_string(''), 2);
     $header .= html_writer::end_tag('div');
     echo $header;
     
-    
-    $mform = new FormularioOrientador("acao_orientador.php?id={$id}&data={$id_projeto}",array('modcontext' => $modcontext, 'resumo' => $projeto[$id_projeto]->resumo ));  
+    if($dados_orientador[$id_projeto]->obs_orientador != null){        
+        $mform = new FormularioOrientador("acao_orientador.php?id={$id}&data={$id_projeto}",array('modcontext' => $modcontext, 'resumo' => $projeto[$id_projeto]->resumo, 'condicao' => $dados_orientador[$id_projeto]->status_resumo, 'comentario' => $dados_orientador[$id_projeto]->obs_orientador));  
+    }else{
+        $mform = new FormularioOrientador("acao_orientador.php?id={$id}&data={$id_projeto}",array('modcontext' => $modcontext, 'resumo' => $projeto[$id_projeto]->resumo ));  
+    }
     
     $mform->display(); 
     

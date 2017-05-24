@@ -65,7 +65,9 @@ $PAGE->set_heading($course->fullname);
         elseif ($data = $mform->get_data()):
             alterar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);
             guardar_professor($id_projeto,$data->avaliador,$tipo2);
-            guardar_professor($id_projeto,$data->avaliador2,$tipo2);
+            if($data->avaliador2!= null && $data->avaliador2 != '' ){
+                guardar_professor($id_projeto,$data->avaliador2,$tipo2);
+            }
             header("Location: view.php?id={$id}&are={$area}&tur={$turno}&cat={$categoria}");
         else:
             header_definicao_projeto($sepex, $cm, $projeto, $orientadores, $id_projeto, $mform);
@@ -75,7 +77,9 @@ $PAGE->set_heading($course->fullname);
             redirect("view.php?id={$id}&are={$area}&tur={$turno}&cat={$categoria}");        
         elseif ($data = $mform->get_data()):           
             guardar_professor($id_projeto,$data->avaliador,$tipo2);
-            guardar_professor($id_projeto,$data->avaliador2,$tipo2);
+            if($data->avaliador2!= null && $data->avaliador2 != ''){
+                guardar_professor($id_projeto,$data->avaliador2,$tipo2);
+            }
             guardar_definicao_projeto($id_projeto, $data->localapresentacao, $data->data_apresentacao);
             header("Location: view.php?id={$id}&are={$area}&tur={$turno}&cat={$categoria}");
         else:

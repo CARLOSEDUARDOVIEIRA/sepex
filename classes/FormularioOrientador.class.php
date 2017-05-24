@@ -16,7 +16,7 @@ class FormularioOrientador extends moodleform {
         
         $mform = $this->_form;         
         $modcontext = $this->_customdata['modcontext'];
-        
+        $condicao = $this->_customdata['condicao'];
         // -------------------- RESUMO -------------------------
         $mform->addElement('header', 'resumo_header', get_string('resumo','sepex'));
         $resumo = $this->_customdata['resumo'];
@@ -28,15 +28,19 @@ class FormularioOrientador extends moodleform {
         // -------------------- AVALIAÇÃO -------------------------
         $mform->addElement('header', 'avaliacao', get_string('avaliacao','sepex'));
         $radioarray=array();
-        $radioarray[] = $mform->createElement('radio', 'condicao', '', get_string('aprovado','sepex'), 0);
-        $radioarray[] = $mform->createElement('radio', 'condicao', '', get_string('reprovado','sepex'), 1);       
+        $radioarray[] = $mform->createElement('radio', 'condicao', '', get_string('aprovado','sepex'), 1);
+        $radioarray[] = $mform->createElement('radio', 'condicao', '', get_string('reprovado','sepex'), 0);       
         $mform->addGroup($radioarray, 'radioar', '', array(' '), false);
-        $mform->setDefault('condicao', 0);
-        
+        if($condicao){
+            $mform->setDefault('condicao',$this->_customdata['condicao']);
+        }else{
+            $mform->setDefault('condicao', 1);
+        }
         $mform->addElement('textarea', 'comentario', get_string("comentario", "sepex"), 'wrap="virtual" rows="5" cols="60"');
         $mform->addRule('comentario', get_string('comentario', 'sepex'), 'required', null, 'client');
         $mform->addHelpButton('comentario', 'comentario', 'sepex');
         $mform->setType('comentario', PARAM_RAW);
+        $mform->setDefault('comentario',$this->_customdata['comentario']);
         
         $this->add_action_buttons();
                 
