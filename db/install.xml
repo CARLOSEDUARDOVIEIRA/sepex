@@ -61,8 +61,7 @@
     <TABLE NAME="sepex_aluno" COMMENT="Tabela de alunos">
       <FIELDS>
         <FIELD NAME="matricula" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
-        <FIELD NAME="nome_aluno" TYPE="char" LENGTH="300" NOTNULL="true" COMMENT="Nome do aluno"/>
-        <FIELD NAME="id_projeto" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="codigo dos projetos de participacao do aluno"/>
+        <FIELD NAME="nome_aluno" TYPE="char" LENGTH="300" NOTNULL="true" COMMENT="Nome do aluno"/>        
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="matricula"/>

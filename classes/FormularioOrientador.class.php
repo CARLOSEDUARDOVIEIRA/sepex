@@ -17,6 +17,7 @@ class FormularioOrientador extends moodleform {
         $mform = $this->_form;         
         $modcontext = $this->_customdata['modcontext'];
         $condicao = $this->_customdata['condicao'];
+       
         // -------------------- RESUMO -------------------------
         $mform->addElement('header', 'resumo_header', get_string('resumo','sepex'));
         $resumo = $this->_customdata['resumo'];
@@ -31,7 +32,7 @@ class FormularioOrientador extends moodleform {
         $radioarray[] = $mform->createElement('radio', 'condicao', '', get_string('aprovado','sepex'), 1);
         $radioarray[] = $mform->createElement('radio', 'condicao', '', get_string('reprovado','sepex'), 0);       
         $mform->addGroup($radioarray, 'radioar', '', array(' '), false);
-        if($condicao){
+        if($condicao != null){
             $mform->setDefault('condicao',$this->_customdata['condicao']);
         }else{
             $mform->setDefault('condicao', 1);

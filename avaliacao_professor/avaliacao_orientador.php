@@ -60,11 +60,7 @@ echo $OUTPUT->box(format_string(''), 2);
     $header .= html_writer::end_tag('div');
     echo $header;
     
-    if($dados_orientador[$id_projeto]->obs_orientador != null){        
-        $mform = new FormularioOrientador("acao_orientador.php?id={$id}&data={$id_projeto}",array('modcontext' => $modcontext, 'resumo' => $projeto[$id_projeto]->resumo, 'condicao' => $dados_orientador[$id_projeto]->status_resumo, 'comentario' => $dados_orientador[$id_projeto]->obs_orientador));  
-    }else{
-        $mform = new FormularioOrientador("acao_orientador.php?id={$id}&data={$id_projeto}",array('modcontext' => $modcontext, 'resumo' => $projeto[$id_projeto]->resumo ));  
-    }
+    $mform = new FormularioOrientador("acao_orientador.php?id={$id}&data={$id_projeto}",array('modcontext' => $modcontext, 'resumo' => $projeto[$id_projeto]->resumo, 'condicao' => $dados_orientador[$id_projeto]->status_resumo, 'comentario' => $dados_orientador[$id_projeto]->obs_orientador));
     
     $mform->display(); 
     
