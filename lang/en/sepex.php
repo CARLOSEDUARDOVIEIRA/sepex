@@ -124,4 +124,66 @@ $string['comentario_help'] = 'Informar um feedback sobre a situação atribuida 
 $string['resumo_orientador_help'] = 'O campo de resumo do projeto permite que o orientador realize modificações no resumo original postado pelos alunos. O moodle não possui nenhum backup do resumo. É importante que ao editar o resumo insira o feedback no campo de observações para que tenha um registro das modificações realizadas.';
 $string['responsabilidade'] = 'RESPONSABILIDADE';
 $string['resumo_orientador'] = 'Avaliar resumo';
-$string['erro_professor'] = 'O segundo professor deve ser diferente do primeiro!';
+//-- Campos de avaliar resumo
+$string['criterio_resumo'] = 'Critério';
+$string['criterio_resumo_help'] = 'Campo help de critério de avaliação do resumo';
+$string['qualidade_resumo'] = 'Qualidade da redação e organização do texto';
+$string['qualidade_resumo_help'] = 'Campo help para Qualidade da redação e organização do texto';
+$string['objetivos_resumo'] = 'Objetivos claros';
+$string['objetivos_resumo_help'] = 'Campo help Objetivos claros';
+$string['metodologia_resumo'] = 'Descrição clara da metodologia';
+$string['metodologia_resumo_help'] = 'Campo help Descrição clara da metodologia';
+$string['resultados_resumo'] = 'Qualidade dos resultados';
+$string['resultados_resumo_help'] = 'Campo help Qualidade dos resultados';
+$string['conclusao_objetivos'] = 'Adequação da conclusão aos objetivos propostos';
+$string['conclusao_objetivos_help'] = 'Campo help Adequação da conclusão aos objetivos propostos';
+$string['total_resumo'] = 'Nota total resumo';
+//-- Campos de avaliar apressentação
+$string['header_apresentacao'] = 'Avaliar Apresentação';
+$string['criterio_apresentacao'] = 'Critério avaliação';
+$string['criterio_apresentacao_help'] = 'Campo help Critério avaliação';
+$string['exposicao_apresentacao'] = 'Exposição com clareza e objetividade';
+$string['exposicao_apresentacao_help'] = 'Campo help Exposição com clareza e objetividade';
+$string['tempo_apresentacao'] = 'Cumprimento do limite de tempo da apresentação (10 minutos)';
+$string['tempo_apresentacao_help'] = 'Campo help Cumprimento do limite de tempo da apresentação (10 minutos)';
+$string['conhecimento_apresentacao'] = 'Demonstração de segurança e conhecimento';
+$string['conhecimento_apresentacao_help'] = 'Campo help Demonstração de segurança e conhecimento';
+$string['relevancia_apresentacao'] = 'Capacidade de demonstrar a relevância do trabalho';
+$string['relevancia_apresentacao_help'] = 'Capacidade de demonstrar a relevância do trabalho';
+$string['interdisc_apresentacao'] = 'Percepção do aluno quanto à interdisciplinaridade';
+$string['interdisc_apresentacao_help'] = 'Campo help Percepção do aluno quanto à interdisciplinaridade';
+$string['valorizacao_apresentacao'] = 'Valorização dos conhecimentos teóricos frente ao desenvolvimento do trabalho';
+$string['valorizacao_apresentacao_help'] = 'Campo help Valorização dos conhecimentos teóricos frente ao desenvolvimento do trabalho';
+$string['viabilidade_apresentacao'] = 'Viabilidade do trabalho';
+$string['viabilidade_apresentacao_help'] = 'Campo help Viabilidade do trabalho';
+$string['total_apresentacao'] = 'Nota total apresentação';
+//--Campos de video
+$string['qualidade_video'] = 'Qualidade de finalização';
+$string['qualidade_video_help'] = 'Avaliar: edição, movimentos de câmera, efeitos e qualidade de som.';
+$string['originalidade_video'] = 'Originalidade';
+$string['originalidade_video_help'] = 'Campo help Originalidade';
+$string['coerencia_video'] = 'Coerência';
+$string['coerencia_video_help'] = 'Coerência entre sinopse (roteiro) e narrativa audio visual';
+//--Campos de fotos
+$string['adequacao_foto'] = 'Adequação da fotografia ao tema proposto';
+$string['adequacao_foto_help'] = 'Campo help de Adequação da fotografia ao tema proposto';
+$string['qualidade_foto'] = 'Qualidade da fotografia';
+$string['qualidade_foto_help'] = 'Campo help Qualidade da fotografia';
+$string['emocao_foto'] = 'Emoção captada pela foto';
+$string['emocao_foto_help'] = 'Campo help Emoção captada pela foto';
+$string['coerencia_foto'] = 'Coerência';
+$string['coerencia_foto_help'] = 'Coerência entre o tema proposto e o texto explicativo';
+
+//Constantes categoria.
+$string['egressos'] = 1;
+$string['estagios'] = 2;
+$string['iniciacao'] = 3;
+$string['inovacao'] = 4;
+$string['extensao'] = 5;
+$string['integrador'] = 6;
+$string['responsabilidade'] = 7;
+$string['temaslivres'] = 8;
+$string['tcc'] = 9;
+$string['video'] = 10;
+$string['fotografia'] = 11;            
+            

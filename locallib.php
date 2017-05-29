@@ -776,3 +776,48 @@ function listar_dados_avaliacao_orientador($id_projeto, $cod_professor){
             WHERE spp.id_projeto = ? AND spp.professor_cod_professor = ? AND spp.tipo = 'orientador'", array($id_projeto, $cod_professor));
     return $avaliacao_orientador;
 }
+
+
+function guardar_avaliacao_avaliador($dados,$id_projeto, $cod_professor){    
+    global $DB;
+    
+    $DB->execute("
+        INSERT INTO mdl_sepex_projeto_avaliacao spa
+        INNER JOIN mdl_sepex_projeto_professor spp
+        ON spa.id_projeto_professor = spp.id_projeto_professor
+            (spp.id_projeto_professor, spa.resumo1,spa.resumo2, spa.resumo3, spa.resumo4, spa.resumo5, spa.resumo6, spa.total_resumo,
+                spa.avaliacao1, spa.avaliacao2, spa.avaliacao3, spa.avaliacao4, spa.avaliacao5, spa.avaliacao6, spa.total_avaliacao) 
+        VALUES
+            (spp.id_projeto_professor,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        WHERE spp.id_projeto = {$id_projeto} AND professor_cod_professor = {$cod_professor} AND tipo = 'avaliador' ",
+        array($dados->resumo1, $dados->resumo1,$dados->resumo1,$dados->resumo1,$dados->resumo1,$dados->resumo1, $dados->total_resumo,
+              $dados->avaliacao1,$dados->avaliacao2,$dados->avaliacao3,$dados->avaliacao4,$dados->avaliacao5,$dados->avaliacao6,$dados->total_apresentacao));
+                        
+}
+
+function listar_dados_avaliacao_avaliador($id_projeto, $cod_professor){
+    global $DB;
+    
+    $avaliacao_avaliador = $DB->get_records_sql("
+        SELECT            
+            spp.id_projeto,            
+            spa.resumo1,
+            spa.resumo2,
+            spa.resumo3,
+            spa.resumo4,
+            spa.resumo5,
+            spa.resumo6,
+            spa.total_resumo,
+            spa.avaliacao1,
+            spa.avaliacao2,
+            spa.avaliacao3,
+            spa.avaliacao4,
+            spa.avaliacao5,
+            spa.avaliacao6,
+            spa.total_avaliacao
+            FROM mdl_sepex_projeto_professor spp
+            INNER JOIN mdl_sepex_projeto_avaliacao spa
+            ON spa.id_projeto_professor = spp.id_projeto_professor
+            WHERE spp.id_projeto = ? AND spp.professor_cod_professor = ? AND spp.tipo = 'avaliador'", array($id_projeto, $cod_professor));
+    return $avaliacao_avaliador;
+}
