@@ -54,9 +54,9 @@ $PAGE->set_heading($course->fullname);
     //VIEW          
    
     if(isset($dados_apresentacao[$id_projeto]->id_local_apresentacao)):
-        $mform = new FormularioDefinicaoProjeto("definicao_projeto.php?id={$id}&data={$id_projeto}&acao=1&are={$area}&tur={$turno}&cat={$categoria}", array('data_apresentacao'=>$dados_apresentacao[$id_projeto]->data_apresentacao, 'localapresentacao'=>$dados_apresentacao[$id_projeto]->id_local_apresentacao, 'avaliador'=>$avaliadores[0], 'avaliador2'=>$avaliadores[1],));          
+        $mform = new FormularioDefinicaoProjeto("definicao_projeto.php?id={$id}&data={$id_projeto}&acao=1&are={$area}&tur={$turno}&cat={$categoria}", array('data_apresentacao'=>$dados_apresentacao[$id_projeto]->data_apresentacao, 'localapresentacao'=>$dados_apresentacao[$id_projeto]->id_local_apresentacao, 'avaliador'=>$avaliadores[0], 'avaliador2'=>$avaliadores[1],'course'=> $cm->course));          
     else:        
-        $mform = new FormularioDefinicaoProjeto("definicao_projeto.php?id={$id}&data={$id_projeto}&are={$area}&tur={$turno}&cat={$categoria}");          
+        $mform = new FormularioDefinicaoProjeto("definicao_projeto.php?id={$id}&data={$id_projeto}&are={$area}&tur={$turno}&cat={$categoria}", array('course'=> $cm->course));          
     endif;    
         
     if(isset($_GET['acao'])){

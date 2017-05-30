@@ -69,8 +69,8 @@ if(isset($projeto[$id_projeto]->resumo)){
         print_r($dados_avaliacao);
     echo '</pre>';
 //if (!empty($add)) {
-//    $mform = new FormularioAvaliador("acao_avaliacao.php?id={$id}&data={$id_projeto}", array('cod_categoria' => $projeto[$id_projeto]->cod_categoria));
-//    $mform->display();
+    $mform = new FormularioAvaliador("acao_avaliacao.php?id={$id}&data={$id_projeto}", array('cod_categoria' => $projeto[$id_projeto]->cod_categoria));
+    $mform->display();
 //}else if (!empty($update)) {
 //    $mform = new FormularioAvaliador("acao_avaliacao.php?id={$id}&data={$id_projeto}", array('modcontext' => $modcontext, 'resumo' => $projeto[$id_projeto]->resumo));
 //

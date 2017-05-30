@@ -9,14 +9,26 @@
 require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 
-
 class Formulario extends moodleform {
     
     function definition() {
-        global $DB, $PAGE;
-        
+        global $DB, $PAGE;           
         $mform = $this->_form;         
+        $course = $this->_customdata['course'];
         $modcontext = $this->_customdata['modcontext'];
+        
+        if(isset($this->_customdata['modcontext'])){            
+            $mform->setDefault('cod_curso',$this->_customdata['cod_curso']);    
+            $mform->setDefault('periodo',$this->_customdata['cod_periodo']);
+            $mform->setDefault('turno',$this->_customdata['turno']);
+            $mform->setDefault('cod_categoria',$this->_customdata['cod_categoria']);
+            $mform->setDefault('titulo',$this->_customdata['titulo']);
+            $mform->setDefault('aluno_matricula',$this->_customdata['aluno_matricula']);
+            $resumo = $this->_customdata['resumo'];
+            $mform->setDefault('tags',$this->_customdata['tags']);
+            $mform->setDefault('aloca_mesa',$this->_customdata['aloca_mesa']);
+            $mform->setDefault('cod_professor',$this->_customdata['cod_professor']);
+        }
         
         //CURSO
         $cursos = array(
@@ -47,7 +59,7 @@ class Formulario extends moodleform {
         $mform->addRule('cod_curso', get_string('cursovazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('cod_curso', get_string('curso', 'sepex'), 'maxlength', 255, 'client');
         $mform->addHelpButton('cod_curso', 'curso', 'sepex');
-        $mform->setDefault('cod_curso',$this->_customdata['cod_curso']);
+        
         
         //PERIODO
         $periodos = array(
@@ -67,7 +79,7 @@ class Formulario extends moodleform {
         $mform->addRule('periodo', get_string('periodovazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('periodo', get_string('periodo', 'sepex', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('periodo', 'periodo', 'sepex');
-        $mform->setDefault('periodo',$this->_customdata['cod_periodo']);
+        
         
         //TURNO
          $turnos = array(
@@ -79,7 +91,7 @@ class Formulario extends moodleform {
         $mform->addRule('turno', get_string('turnovazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('turno', get_string('turno', 'sepex', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('turno', 'turno', 'sepex');
-        $mform->setDefault('turno',$this->_customdata['turno']);
+        
         
         //CATEGORIA
         $categorias = array(
@@ -101,7 +113,7 @@ class Formulario extends moodleform {
         $mform->addRule('cod_categoria',get_string('categoriavazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('cod_categoria', get_string('categoria', 'sepex', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('cod_categoria', 'categoria', 'sepex');
-        $mform->setDefault('cod_categoria',$this->_customdata['cod_categoria']);
+        
               
         //TITULO DO TRABALHO
         $mform->addElement('text', 'titulo', get_string('titulo', 'sepex'), array('size' => '64'));
@@ -109,14 +121,14 @@ class Formulario extends moodleform {
         $mform->addRule('titulo', get_string('titulovazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('titulo', get_string('titulo', 'sepex', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('titulo', 'titulo', 'sepex');
-        $mform->setDefault('titulo',$this->_customdata['titulo']);
+        
         
         //MATRICULA DO ALUNO                           
-        $procurarAlunos = $DB->get_records('sepex_aluno');
+        $student = 'student';
+        $alunos = listar_usuarios_por_curso($student,$course); 
         $nomes = array();
-
-        foreach($procurarAlunos as $procurarAlunos){
-            $nomes[$procurarAlunos->matricula] = $procurarAlunos->nome_aluno;
+        foreach($alunos as $procurarAlunos){
+            $nomes[$procurarAlunos->username] = $procurarAlunos->name;
         }
 
         $options = array(
@@ -127,27 +139,27 @@ class Formulario extends moodleform {
         $mform->addRule('aluno_matricula', get_string('integrantevazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('aluno_matricula', get_string('integrantes', 'sepex', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('aluno_matricula', 'integrantes', 'sepex');
-        $mform->setDefault('aluno_matricula',$this->_customdata['aluno_matricula']);
-        
+             
               
-        //ORIENTADOR        
-        $orientadores = $DB->get_records('sepex_professor');
+        //ORIENTADOR
+        $teacher = 'editingteacher';
+        $orientadores = listar_usuarios_por_curso($teacher,$course);        
         $professores = array(''=>'Escolher',);
         foreach($orientadores as $professor){
-            $professores[$professor->cod_professor] =  $professor->nome_professor;
+            $professores[$professor->username] =  $professor->name;
         }
-        
+     
         $mform->addElement('select', 'cod_professor', get_string('orientador', 'sepex'), $professores);
         $mform->addElement('select', 'cod_professor2', get_string('orientador2', 'sepex'), $professores);
         $mform->addRule('cod_professor', get_string('orientadorvazio', 'sepex'), 'required', null, 'client');
         $mform->addHelpButton('cod_professor', 'orientador', 'sepex');
-        $mform->setDefault('cod_professor',$this->_customdata['cod_professor']);
+        
         
         if(isset($this->_customdata['cod_professor2'])){
             $mform->setDefault('cod_professor2',$this->_customdata['cod_professor2']);
         }
         //RESUMO        
-        $resumo = $this->_customdata['resumo'];
+        
         $mform->addElement('editor', 'resumo', get_string('resumo', 'sepex'), null, array('context' => $modcontext))->setValue( array('text' => $resumo));        
         $mform->addRule('resumo', get_string('resumovazio', 'sepex'), 'required', null, 'client');
         $mform->addHelpButton('resumo', 'resumo', 'sepex');
@@ -159,7 +171,7 @@ class Formulario extends moodleform {
         $mform->addRule('tags', get_string('tagsvazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('tags', get_string('tags', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('tags', 'tags', 'sepex');
-        $mform->setDefault('tags',$this->_customdata['tags']);
+        
        
         //ALOCA MESA
         $mesa = array(
@@ -171,7 +183,7 @@ class Formulario extends moodleform {
         $mform->addRule('aloca_mesa', get_string('alocamesavazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('aloca_mesa', get_string('alocamesa', 'sepex', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('aloca_mesa', 'alocamesa', 'sepex');
-        $mform->setDefault('aloca_mesa',$this->_customdata['aloca_mesa']);
+        
         
         
         

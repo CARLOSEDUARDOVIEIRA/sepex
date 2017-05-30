@@ -15,6 +15,12 @@ class FormularioDefinicaoProjeto extends moodleform {
         global $DB, $PAGE;
         
         $mform = $this->_form;         
+        $course = $this->_customdata['course'];
+        if(isset($this->_customdata['localapresentacao'])){
+            $mform->setDefault('localapresentacao',$this->_customdata['localapresentacao']);
+            $mform->setDefault('avaliador', $this->_customdata['avaliador']);
+            $mform->setDefault('avaliador2', $this->_customdata['avaliador2']);
+        }
         
         
         // -------------------- DATA PARA APRESENTAÇÃO DO PROJETO -------------------------
@@ -34,22 +40,23 @@ class FormularioDefinicaoProjeto extends moodleform {
         $mform->addElement('select', 'localapresentacao', get_string('localapresentacao', 'sepex'), $locais_apresentacao);        
         $mform->addRule('localapresentacao', get_string('localapresentacaovazio', 'sepex'), 'required', null, 'client');        
         $mform->addHelpButton('localapresentacao', 'localapresentacao', 'sepex');
-        $mform->setDefault('localapresentacao',$this->_customdata['localapresentacao']);
+        
         
         
         //------------------------ SELEÇÃO AVALIADORES ------------------------------------
         $mform->addElement('header', 'avaliadores', get_string('avaliadores','sepex'));        
-        $avaliadores = $DB->get_records('sepex_professor');
+            
+        $teacher = 'editingteacher';
+        $avaliadores = listar_usuarios_por_curso($teacher,$course);        
         $professores = array(''=>'Escolher',);
         foreach($avaliadores as $professor){
-            $professores[$professor->cod_professor] =  $professor->nome_professor;
-        }        
+            $professores[$professor->username] =  $professor->name;
+        }
+        
         $mform->addElement('select', 'avaliador', get_string('avaliador', 'sepex'), $professores);        
         $mform->addElement('select', 'avaliador2', get_string('orientador2', 'sepex'), $professores);
         $mform->addRule('avaliador', get_string('avaliadorvazio', 'sepex'), 'required', null, 'client');        
-        $mform->addHelpButton('avaliador', 'avaliador', 'sepex');
-        $mform->setDefault('avaliador', $this->_customdata['avaliador']);
-        $mform->setDefault('avaliador2', $this->_customdata['avaliador2']);
+        $mform->addHelpButton('avaliador', 'avaliador', 'sepex');        
                            
         $this->add_action_buttons();
     }

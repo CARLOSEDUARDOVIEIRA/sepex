@@ -46,10 +46,7 @@ class FormularioAvaliador extends moodleform {
         }else{
             $placeresumo = '20 pontos';
         }
-        
-
-
-        
+                
         //CAMPOS DE AVALIAÇÃO DO RESUMO PELO AVALIADOR
         $mform->addElement('header', 'resumo_orientador', get_string('resumo','sepex'),array('size' => '15'));               
              
@@ -89,6 +86,23 @@ class FormularioAvaliador extends moodleform {
             $mform->setType('resumo6', PARAM_RAW);
         }
         //CAMPOS DE AVALIAÇÃO DA APRESENTAÇÃO PELO AVALIADOR
+        
+       
+
+        $n = listar_nome_alunos(1);
+        $nomes = explode(", ", $n);
+        echo '<pre>';
+        print_r($nomes);
+        echo '</pre>';
+                
+        $typeitem = array();
+        foreach ($nomes as $key => $value) {
+            $typeitem[] = &$mform->createElement('advcheckbox', $key, '', $value, array('name' => $key, 'group' => 1), $key);
+            $mform->setDefault("nomes[$key]", true);
+        }
+        $mform->addGroup($typeitem, 'nomes', get_string('alunos_presentes'));
+        $this->add_checkbox_controller(1);
+        
         
         $mform->addElement('header', 'header_apresentacao', get_string('header_apresentacao','sepex'));                        
         if($cod_categoria != $video && $cod_categoria != $fotografia){

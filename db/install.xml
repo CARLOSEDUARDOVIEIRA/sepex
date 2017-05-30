@@ -73,6 +73,7 @@
         <FIELD NAME="id_aluno_projeto" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>  
         <FIELD NAME="aluno_matricula" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" />
         <FIELD NAME="id_projeto" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="presenca" TYPE="int" LENGTH="10" NOTNULL="true"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id_aluno_projeto"/>

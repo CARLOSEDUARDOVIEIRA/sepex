@@ -99,9 +99,7 @@ echo $OUTPUT->header();
             echo $OUTPUT->heading(format_string('Organização sepex'), 2);
             echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
             viewGerente($id);
-        }
-        
-        
+        }               
     }
 //Fim da página
     echo $OUTPUT->footer();

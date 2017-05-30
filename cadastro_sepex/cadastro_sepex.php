@@ -55,7 +55,7 @@ define('VIEW_URL_LINK', "../view.php?id=" . $id);
 
 //    //INSTANCIAÇÃO DO OBJETO FORMULÁRIO - Obtendo o id do projeto via get
     if (!empty($add)) {
-        $mform = new Formulario("cadastro_sepex.php?id={$id}&add=1");        
+        $mform = new Formulario("cadastro_sepex.php?id={$id}&add=1", array('course'=> $cm->course));        
          
         if($dados = $mform->get_data()):        
             $codigo = criarCodigo($dados);
@@ -75,9 +75,9 @@ define('VIEW_URL_LINK', "../view.php?id=" . $id);
         
         //Instanciação de um novo formulario passando como parametro: (destino_formulario, array(informe aqui os campos e os valores dos campos)        
         if(isset($professores[1])){
-            $mform = new Formulario("cadastro_sepex.php?id={$id}&update=1&data={$id_projeto}&cod={$projeto[$id_projeto]->cod_projeto}&p={$professores[0]}&p2={$professores[1]}", array('modcontext'=>$modcontext, 'cod_curso'=>$projeto[$id_projeto]->curso_cod_curso,'titulo' => $projeto[$id_projeto]->titulo, 'resumo' => $projeto[$id_projeto]->resumo, 'tags' => $projeto[$id_projeto]->tags, 'aloca_mesa' => $projeto[$id_projeto]->aloca_mesa, 'cod_periodo' => $projeto[$id_projeto]->cod_periodo, 'turno' => $projeto[$id_projeto]->turno, 'cod_categoria' => $projeto[$id_projeto]->cod_categoria, 'aluno_matricula' => $alunos, 'cod_professor'=> $professores[0],'cod_professor2'=> $professores[1] ));
+            $mform = new Formulario("cadastro_sepex.php?id={$id}&update=1&data={$id_projeto}&cod={$projeto[$id_projeto]->cod_projeto}&p={$professores[0]}&p2={$professores[1]}", array('modcontext'=>$modcontext, 'cod_curso'=>$projeto[$id_projeto]->curso_cod_curso,'titulo' => $projeto[$id_projeto]->titulo, 'resumo' => $projeto[$id_projeto]->resumo, 'tags' => $projeto[$id_projeto]->tags, 'aloca_mesa' => $projeto[$id_projeto]->aloca_mesa, 'cod_periodo' => $projeto[$id_projeto]->cod_periodo, 'turno' => $projeto[$id_projeto]->turno, 'cod_categoria' => $projeto[$id_projeto]->cod_categoria, 'aluno_matricula' => $alunos, 'cod_professor'=> $professores[0],'cod_professor2'=> $professores[1], 'course'=> $cm->course));
         }else{
-            $mform = new Formulario("cadastro_sepex.php?id={$id}&update=1&data={$id_projeto}&cod={$projeto[$id_projeto]->cod_projeto}&p={$professores[0]}&p2=0", array('modcontext'=>$modcontext, 'cod_curso'=>$projeto[$id_projeto]->curso_cod_curso,'titulo' => $projeto[$id_projeto]->titulo, 'resumo' => $projeto[$id_projeto]->resumo, 'tags' => $projeto[$id_projeto]->tags, 'aloca_mesa' => $projeto[$id_projeto]->aloca_mesa, 'cod_periodo' => $projeto[$id_projeto]->cod_periodo, 'turno' => $projeto[$id_projeto]->turno, 'cod_categoria' => $projeto[$id_projeto]->cod_categoria, 'aluno_matricula' => $alunos, 'cod_professor'=> $professores[0]));
+            $mform = new Formulario("cadastro_sepex.php?id={$id}&update=1&data={$id_projeto}&cod={$projeto[$id_projeto]->cod_projeto}&p={$professores[0]}&p2=0", array('modcontext'=>$modcontext, 'cod_curso'=>$projeto[$id_projeto]->curso_cod_curso,'titulo' => $projeto[$id_projeto]->titulo, 'resumo' => $projeto[$id_projeto]->resumo, 'tags' => $projeto[$id_projeto]->tags, 'aloca_mesa' => $projeto[$id_projeto]->aloca_mesa, 'cod_periodo' => $projeto[$id_projeto]->cod_periodo, 'turno' => $projeto[$id_projeto]->turno, 'cod_categoria' => $projeto[$id_projeto]->cod_categoria, 'aluno_matricula' => $alunos, 'cod_professor'=> $professores[0], 'course'=> $cm->course));
         }
         
         if($dados = $mform->get_data()):        
@@ -87,7 +87,6 @@ define('VIEW_URL_LINK', "../view.php?id=" . $id);
             exibir_formulario_inscricao($sepex,$cm,$mform);
         endif;        
     }
-
 
 
  

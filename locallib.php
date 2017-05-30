@@ -333,7 +333,7 @@ function listar_projetos_aluno($usuario,$id){
                     echo '<th>'.get_string('envio', 'sepex').'</th>';
                     echo '<th>'.get_string('local', 'sepex').'</th>';
                     echo '<th>'.get_string('apresentacao', 'sepex').'</th>';
-                    echo '<th>'.get_string('editar', 'sepex').'</th>';
+                    echo '<th>'.strtoupper(get_string('editar', 'sepex')).'</th>';
                     echo '<th>'.get_string('apagar', 'sepex').'</th>';
                 echo '</tr>';
             echo '</thead>';
@@ -541,21 +541,43 @@ function listar_professor_por_id_projeto($id_projeto,$tipo){
 function listar_nome_professores($id_projeto, $tipo){
     global $DB;         
     $resultado = $DB->get_records_sql("
-           SELECT
-                spp.professor_cod_professor,
-                spr.nome_professor  
-                FROM mdl_sepex_projeto sp
-                INNER JOIN mdl_sepex_projeto_professor spp ON spp.id_projeto = sp.id_projeto
-                INNER JOIN mdl_sepex_professor spr ON spr.cod_professor = spp.professor_cod_professor
-                WHERE sp.id_projeto = {$id_projeto} AND spp.tipo = '{$tipo}'", array($id_projeto,$tipo));    
+           SELECT                
+                u.username,
+                CONCAT(u.firstname,' ',u.lastname) as name                
+                FROM mdl_course c
+                INNER JOIN mdl_context ct ON ct.instanceid = c.id
+                INNER JOIN mdl_role_assignments ra ON ra.contextid = ct.id
+                INNER JOIN mdl_user u ON u.id = ra.userid
+                INNER JOIN mdl_role r on r.id = ra.roleid
+                INNER JOIN mdl_sepex_projeto_professor spp
+                ON spp.professor_cod_professor = u.username
+                INNER JOIN mdl_sepex_projeto sp ON sp.id_projeto = spp.id_projeto
+                WHERE ct.contextlevel = 50 AND c.id = 4509 AND r.shortname = 'editingteacher'                                                                                    
+                AND sp.id_projeto = {$id_projeto} AND spp.tipo = '{$tipo}'");    
      
     $orientadores = array();    
     foreach($resultado as $orientador){                
-        array_push($orientadores, $orientador->nome_professor);                
+        array_push($orientadores, $orientador->name);                
     }     
     $orientador = implode(", ", $orientadores);
     return $orientador;
 }
+
+function listar_usuarios_por_curso($user,$course){
+    global $DB;
+    $professores = $DB->get_records_sql("
+        SELECT
+            u.username,
+            CONCAT(u.firstname,' ',u.lastname) as name            
+            FROM mdl_course c
+            INNER JOIN mdl_context ct ON ct.instanceid = c.id
+            INNER JOIN mdl_role_assignments ra ON ra.contextid = ct.id
+            INNER JOIN mdl_user u ON u.id = ra.userid
+            INNER JOIN mdl_role r on r.id = ra.roleid
+            WHERE ct.contextlevel = 50 AND c.id = {$course} AND r.shortname = '{$user}'");
+    return $professores; 
+}
+
 
 
 
@@ -821,3 +843,17 @@ function listar_dados_avaliacao_avaliador($id_projeto, $cod_professor){
             WHERE spp.id_projeto = ? AND spp.professor_cod_professor = ? AND spp.tipo = 'avaliador'", array($id_projeto, $cod_professor));
     return $avaliacao_avaliador;
 }
+
+
+//function listar_nome_alunos($id_projeto){
+//        global $DB;     
+//    $alunos_projeto = $DB->get_records_sql("
+//        SELECT            
+//            sp.id_projeto,
+//            sap.matricula,
+//            spp.aluno_matricula
+//            FROM mdl_sepex_projeto_professor spp            
+//            WHERE spp.id_projeto = ? AND spp.professor_cod_professor = ? AND spp.tipo = 'orientador'", array($id_projeto, $cod_professor));
+//    return $alunos_projeto;
+//     
+//}
