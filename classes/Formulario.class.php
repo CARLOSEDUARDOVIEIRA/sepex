@@ -124,22 +124,11 @@ class Formulario extends moodleform {
         
         
         //MATRICULA DO ALUNO                           
-        $student = 'student';
-        $alunos = listar_usuarios_por_curso($student,$course); 
-        $nomes = array();
-        foreach($alunos as $procurarAlunos){
-            $nomes[$procurarAlunos->username] = $procurarAlunos->name;
-        }
-
-        $options = array(
-            'multiple' => true            
-        );
-        $mform->addElement('autocomplete', 'aluno_matricula', get_string('integrantes', 'sepex'), $nomes, $options);
+        $mform->addElement('text', 'aluno_matricula', get_string('integrantes', 'sepex'), array('size' => '64'));
         $mform->setType('aluno_matricula', PARAM_RAW);
         $mform->addRule('aluno_matricula', get_string('integrantevazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('aluno_matricula', get_string('integrantes', 'sepex', 255), 'maxlength', 255, 'client');
-        $mform->addHelpButton('aluno_matricula', 'integrantes', 'sepex');
-             
+        $mform->addHelpButton('aluno_matricula', 'integrantes', 'sepex');                     
               
         //ORIENTADOR
         $teacher = 'editingteacher';

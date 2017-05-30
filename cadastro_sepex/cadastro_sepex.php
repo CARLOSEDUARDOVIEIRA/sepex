@@ -81,7 +81,7 @@ define('VIEW_URL_LINK', "../view.php?id=" . $id);
         }
         
         if($dados = $mform->get_data()):        
-            atualizar_projeto($dados,$id_projeto, $orientador1,$orientador2);
+            atualizar_projeto($dados,$id_projeto, $orientador1,$orientador2, $USER);
             header("Location:". VIEW_URL_LINK);            
         else:
             exibir_formulario_inscricao($sepex,$cm,$mform);

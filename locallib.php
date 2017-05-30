@@ -139,12 +139,20 @@ function guardar_projeto($dados, $codigo, $USER)
     $curso->curso_cod_curso = $dados->cod_curso;
     $curso->projeto_id_projeto = $id;
     $DB->insert_record("sepex_projeto_curso", $curso);
+    //FUNÇÕES MODIFICADAS DEVIDO O MOODLE SE DESATUALIZADO.
+    $principal = new stdClass();
+    $principal->aluno_matricula = $USER->username;
+    $principal->id_projeto = $id;
+    $DB->insert_record("sepex_aluno_projeto", $principal);
     
-    $alunos = new stdClass();  
-    foreach($dados->aluno_matricula as $aluno){
-        $alunos->aluno_matricula = $aluno;
-        $alunos->id_projeto = $id;
-        $DB->insert_record("sepex_aluno_projeto", $alunos);
+    $aluno = new stdClass();
+    $alunos = explode(";",$dados->aluno_matricula);    
+    foreach($alunos as $i){
+        if($i != $USER->username){
+            $aluno->aluno_matricula = $i;
+            $aluno->id_projeto = $id;
+            $DB->insert_record("sepex_aluno_projeto", $aluno);
+        }
     }
     
     
@@ -176,7 +184,7 @@ function guardar_professor($id,$cod_professor,$tipo){
  * @param type $codigo
  * @param type $id_projeto
  */
-function atualizar_projeto($dados,$id_projeto, $orientador1,$orientador2)
+function atualizar_projeto($dados,$id_projeto, $orientador1,$orientador2, $USER)
 {
     global $DB;
     
@@ -202,11 +210,19 @@ function atualizar_projeto($dados,$id_projeto, $orientador1,$orientador2)
                 WHERE sp.id_projeto = {$id_projeto} ",array($novo_codigo, $dados->titulo, $dados->resumo[text], $dataAtual, $dados->tags, $dados->periodo, $dados->turno, $area, $dados->aloca_mesa, $dados->cod_categoria, $dados->cod_curso ));
     
     $DB->delete_records('sepex_aluno_projeto', array("id_projeto" => $id_projeto));   
-    $alunos = new stdClass();  
-    foreach($dados->aluno_matricula as $aluno){
-        $alunos->aluno_matricula = $aluno;
-        $alunos->id_projeto = $id_projeto;
-        $DB->insert_record("sepex_aluno_projeto", $alunos);
+    $principal = new stdClass();
+    $principal->aluno_matricula = $USER->username;
+    $principal->id_projeto = $id_projeto;
+    $DB->insert_record("sepex_aluno_projeto", $principal);
+    
+    $aluno = new stdClass();
+    $alunos = explode(";",$dados->aluno_matricula);    
+    foreach($alunos as $i){
+        if($i != $USER->username){
+            $aluno->aluno_matricula = $i;
+            $aluno->id_projeto = $id_projeto;
+            $DB->insert_record("sepex_aluno_projeto", $aluno);
+        }
     }
     
     $tipo = 'orientador';
@@ -612,16 +628,14 @@ function retorna_categoria($cod_categoria){
  * @return type string
  */
 function listar_matricula_alunos_por_id_projeto($id_projeto){
-    global $DB;
-
-    $query = $DB->get_records("sepex_aluno_projeto", array("id_projeto" => $id_projeto));
-
+  global $DB;         
+    $query = $DB->get_records("sepex_aluno_projeto",array("id_projeto" => $id_projeto));        
     $alunos = array();
     foreach($query as $aluno){
-        $alunos[$aluno->id_aluno_projeto] = $aluno->aluno_matricula;
-    }
-
-    return $alunos;
+            $alunos[$aluno->id_aluno_projeto] =  $aluno->aluno_matricula;
+    }     
+    $resultado =  implode(";", $alunos);        
+    return $resultado;
 }
 /** Listar codigo dos professores por id projeto.
  * @global type $DB
