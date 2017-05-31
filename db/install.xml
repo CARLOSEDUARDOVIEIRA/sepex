@@ -73,7 +73,7 @@
         <FIELD NAME="id_aluno_projeto" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>  
         <FIELD NAME="aluno_matricula" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" />
         <FIELD NAME="id_projeto" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="presenca" TYPE="int" LENGTH="10" NOTNULL="false"/>
+        <FIELD NAME="presenca" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id_aluno_projeto"/>
@@ -140,8 +140,7 @@
         <FIELD NAME="resumo2" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
         <FIELD NAME="resumo3" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
         <FIELD NAME="resumo4" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="resumo5" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="resumo6" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
+        <FIELD NAME="resumo5" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>        
         <FIELD NAME="total_resumo" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
         <FIELD NAME="avaliacao1" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
         <FIELD NAME="avaliacao2" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>

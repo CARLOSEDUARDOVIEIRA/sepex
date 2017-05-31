@@ -148,7 +148,7 @@ function guardar_projeto($dados, $codigo, $USER)
     $aluno = new stdClass();
     $alunos = explode(";",$dados->aluno_matricula);    
     foreach($alunos as $i){
-        if($i != $USER->username){
+        if($i != $USER->username && is_numeric($i)){
             $aluno->aluno_matricula = $i;
             $aluno->id_projeto = $id;
             $DB->insert_record("sepex_aluno_projeto", $aluno);
@@ -218,7 +218,7 @@ function atualizar_projeto($dados,$id_projeto, $orientador1,$orientador2, $USER)
     $aluno = new stdClass();
     $alunos = explode(";",$dados->aluno_matricula);    
     foreach($alunos as $i){
-        if($i != $USER->username){
+        if($i != $USER->username && is_numeric($i)){
             $aluno->aluno_matricula = $i;
             $aluno->id_projeto = $id_projeto;
             $DB->insert_record("sepex_aluno_projeto", $aluno);
@@ -226,11 +226,11 @@ function atualizar_projeto($dados,$id_projeto, $orientador1,$orientador2, $USER)
     }
     
     $tipo = 'orientador';
-    if($orientador1 != $dados->cod_professor){
+    if($orientador1 != $dados->cod_professor && $dados->cod_professor != $dados->cod_professor2){
         atualizar_professor_orientador($id_projeto,$tipo, $orientador1, $dados->cod_professor);
     }    
     
-    if($orientador2 == 0 && $dados->cod_professor2 != $dados->cod_professor && $dados->cod_professor2 != null && $dados->cod_professor2 != ''){
+    if($orientador2 == null && $dados->cod_professor2 != $dados->cod_professor && $dados->cod_professor2 != null && $dados->cod_professor2 != ''){
         guardar_professor($id_projeto,$dados->cod_professor2,$tipo);        
     }elseif($orientador2 != $dados->cod_professor2 && $dados->cod_professor2 != '' && $dados->cod_professor2 != $dados->cod_professor){
         atualizar_professor_orientador($id_projeto,$tipo, $orientador2, $dados->cod_professor2);        
@@ -817,18 +817,47 @@ function listar_dados_avaliacao_orientador($id_projeto, $cod_professor){
 function guardar_avaliacao_avaliador($dados,$id_projeto, $cod_professor){    
     global $DB;
     
-    $DB->execute("
-        INSERT INTO mdl_sepex_projeto_avaliacao spa
-        INNER JOIN mdl_sepex_projeto_professor spp
-        ON spa.id_projeto_professor = spp.id_projeto_professor
-            (spp.id_projeto_professor, spa.resumo1,spa.resumo2, spa.resumo3, spa.resumo4, spa.resumo5, spa.resumo6, spa.total_resumo,
-                spa.avaliacao1, spa.avaliacao2, spa.avaliacao3, spa.avaliacao4, spa.avaliacao5, spa.avaliacao6, spa.total_avaliacao) 
-        VALUES
-            (spp.id_projeto_professor,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-        WHERE spp.id_projeto = {$id_projeto} AND professor_cod_professor = {$cod_professor} AND tipo = 'avaliador' ",
-        array($dados->resumo1, $dados->resumo1,$dados->resumo1,$dados->resumo1,$dados->resumo1,$dados->resumo1, $dados->total_resumo,
-              $dados->avaliacao1,$dados->avaliacao2,$dados->avaliacao3,$dados->avaliacao4,$dados->avaliacao5,$dados->avaliacao6,$dados->total_apresentacao));
+$id = $DB->get_records_sql("
+    SELECT
+	id_projeto,	  		
+	id_projeto_professor		
+	FROM mdl_sepex_projeto_professor            
+	WHERE id_projeto = ? AND professor_cod_professor = ? AND tipo = 'avaliador'", array($id_projeto, $cod_professor));  
+    
+    $avaliacao = new stdClass();
+    $avaliacao->id_projeto_professor = $id[$id_projeto]->id_projeto_professor;
+    $avaliacao->resumo1 = $dados->resumo1;
+    $avaliacao->resumo2 = $dados->resumo2;
+    $avaliacao->resumo3 = $dados->resumo3;
+    $avaliacao->resumo4 = $dados->resumo4;
+    $avaliacao->resumo5 = $dados->resumo5;
+    $avaliacao->resumo6 = $dados->resumo6;
+    $total_resumo = $dados->resumo1 + $dados->resumo2 + $dados->resumo3 + $dados->resumo4 +$dados->resumo5 + $dados->resumo6;
+    $avaliacao->total_resumo = $total_resumo;
+    $avaliacao->avaliacao1 = $dados->apresentacao1;
+    $avaliacao->avaliacao2 = $dados->apresentacao2;
+    $avaliacao->avaliacao3 = $dados->apresentacao3;
+    $avaliacao->avaliacao4 = $dados->apresentacao4;
+    $avaliacao->avaliacao5 = $dados->apresentacao5;
+    $avaliacao->avaliacao6 = $dados->apresentacao6;
+    $total_avaliacao = $dados->apresentacao1 + $dados->apresentacao2 + $dados->apresentacao3 + $dados->apresentacao4 +$dados->apresentacao5 + $dados->apresentacao6;
+       
+    $avaliacao->total_avaliacao = $total_avaliacao;
+    $DB->insert_record("sepex_projeto_avaliacao", $avaliacao);
+
+    $dados_avaliacao = listar_dados_avaliacao_avaliador($id_projeto, $cod_professor);
+echo '<pre>';
+//print_r($id[$id_projeto]->id_projeto_professor);
+    print_r($dados);
+    print_r($dados_avaliacao);
+echo '</pre>';
+//    
                         
+}
+function guardar_presenca_aluno($dados,$id_projeto){
+    global $DB;
+    
+    
 }
 
 function listar_dados_avaliacao_avaliador($id_projeto, $cod_professor){
@@ -836,7 +865,8 @@ function listar_dados_avaliacao_avaliador($id_projeto, $cod_professor){
     
     $avaliacao_avaliador = $DB->get_records_sql("
         SELECT            
-            spp.id_projeto,            
+            spp.id_projeto,
+            spa.id_projeto_professor,
             spa.resumo1,
             spa.resumo2,
             spa.resumo3,
@@ -858,16 +888,15 @@ function listar_dados_avaliacao_avaliador($id_projeto, $cod_professor){
     return $avaliacao_avaliador;
 }
 
+function listar_nome_alunos($id_projeto){
+        global $DB;     
+    $alunos_projeto = $DB->get_records_sql("
+        SELECT
+            u.username,
+            CONCAT(u.firstname,' ',u.lastname) as name            
+            FROM mdl_sepex_aluno_projeto sap                        
+            INNER JOIN mdl_user u ON u.username = sap.aluno_matricula            
+            WHERE sap.id_projeto = {$id_projeto}");        
 
-//function listar_nome_alunos($id_projeto){
-//        global $DB;     
-//    $alunos_projeto = $DB->get_records_sql("
-//        SELECT            
-//            sp.id_projeto,
-//            sap.matricula,
-//            spp.aluno_matricula
-//            FROM mdl_sepex_projeto_professor spp            
-//            WHERE spp.id_projeto = ? AND spp.professor_cod_professor = ? AND spp.tipo = 'orientador'", array($id_projeto, $cod_professor));
-//    return $alunos_projeto;
-//     
-//}
+    return $alunos_projeto;    
+}

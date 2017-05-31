@@ -9,7 +9,13 @@
  */
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 require_once('../locallib.php');
-require_once ('../classes/FormularioAvaliador.class.php');
+require_once ('../classes/formularios_avaliacoes/Estagio.class.php');
+require_once ('../classes/formularios_avaliacoes/Fotografia.class.php');
+require_once ('../classes/formularios_avaliacoes/Inovacao.class.php');
+require_once ('../classes/formularios_avaliacoes/Integrador.class.php');
+require_once ('../classes/formularios_avaliacoes/Video.class.php');
+require_once ('../classes/formularios_avaliacoes/OutrasCategorias.class.php');
+require_once ('../classes/formularios_avaliacoes/TCC.class.php');
 
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
@@ -39,42 +45,67 @@ $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();         
 echo $OUTPUT->heading(format_string('AVALIAR APRESENTAÇÃO DO PROJETO'), 2);
 echo $OUTPUT->box(format_string(''), 2);  
+//--Constantes
+    $egresos = get_string('egressos', 'sepex');
+    $estagios = get_string('estagios', 'sepex');
+    $iniciacao = get_string('iniciacao', 'sepex');
+    $inovacao = get_string('inovacao', 'sepex');
+    $extensao = get_string('extensao', 'sepex');
+    $integrador = get_string('integrador', 'sepex');        
+    $temaslivres = get_string('temaslivres', 'sepex');        
+    $video = get_string('video', 'sepex');
+    $fotografia = get_string('fotografia', 'sepex');
+    $responsabilidade = get_string('responsabilidadesocial', 'sepex');
+    $tcc = get_string('tcc', 'sepex');
+    
+    if (!empty($id_projeto)) {    
+        $projeto = listar_projeto_por_id($id_projeto);        
+        $tipo = 'orientador';
+        $orientadores = listar_nome_professores($id_projeto, $tipo);
+    }
+    //View header of page
+    $header = html_writer::start_tag('div', array('style' => 'margin-bottom:5%;'));
+    $header .= html_writer::start_tag('h5', array('class' => 'page-header'));
+    $header .= $projeto[$id_projeto]->cod_projeto . ' - ' . $projeto[$id_projeto]->titulo;
+    $header .= html_writer::end_tag('h5');
+    $header .= '<b>' . get_string('curso', 'sepex') . '</b>' . ': ' . $projeto[$id_projeto]->curso_cod_curso . '</br>';
+    $header .= '<b>' . get_string('turno', 'sepex') . '</b>' . ': ' . $projeto[$id_projeto]->turno . '</br>';
+    $header .= '<b>' . get_string('orientadores', 'sepex') . '</b>' . ': ' . $orientadores;
+    $header .= html_writer::end_tag('div');
+    echo $header;
+    if(isset($projeto[$id_projeto]->resumo)){
+        $resumo = html_writer::start_tag('div', array('style' => 'margin-left:5%; margin-right:10%;text-align:justify;'));
+        $resumo .= html_writer::start_tag('p').$projeto[$id_projeto]->resumo.html_writer::end_tag('p');
+        $resumo .= html_writer::end_tag('div');
+        echo $resumo;
+    }
 
-//CHAMADA MODEL       
-if (!empty($id_projeto)) {    
-    $projeto = listar_projeto_por_id($id_projeto);
-    $tipo = 'orientador';
-    $orientadores = listar_nome_professores($id_projeto, $tipo);
-}
-
-
-//View header of page
-$header = html_writer::start_tag('div', array('style' => 'margin-bottom:5%;'));
-$header .= html_writer::start_tag('h5', array('class' => 'page-header'));
-$header .= $projeto[$id_projeto]->cod_projeto . ' - ' . $projeto[$id_projeto]->titulo;
-$header .= html_writer::end_tag('h5');
-$header .= '<b>' . get_string('curso', 'sepex') . '</b>' . ': ' . $projeto[$id_projeto]->curso_cod_curso . '</br>';
-$header .= '<b>' . get_string('turno', 'sepex') . '</b>' . ': ' . $projeto[$id_projeto]->turno . '</br>';
-$header .= '<b>' . get_string('orientadores', 'sepex') . '</b>' . ': ' . $orientadores;
-$header .= html_writer::end_tag('div');
-echo $header;
-if(isset($projeto[$id_projeto]->resumo)){
-    $resumo = html_writer::start_tag('div', array('style' => 'margin-left:5%; margin-right:10%;text-align:justify;'));
-    $resumo .= html_writer::start_tag('p').$projeto[$id_projeto]->resumo.html_writer::end_tag('p');
-    $resumo .= html_writer::end_tag('div');
-    echo $resumo;
-}
-    $dados_avaliacao = listar_dados_avaliacao_avaliador($id_projeto, $USER->username);
-    echo '<pre>';
-        print_r($dados_avaliacao);
-    echo '</pre>';
-//if (!empty($add)) {
-    $mform = new FormularioAvaliador("acao_avaliacao.php?id={$id}&data={$id_projeto}", array('cod_categoria' => $projeto[$id_projeto]->cod_categoria));
+    if($projeto[$id_projeto]->cod_categoria == $integrador){                    
+        $mform = new Integrador("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
+    }
+    elseif($projeto[$id_projeto]->cod_categoria == $estagios){                    
+        $mform = new Estagio("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
+    }
+    elseif($projeto[$id_projeto]->cod_categoria == $fotografia){                    
+        $mform = new Fotografia("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
+    }
+    elseif($projeto[$id_projeto]->cod_categoria == $inovacao){                    
+        $mform = new Inovacao("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
+    }
+    elseif($projeto[$id_projeto]->cod_categoria == $video){                    
+        $mform = new Video("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
+    }
+    elseif($projeto[$id_projeto]->cod_categoria == $egresos || $projeto[$id_projeto]->cod_categoria == $iniciacao || $projeto[$id_projeto]->cod_categoria == $extensao || $projeto[$id_projeto]->cod_categoria == $temaslivres){
+        $mform = new OutrasCategorias("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));
+    }
+    elseif($projeto[$id_projeto]->cod_categoria == $tcc || $projeto[$id_projeto]->cod_categoria == $responsabilidade){
+        $mform = new TCC("acao_avaliacao.php?id={$id}&data={$id_projeto}");
+    }
+    
     $mform->display();
-//}else if (!empty($update)) {
-//    $mform = new FormularioAvaliador("acao_avaliacao.php?id={$id}&data={$id_projeto}", array('modcontext' => $modcontext, 'resumo' => $projeto[$id_projeto]->resumo));
-//
-//}
+    $dados_avaliacao = listar_dados_avaliacao_avaliador($id_projeto, $USER->username);
+
+    
 
 
 
