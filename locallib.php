@@ -401,6 +401,55 @@ function listar_projetos_aluno($usuario,$id){
     endif;
     
 }
+
+function listar_projetos_aluno_apresentacao($usuario,$id){
+    
+    $resultado = select_projetos_aluno($usuario);       
+    if($resultado !=null || $resultado != ''):
+        //Caso o moodle tenha o plugin módulo use o css dele através da classe forumheaderlist
+        echo '<table class="forumheaderlist table table-striped">';
+            echo '<thead>';
+                echo '<tr>';
+                    echo '<th>'.get_string('cod_projeto', 'sepex').'</th>';
+                    echo '<th>'.get_string('titulo_projeto', 'sepex').'</th>';                    
+                    echo '<th>'.get_string('categoria_projeto', 'sepex').'</th>';
+                    echo '<th>'.get_string('envio', 'sepex').'</th>';
+                    echo '<th>'.get_string('informacao_projeto', 'sepex').'</th>';
+                echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+            foreach($resultado as $projeto){                
+                echo '<tr>';
+                    echo'<td><a>'.$projeto->cod_projeto.'</a></td>';
+                    
+                    $titulo  = html_writer::start_tag('td');
+                    $titulo .= html_writer::start_tag('a', array('href'=> './projeto_aluno/view.php?id='.$id.'&data='.$projeto->id_projeto,));
+                    $titulo .= $projeto->titulo;
+                    $titulo .= html_writer::end_tag('a'); 
+                    $titulo .= html_writer::end_tag('td'); 
+                    echo $titulo;
+                    
+                    $categoria = retorna_categoria($projeto->cod_categoria);
+                   
+                    echo'<td><a>'.$categoria[$projeto->cod_categoria]->nome_categoria.'</a></td>';
+                    
+                    echo'<td><a>'.$projeto->data_cadastro.'</a></td>';
+                    
+                    $link  = html_writer::start_tag('td');
+                    $link .= html_writer::start_tag('a', array('href'=> './projeto_aluno/view.php?id='.$id.'&data='.$projeto->id_projeto,));
+                    $link .= get_string('visualizar', 'sepex');
+                    $link .= html_writer::end_tag('a'); 
+                    $link .= html_writer::end_tag('td'); 
+                    echo $link;
+                                    
+                echo '</tr>';
+            }
+            echo '</tbody>';
+        echo '</table>';
+    endif;
+    
+}
+
 function header_projetos_professor(){
     echo '<table class="forumheaderlist table table-striped">';
         echo '<thead>';           
@@ -593,8 +642,6 @@ function listar_usuarios_por_curso($user,$course){
             WHERE ct.contextlevel = 50 AND c.id = {$course} AND r.shortname = '{$user}'");
     return $professores; 
 }
-
-
 
 
 /**
@@ -793,10 +840,11 @@ function guardar_avaliacao_orientador($dados,$id_projeto, $cod_professor){
         INNER JOIN mdl_sepex_projeto_professor spp
         ON sp.id_projeto = spp.id_projeto
         SET sp.resumo = ?,
-        spp.status_resumo = ?, 
+        sp.tags = ?,
+        spp.status_resumo = ?,        
         spp.obs_orientador = ?,
         spp.data_avaliacao = ?
-        WHERE sp.id_projeto = {$id_projeto} AND professor_cod_professor = {$cod_professor} AND tipo = 'orientador' ",array($dados->resumo[text], $dados->condicao, $dados->comentario, $dataAtual));
+        WHERE sp.id_projeto = {$id_projeto} AND professor_cod_professor = {$cod_professor} AND tipo = 'orientador' ",array($dados->resumo[text],$dados->tags, $dados->condicao, $dados->comentario, $dataAtual));
                         
 }
 
@@ -817,12 +865,31 @@ function listar_dados_avaliacao_orientador($id_projeto, $cod_professor){
 function guardar_avaliacao_avaliador($dados,$id_projeto, $cod_professor){    
     global $DB;
     
-$id = $DB->get_records_sql("
-    SELECT
-	id_projeto,	  		
-	id_projeto_professor		
-	FROM mdl_sepex_projeto_professor            
-	WHERE id_projeto = ? AND professor_cod_professor = ? AND tipo = 'avaliador'", array($id_projeto, $cod_professor));  
+    $id = $DB->get_records_sql("
+        SELECT
+            id_projeto,	  		
+            id_projeto_professor		
+            FROM mdl_sepex_projeto_professor            
+            WHERE id_projeto = ? AND professor_cod_professor = ? AND tipo = 'avaliador'", array($id_projeto, $cod_professor));  
+    
+    if($dados->apresentacao1 == ''){
+        $dados->apresentacao1 = NULL;
+    }
+    if($dados->apresentacao2 == ''){
+        $dados->apresentacao2 = NULL;
+    }
+    if($dados->apresentacao3 == ''){
+        $dados->apresentacao3 = NULL;
+    }
+    if($dados->apresentacao4 == ''){
+        $dados->apresentacao4 = NULL;
+    }
+    if($dados->apresentacao5 == ''){
+        $dados->apresentacao5 = NULL;
+    }
+    if($dados->apresentacao6 == ''){
+        $dados->apresentacao6 = NULL;
+    } 
     
     $avaliacao = new stdClass();
     $avaliacao->id_projeto_professor = $id[$id_projeto]->id_projeto_professor;
@@ -830,9 +897,8 @@ $id = $DB->get_records_sql("
     $avaliacao->resumo2 = $dados->resumo2;
     $avaliacao->resumo3 = $dados->resumo3;
     $avaliacao->resumo4 = $dados->resumo4;
-    $avaliacao->resumo5 = $dados->resumo5;
-    $avaliacao->resumo6 = $dados->resumo6;
-    $total_resumo = $dados->resumo1 + $dados->resumo2 + $dados->resumo3 + $dados->resumo4 +$dados->resumo5 + $dados->resumo6;
+    $avaliacao->resumo5 = $dados->resumo5;    
+    $total_resumo = $dados->resumo1 + $dados->resumo2 + $dados->resumo3 + $dados->resumo4 +$dados->resumo5;
     $avaliacao->total_resumo = $total_resumo;
     $avaliacao->avaliacao1 = $dados->apresentacao1;
     $avaliacao->avaliacao2 = $dados->apresentacao2;
@@ -844,19 +910,66 @@ $id = $DB->get_records_sql("
        
     $avaliacao->total_avaliacao = $total_avaliacao;
     $DB->insert_record("sepex_projeto_avaliacao", $avaliacao);
-
-    $dados_avaliacao = listar_dados_avaliacao_avaliador($id_projeto, $cod_professor);
-echo '<pre>';
-//print_r($id[$id_projeto]->id_projeto_professor);
-    print_r($dados);
-    print_r($dados_avaliacao);
-echo '</pre>';
-//    
-                        
 }
-function guardar_presenca_aluno($dados,$id_projeto){
+
+function atualizar_avaliacao_avaliador($dados,$id){
     global $DB;
     
+    $total_resumo = $dados->resumo1 + $dados->resumo2 + $dados->resumo3 + $dados->resumo4 +$dados->resumo5;
+    $total_avaliacao = $dados->apresentacao1 + $dados->apresentacao2 + $dados->apresentacao3 + $dados->apresentacao4 +$dados->apresentacao5 + $dados->apresentacao6;
+    if($dados->apresentacao1 == ''){
+        $dados->apresentacao1 = NULL;
+    }
+    if($dados->apresentacao2 == ''){
+        $dados->apresentacao2 = NULL;
+    }
+    if($dados->apresentacao3 == ''){
+        $dados->apresentacao3 = NULL;
+    }
+    if($dados->apresentacao4 == ''){
+        $dados->apresentacao4 = NULL;
+    }
+    if($dados->apresentacao5 == ''){
+        $dados->apresentacao5 = NULL;
+    }
+    if($dados->apresentacao6 == ''){
+        $dados->apresentacao6 = NULL;
+    }         
+    
+    $DB->execute("
+            UPDATE mdl_sepex_projeto_avaliacao               
+            SET resumo1 = ?,
+            resumo2 = ?,
+            resumo3 = ?,
+            resumo4 = ?,
+            resumo5 = ?,            
+            total_resumo = ?,
+            avaliacao1 = null,
+            avaliacao2 = ?,
+            avaliacao3 = ?,
+            avaliacao4 = ?,
+            avaliacao5 = ?,
+            avaliacao6 = ?,
+            total_avaliacao = ?
+            WHERE id_projeto_professor = {$id}",array($dados->resumo1,$dados->resumo2,$dados->resumo3,
+                                                       $dados->resumo4,$dados->resumo5,$total_resumo,
+                                                       $dados->apresentacao1, $dados->apresentacao2, $dados->apresentacao3,
+                                                       $dados->apresentacao4, $dados->apresentacao5, $dados->apresentacao6,
+                                                       $total_avaliacao
+                                                ));                        
+    
+}
+
+
+function guardar_presenca_aluno($dados,$id_projeto){
+    global $DB;           
+    
+    foreach($dados->types as $indice => $aluno){                                
+        $DB->execute("
+            UPDATE mdl_sepex_aluno_projeto                
+                SET presenca = ?
+                WHERE id_projeto = {$id_projeto} AND aluno_matricula = {$indice}", array($aluno));                        
+    }    
     
 }
 
@@ -871,8 +984,7 @@ function listar_dados_avaliacao_avaliador($id_projeto, $cod_professor){
             spa.resumo2,
             spa.resumo3,
             spa.resumo4,
-            spa.resumo5,
-            spa.resumo6,
+            spa.resumo5,            
             spa.total_resumo,
             spa.avaliacao1,
             spa.avaliacao2,
@@ -899,4 +1011,18 @@ function listar_nome_alunos($id_projeto){
             WHERE sap.id_projeto = {$id_projeto}");        
 
     return $alunos_projeto;    
+}
+
+function listar_presenca_aluno_matricula($id_projeto, $matricula){
+    global $DB;
+    
+    $alunos_presenca = $DB->get_records_sql("
+        SELECT
+            id_projeto,
+            aluno_matricula,
+            presenca
+            FROM mdl_sepex_aluno_projeto                                    
+            WHERE id_projeto = {$id_projeto} AND aluno_matricula = {$matricula}");        
+    return $alunos_presenca; 
+    
 }

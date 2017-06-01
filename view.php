@@ -61,9 +61,11 @@ $PAGE->set_title(format_string($sepex->name));
 $PAGE->set_heading(format_string($sepex->name));
 //A saída começa aqui.
 echo $OUTPUT->header();
+     
+    //-------------------------------- ALUNO                       
+    if (!has_capability('mod/sepex:openformulario', $context_course)) {
+        $showactivity = true;
 
-    $showactivity = true;
-  
         $timenow = time();
         if (!empty($sepex->timeavailablefrom) && $sepex->timeavailablefrom > $timenow) {
             echo $OUTPUT->notification(get_string('notopenyet', 'sepex', userdate($sepex->timeavailablefrom)));
@@ -72,12 +74,9 @@ echo $OUTPUT->header();
             echo $OUTPUT->notification(get_string('expired', 'sepex', userdate($sepex->timeavailableto)));
             $showactivity = false;
         }
-
-    if ($showactivity) {
-        //-------------------------------- ALUNO                       
-        if (!has_capability('mod/sepex:openformulario', $context_course)) {
-          //Se for aluno redireciono para o formulario.            
-            $usuario = $USER->username;
+        $usuario = $USER->username;
+        if ($showactivity) {
+            //Se for aluno redireciono para o formulario.                        
             listar_projetos_aluno($usuario, $id);
             if (isset($_POST['acao'])){
                 $acao =  htmlspecialchars($_POST['acao']);
@@ -88,18 +87,21 @@ echo $OUTPUT->header();
                 }
             }
         }
-        //-------------------------------- PROFESSOR
-        else if (has_capability('mod/sepex:openprofessor', $context_course)) {            
+        listar_projetos_aluno_apresentacao($usuario,$id);
+    }        
+    //-------------------------------- PROFESSOR
+    elseif (has_capability('mod/sepex:openprofessor', $context_course)) {            
             $usuario = $USER->username;
             listar_projetos_professor($usuario,$id);
-            
-        }
+
+    }
         //-------------------------------- GERENTE
-        else {
+    else {
             echo $OUTPUT->heading(format_string('Organização sepex'), 2);
             echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
             viewGerente($id);
-        }               
-    }
+    }       
+    
+    
 //Fim da página
     echo $OUTPUT->footer();

@@ -25,6 +25,13 @@ class FormularioOrientador extends moodleform {
         $mform->addHelpButton('resumo', 'resumo_orientador', 'sepex');
         $mform->setType('resumo', PARAM_RAW);
         
+         //---------------------TAGS--------------------------       
+        $mform->addElement('text', 'tags', get_string('tags', 'sepex'), array('size' => '64'));
+        $mform->setType('tags', PARAM_RAW);
+        $mform->addRule('tags', get_string('tagsvazio', 'sepex'), 'required', null, 'client');
+        $mform->addRule('tags', get_string('tags', '', 255), 'maxlength', 255, 'client');
+        $mform->addHelpButton('tags', 'tags', 'sepex');
+        $mform->setDefault('tags',$this->_customdata['tags']);
         
         // -------------------- AVALIAÇÃO -------------------------
         $mform->addElement('header', 'avaliacao', get_string('avaliacao','sepex'));

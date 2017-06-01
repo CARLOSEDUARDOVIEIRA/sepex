@@ -65,6 +65,7 @@ $PAGE->set_heading($course->fullname);
                         echo '<th>'.get_string('cod_projeto', 'sepex').'</th>';
                         echo '<th>'.get_string('titulo_projeto', 'sepex').'</th>';                    
                         echo '<th>'.get_string('orientadores', 'sepex').'</th>';
+                        echo '<th>'.strtoupper(get_string('avaliadores', 'sepex')).'</th>';
                         echo '<th>'.get_string('local', 'sepex').'</th>';
                         echo '<th>'.get_string('horario', 'sepex').'</th>';
                         echo '<th>'.'</th>';
@@ -83,7 +84,9 @@ $PAGE->set_heading($course->fullname);
                                 $titulo .= html_writer::end_tag('td'); 
                             echo $titulo;                            
                             $orientadores = listar_nome_professores($projeto->id_projeto, $tipo);
+                            $avaliadores = listar_nome_professores($projeto->id_projeto, 'avaliador');
                             echo'<td><a>'.$orientadores.'</a></td>';
+                            echo'<td><a>'.$avaliadores.'</a></td>';
                             if (isset($apresentacao[$projeto->id_projeto]->nome_local_apresentacao)){
                                 echo '<td>'.$apresentacao[$projeto->id_projeto]->nome_local_apresentacao.'</td>';
                                 echo '<td>'.date("d/m/Y H:i:s", $apresentacao[$projeto->id_projeto]->data_apresentacao).'</td>';                                

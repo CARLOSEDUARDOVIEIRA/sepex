@@ -21,6 +21,23 @@ class Estagio extends moodleform {
 
         $mform = $this->_form; 
         $id_projeto = $this->_customdata['id_projeto'];
+        if($this->_customdata['resumo1']){
+            $mform->setDefault('resumo1',$this->_customdata['resumo1']);
+            $mform->setDefault('resumo2',$this->_customdata['resumo2']);    
+            $mform->setDefault('resumo3',$this->_customdata['resumo3']);    
+            $mform->setDefault('resumo4',$this->_customdata['resumo4']);    
+            $mform->setDefault('resumo5',$this->_customdata['resumo5']);    
+            $mform->setDefault('total_resumo',$this->_customdata['total_resumo']);
+        }
+        if($this->_customdata['apresentacao1']){  
+            $mform->setDefault('apresentacao1',$this->_customdata['apresentacao1']);
+            $mform->setDefault('apresentacao2',$this->_customdata['apresentacao2']);
+            $mform->setDefault('apresentacao3',$this->_customdata['apresentacao3']);
+            $mform->setDefault('apresentacao4',$this->_customdata['apresentacao4']);
+            $mform->setDefault('apresentacao5',$this->_customdata['apresentacao5']);
+            $mform->setDefault('total_apresentacao',$this->_customdata['total_apresentacao']);
+        }
+        
         $placeholder = '20 pontos';
                 
         //CAMPOS DE AVALIAÇÃO DO RESUMO PELO AVALIADOR
@@ -29,7 +46,7 @@ class Estagio extends moodleform {
         //Qualidade da redação e organização do texto        
         $mform->addElement('text', 'resumo1', get_string('qualidade_resumo', 'sepex'), array('placeholder'=> '20 pontos', 'size' => '15'));
         $mform->addRule('resumo1', get_string('qualidade_resumo', 'sepex'), 'required', null, 'client');
-        $mform->addRule('resumo1', get_string('qualidade_resumo', 'sepex'), 'numeric', null, 'client');
+        $mform->addRule('resumo1', get_string('qualidade_resumo', 'sepex'), 'numeric', null, 'client');        
         $mform->addHelpButton('resumo1', 'qualidade_resumo', 'sepex');
         $mform->setType('resumo1', PARAM_RAW);
                 
@@ -74,8 +91,9 @@ class Estagio extends moodleform {
         }    
         $typeitem = array();
         foreach ($lista_aluno as $key => $value) {
-         $typeitem[] = &$mform->createElement('advcheckbox',$key, '', $value, array('name' => $key,'group'=>1), $key);
-         $mform->setDefault("types[$key]", false);
+            $aluno = listar_presenca_aluno_matricula($id_projeto, $key);                                    
+         $typeitem[] = &$mform->createElement('advcheckbox',$key, '', $value, array('name' => $key,'group'=>1), array(0,1));
+         $mform->setDefault("types[$key]", $aluno[$id_projeto]->presenca);         
         }
         $mform->addGroup($typeitem, 'types',get_string('presenca_integrantes','sepex'));
         $mform->addHelpButton('types', 'presenca_integrantes', 'sepex');

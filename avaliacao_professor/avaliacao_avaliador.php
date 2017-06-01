@@ -62,15 +62,17 @@ echo $OUTPUT->box(format_string(''), 2);
         $projeto = listar_projeto_por_id($id_projeto);        
         $tipo = 'orientador';
         $orientadores = listar_nome_professores($id_projeto, $tipo);
+        $categoria = retorna_categoria($projeto[$id_projeto]->cod_categoria);                                   
     }
     //View header of page
-    $header = html_writer::start_tag('div', array('style' => 'margin-bottom:5%;'));
-    $header .= html_writer::start_tag('h5', array('class' => 'page-header'));
-    $header .= $projeto[$id_projeto]->cod_projeto . ' - ' . $projeto[$id_projeto]->titulo;
+    $header  = html_writer::start_tag('div', array('style' => 'margin-bottom:5%;'));                                                     
+    $header .= html_writer::start_tag('h5', array('class'=>'page-header'));
+    $header.= $projeto[$id_projeto]->cod_projeto.' - '.$projeto[$id_projeto]->titulo;
     $header .= html_writer::end_tag('h5');
-    $header .= '<b>' . get_string('curso', 'sepex') . '</b>' . ': ' . $projeto[$id_projeto]->curso_cod_curso . '</br>';
-    $header .= '<b>' . get_string('turno', 'sepex') . '</b>' . ': ' . $projeto[$id_projeto]->turno . '</br>';
-    $header .= '<b>' . get_string('orientadores', 'sepex') . '</b>' . ': ' . $orientadores;
+    $header.= '<b>'.get_string('curso', 'sepex').'</b>'.': '.$projeto[$id_projeto]->curso_cod_curso.'</br>';
+    $header.= '<b>'.get_string('turno', 'sepex').'</b>'.': '.$projeto[$id_projeto]->turno.'</br>';
+    $header.= '<b>'.get_string('orientadores', 'sepex').'</b>'.': '.$orientadores.'</br>';
+    $header.= '<b>'.strtoupper(get_string('categoria', 'sepex')).'</b>'.': '.$categoria[$projeto[$id_projeto]->cod_categoria]->nome_categoria;
     $header .= html_writer::end_tag('div');
     echo $header;
     if(isset($projeto[$id_projeto]->resumo)){
@@ -78,36 +80,106 @@ echo $OUTPUT->box(format_string(''), 2);
         $resumo .= html_writer::start_tag('p').$projeto[$id_projeto]->resumo.html_writer::end_tag('p');
         $resumo .= html_writer::end_tag('div');
         echo $resumo;
+        echo '<p></br>'.'<b>'.get_string('palavra_chave', 'sepex').'</b>'.':  '.$projeto[$id_projeto]->tags.'</p>';
     }
-
+    
+    $dados_avaliacao = listar_dados_avaliacao_avaliador($id_projeto, $USER->username);
+     
     if($projeto[$id_projeto]->cod_categoria == $integrador){                    
-        $mform = new Integrador("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
+        $mform = new Integrador("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto,
+                                                                                       'resumo1' => $dados_avaliacao[$id_projeto]->resumo1,
+                                                                                       'resumo2' => $dados_avaliacao[$id_projeto]->resumo2,
+                                                                                       'resumo3' => $dados_avaliacao[$id_projeto]->resumo3,
+                                                                                       'resumo4' => $dados_avaliacao[$id_projeto]->resumo4,
+                                                                                       'resumo5' => $dados_avaliacao[$id_projeto]->resumo5,
+                                                                                       'total_resumo' => $dados_avaliacao[$id_projeto]->total_resumo,
+                                                                                       'apresentacao1' => $dados_avaliacao[$id_projeto]->avaliacao1,
+                                                                                       'apresentacao2' => $dados_avaliacao[$id_projeto]->avaliacao2,
+                                                                                       'apresentacao3' => $dados_avaliacao[$id_projeto]->avaliacao3,
+                                                                                       'apresentacao4' => $dados_avaliacao[$id_projeto]->avaliacao4,
+                                                                                       'apresentacao5' => $dados_avaliacao[$id_projeto]->avaliacao5,
+                                                                                       'total_apresentacao'=> $dados_avaliacao[$id_projeto]->total_avaliacao                                                                                                
+                                                                                     ));        
     }
     elseif($projeto[$id_projeto]->cod_categoria == $estagios){                    
-        $mform = new Estagio("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
+        $mform = new Estagio("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto,
+                                                                                    'resumo1' => $dados_avaliacao[$id_projeto]->resumo1,
+                                                                                    'resumo2' => $dados_avaliacao[$id_projeto]->resumo2,
+                                                                                    'resumo3' => $dados_avaliacao[$id_projeto]->resumo3,
+                                                                                    'resumo4' => $dados_avaliacao[$id_projeto]->resumo4,
+                                                                                    'resumo5' => $dados_avaliacao[$id_projeto]->resumo5,
+                                                                                    'total_resumo' => $dados_avaliacao[$id_projeto]->total_resumo,
+                                                                                    'apresentacao1' => $dados_avaliacao[$id_projeto]->avaliacao1,
+                                                                                    'apresentacao2' => $dados_avaliacao[$id_projeto]->avaliacao2,
+                                                                                    'apresentacao3' => $dados_avaliacao[$id_projeto]->avaliacao3,
+                                                                                    'apresentacao4' => $dados_avaliacao[$id_projeto]->avaliacao4,
+                                                                                    'apresentacao5' => $dados_avaliacao[$id_projeto]->avaliacao5,
+                                                                                    'total_apresentacao'=> $dados_avaliacao[$id_projeto]->total_avaliacao                                                                                                
+                                                                                 )); 
     }
     elseif($projeto[$id_projeto]->cod_categoria == $fotografia){                    
-        $mform = new Fotografia("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
+        $mform = new Fotografia("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto,                                                                                                                                                                       
+                                                                                    'apresentacao1' => $dados_avaliacao[$id_projeto]->avaliacao1,
+                                                                                    'apresentacao2' => $dados_avaliacao[$id_projeto]->avaliacao2,
+                                                                                    'apresentacao3' => $dados_avaliacao[$id_projeto]->avaliacao3,
+                                                                                    'apresentacao4' => $dados_avaliacao[$id_projeto]->avaliacao4,
+                                                                                    'apresentacao5' => $dados_avaliacao[$id_projeto]->avaliacao5,
+                                                                                    'apresentacao6' => $dados_avaliacao[$id_projeto]->avaliacao6,
+                                                                                    'total_apresentacao'=> $dados_avaliacao[$id_projeto]->total_avaliacao                                                                                                
+                                                                                 ));         
     }
     elseif($projeto[$id_projeto]->cod_categoria == $inovacao){                    
-        $mform = new Inovacao("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
+        $mform = new Inovacao("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto,
+                                                                                    'resumo1' => $dados_avaliacao[$id_projeto]->resumo1,
+                                                                                    'resumo2' => $dados_avaliacao[$id_projeto]->resumo2,
+                                                                                    'resumo3' => $dados_avaliacao[$id_projeto]->resumo3,
+                                                                                    'resumo4' => $dados_avaliacao[$id_projeto]->resumo4,
+                                                                                    'resumo5' => $dados_avaliacao[$id_projeto]->resumo5,
+                                                                                    'total_resumo' => $dados_avaliacao[$id_projeto]->total_resumo,
+                                                                                    'apresentacao1' => $dados_avaliacao[$id_projeto]->avaliacao1,
+                                                                                    'apresentacao2' => $dados_avaliacao[$id_projeto]->avaliacao2,
+                                                                                    'apresentacao3' => $dados_avaliacao[$id_projeto]->avaliacao3,
+                                                                                    'apresentacao4' => $dados_avaliacao[$id_projeto]->avaliacao4,
+                                                                                    'apresentacao5' => $dados_avaliacao[$id_projeto]->avaliacao5,
+                                                                                    'total_apresentacao'=> $dados_avaliacao[$id_projeto]->total_avaliacao                                                                                                
+                                                                                 ));        
     }
     elseif($projeto[$id_projeto]->cod_categoria == $video){                    
-        $mform = new Video("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
+        $mform = new Video("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto,                                                                                                                                                                       
+                                                                                    'apresentacao1' => $dados_avaliacao[$id_projeto]->avaliacao1,
+                                                                                    'apresentacao2' => $dados_avaliacao[$id_projeto]->avaliacao2,
+                                                                                    'apresentacao3' => $dados_avaliacao[$id_projeto]->avaliacao3,
+                                                                                    'apresentacao4' => $dados_avaliacao[$id_projeto]->avaliacao4,
+                                                                                    'apresentacao5' => $dados_avaliacao[$id_projeto]->avaliacao5,                                                                                    
+                                                                                    'total_apresentacao'=> $dados_avaliacao[$id_projeto]->total_avaliacao                                                                                                
+                                                                                 ));         
     }
     elseif($projeto[$id_projeto]->cod_categoria == $egresos || $projeto[$id_projeto]->cod_categoria == $iniciacao || $projeto[$id_projeto]->cod_categoria == $extensao || $projeto[$id_projeto]->cod_categoria == $temaslivres){
-        $mform = new OutrasCategorias("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));
+        $mform = new OutrasCategorias("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto,
+                                                                                    'resumo1' => $dados_avaliacao[$id_projeto]->resumo1,
+                                                                                    'resumo2' => $dados_avaliacao[$id_projeto]->resumo2,
+                                                                                    'resumo3' => $dados_avaliacao[$id_projeto]->resumo3,
+                                                                                    'resumo4' => $dados_avaliacao[$id_projeto]->resumo4,
+                                                                                    'resumo5' => $dados_avaliacao[$id_projeto]->resumo5,
+                                                                                    'total_resumo' => $dados_avaliacao[$id_projeto]->total_resumo,
+                                                                                    'apresentacao1' => $dados_avaliacao[$id_projeto]->avaliacao1,
+                                                                                    'apresentacao2' => $dados_avaliacao[$id_projeto]->avaliacao2,
+                                                                                    'apresentacao3' => $dados_avaliacao[$id_projeto]->avaliacao3,
+                                                                                    'apresentacao4' => $dados_avaliacao[$id_projeto]->avaliacao4,                                                                                    
+                                                                                    'total_apresentacao'=> $dados_avaliacao[$id_projeto]->total_avaliacao                                                                                                
+                                                                                 )); 
     }
     elseif($projeto[$id_projeto]->cod_categoria == $tcc || $projeto[$id_projeto]->cod_categoria == $responsabilidade){
-        $mform = new TCC("acao_avaliacao.php?id={$id}&data={$id_projeto}");
+        $mform = new TCC("acao_avaliacao.php?id={$id}&data={$id_projeto}",array(    'resumo1' => $dados_avaliacao[$id_projeto]->resumo1,
+                                                                                    'resumo2' => $dados_avaliacao[$id_projeto]->resumo2,
+                                                                                    'resumo3' => $dados_avaliacao[$id_projeto]->resumo3,
+                                                                                    'resumo4' => $dados_avaliacao[$id_projeto]->resumo4,
+                                                                                    'resumo5' => $dados_avaliacao[$id_projeto]->resumo5,
+                                                                                    'total_resumo' => $dados_avaliacao[$id_projeto]->total_resumo,                                                                                    
+                                                                                 )); 
     }
     
     $mform->display();
-    $dados_avaliacao = listar_dados_avaliacao_avaliador($id_projeto, $USER->username);
-
-    
-
-
 
 //Fim da página
 echo $OUTPUT->footer();

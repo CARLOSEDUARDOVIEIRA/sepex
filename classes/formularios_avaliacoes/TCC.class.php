@@ -19,8 +19,15 @@ class TCC extends moodleform {
     function definition() {
         global $DB, $PAGE;
 
-        $mform = $this->_form;        
-                
+        $mform = $this->_form;
+        if($this->_customdata['resumo1']){
+            $mform->setDefault('resumo1',$this->_customdata['resumo1']);
+            $mform->setDefault('resumo2',$this->_customdata['resumo2']);    
+            $mform->setDefault('resumo3',$this->_customdata['resumo3']);    
+            $mform->setDefault('resumo4',$this->_customdata['resumo4']);    
+            $mform->setDefault('resumo5',$this->_customdata['resumo5']);    
+            $mform->setDefault('total_resumo',$this->_customdata['total_resumo']);            
+        }
         //CAMPOS DE AVALIAÇÃO DO RESUMO PELO AVALIADOR
         $mform->addElement('header', 'resumo_orientador', get_string('resumo','sepex'),array('size' => '15'));               
              

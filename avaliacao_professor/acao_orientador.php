@@ -42,8 +42,5 @@ $context_course = context_course::instance($course -> id);
     elseif ($data = $mform->get_data()):
             guardar_avaliacao_orientador($data,$id_projeto, $USER->username);                      
             header("Location: ../view.php?id={$id}&data={$id_projeto}");        
-//            echo '<pre>';
-//            print_r($data);
-//            echo '<pre>';
     endif;
     

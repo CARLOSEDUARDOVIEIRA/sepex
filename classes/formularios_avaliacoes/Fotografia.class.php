@@ -21,6 +21,16 @@ class Fotografia extends moodleform {
 
         $mform = $this->_form;                                                      
         $id_projeto = $this->_customdata['id_projeto'];
+        if($this->_customdata['apresentacao1']){
+            $mform->setDefault('apresentacao1',$this->_customdata['apresentacao1']);
+            $mform->setDefault('apresentacao2',$this->_customdata['apresentacao2']);
+            $mform->setDefault('apresentacao3',$this->_customdata['apresentacao3']);
+            $mform->setDefault('apresentacao4',$this->_customdata['apresentacao4']);
+            $mform->setDefault('apresentacao5',$this->_customdata['apresentacao5']);
+            $mform->setDefault('apresentacao6',$this->_customdata['apresentacao6']);
+            $mform->setDefault('total_apresentacao',$this->_customdata['total_apresentacao']);                                                
+        }
+        
         $mform->addElement('header', 'header_apresentacao', get_string('header_apresentacao','sepex'));
         //CAMPOS DE ALUNOS POR PROJETO               
         $alunos = listar_nome_alunos($id_projeto);
@@ -30,8 +40,9 @@ class Fotografia extends moodleform {
         }    
         $typeitem = array();
         foreach ($lista_aluno as $key => $value) {
-         $typeitem[] = &$mform->createElement('advcheckbox',$key, '', $value, array('name' => $key,'group'=>1), $key);
-         $mform->setDefault("types[$key]", false);
+            $aluno = listar_presenca_aluno_matricula($id_projeto, $key);                                    
+         $typeitem[] = &$mform->createElement('advcheckbox',$key, '', $value, array('name' => $key,'group'=>1), array(0,1));
+         $mform->setDefault("types[$key]", $aluno[$id_projeto]->presenca);         
         }
         $mform->addGroup($typeitem, 'types',get_string('presenca_integrantes','sepex'));
         $mform->addHelpButton('types', 'presenca_integrantes', 'sepex');

@@ -57,21 +57,21 @@ $context_course = context_course::instance($course -> id);
     }
     
     if($projeto[$id_projeto]->cod_categoria == $integrador){    
-        $mform = new Integrador();    
+        $mform = new Integrador("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));    
     }elseif($projeto[$id_projeto]->cod_categoria == $estagios){                    
-            $mform = new Estagio();        
+            $mform = new Estagio("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
     }
     elseif($projeto[$id_projeto]->cod_categoria == $fotografia){                    
-            $mform = new Fotografia();        
+            $mform = new Fotografia("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
         }
     elseif($projeto[$id_projeto]->cod_categoria == $inovacao){                    
-            $mform = new Inovacao();        
+            $mform = new Inovacao("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
         }
     elseif($projeto[$id_projeto]->cod_categoria == $video){                    
-            $mform = new Video();        
+            $mform = new Video("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));        
     }
     elseif($projeto[$id_projeto]->cod_categoria == $egresos || $projeto[$id_projeto]->cod_categoria == $iniciacao || $projeto[$id_projeto]->cod_categoria == $extensao || $projeto[$id_projeto]->cod_categoria == $temaslivres){
-        $mform = new OutrasCategorias();
+        $mform = new OutrasCategorias("acao_avaliacao.php?id={$id}&data={$id_projeto}",array('id_projeto' => $id_projeto));
     }
     elseif($projeto[$id_projeto]->cod_categoria == $tcc || $projeto[$id_projeto]->cod_categoria == $responsabilidade){
         $mform = new TCC();
@@ -80,12 +80,15 @@ $context_course = context_course::instance($course -> id);
     if($mform->is_cancelled()):
         redirect("../view.php?id={$id}&data={$id_projeto}");
     elseif ($data = $mform->get_data()):
-        guardar_avaliacao_avaliador($data,$id_projeto, $USER->username);
+        $dados_avaliacao = listar_dados_avaliacao_avaliador($id_projeto, $USER->username);          
+        
+        if($dados_avaliacao){
+            atualizar_avaliacao_avaliador($data,$dados_avaliacao[$id_projeto]->id_projeto_professor);
+        }else{                      
+            guardar_avaliacao_avaliador($data,$id_projeto, $USER->username);                                                          
+        }
         guardar_presenca_aluno($data,$id_projeto);
-        //header("Location: ../view.php?id={$id}&data={$id_projeto}");        
-//        echo '<pre>';
-//            print_r($data);
-//        echo '<pre>';
+        header("Location: ../view.php?id={$id}&data={$id_projeto}"); 
     endif;
     
   

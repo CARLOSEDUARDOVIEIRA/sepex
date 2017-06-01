@@ -31,7 +31,7 @@ class FormularioDefinicaoProjeto extends moodleform {
         
                         
         // -------------------- LOCAL PARA APRESENTAÇÃO DO PROJETO -------------------------
-        $locais = $DB->get_records('sepex_local_apresentacao');        
+        $locais = $DB->get_records_sql('SELECT * FROM mdl_sepex_local_apresentacao ORDER BY nome_local_apresentacao');        
         $locais_apresentacao = array(''=>'Escolher',);
         foreach($locais as $local){                    
             $locais_apresentacao[$local->id_local_apresentacao] =  $local->nome_local_apresentacao;
