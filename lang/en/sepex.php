@@ -187,9 +187,9 @@ $string['tcc'] = 9;
 $string['video'] = 10;
 $string['fotografia'] = 11;
 
-$string['presenca_integrantes'] = 'Presença do Aluno na Apresentação';
+$string['presenca_integrantes'] = 'Marque aqui os alunos presentes na apresentação';
 $string['presenca_integrantes_help'] = 'Para afirmar a presença dos alunos na apresentação do projeto marque na caixa ao lado de cada nome.';
-$string['informacao_projeto'] = 'LOCAL DE APRESENTAÇÃO';
+$string['informacao_projeto'] = 'VISUALIZAR INFORMAÇÕES';
 $string['visualizar'] = 'Visualizar';
 $string['local_apresentacao'] = 'INFORMAÇÕES SOBRE APRESENTAÇÃO DO PROJETO';
 $string['aguardando_definicao'] = 'Aguardando definição';

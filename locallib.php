@@ -148,13 +148,12 @@ function guardar_projeto($dados, $codigo, $USER)
     $aluno = new stdClass();
     $alunos = explode(";",$dados->aluno_matricula);    
     foreach($alunos as $i){
-        if($i != $USER->username && is_numeric($i)){
+        if($i != $USER->username && is_numeric($i) && strlen($i) == 10){
             $aluno->aluno_matricula = $i;
             $aluno->id_projeto = $id;
             $DB->insert_record("sepex_aluno_projeto", $aluno);
         }
-    }
-    
+    }    
     
     $tipo='orientador';
     guardar_professor($id,$dados->cod_professor,$tipo);
@@ -218,7 +217,7 @@ function atualizar_projeto($dados,$id_projeto, $orientador1,$orientador2, $USER)
     $aluno = new stdClass();
     $alunos = explode(";",$dados->aluno_matricula);    
     foreach($alunos as $i){
-        if($i != $USER->username && is_numeric($i)){
+        if($i != $USER->username && is_numeric($i) && strlen($i) == 10){
             $aluno->aluno_matricula = $i;
             $aluno->id_projeto = $id_projeto;
             $DB->insert_record("sepex_aluno_projeto", $aluno);
@@ -226,14 +225,16 @@ function atualizar_projeto($dados,$id_projeto, $orientador1,$orientador2, $USER)
     }
     
     $tipo = 'orientador';
-    if($orientador1 != $dados->cod_professor && $dados->cod_professor != $dados->cod_professor2){
-        atualizar_professor_orientador($id_projeto,$tipo, $orientador1, $dados->cod_professor);
-    }    
-    
-    if($orientador2 == null && $dados->cod_professor2 != $dados->cod_professor && $dados->cod_professor2 != null && $dados->cod_professor2 != ''){
-        guardar_professor($id_projeto,$dados->cod_professor2,$tipo);        
-    }elseif($orientador2 != $dados->cod_professor2 && $dados->cod_professor2 != '' && $dados->cod_professor2 != $dados->cod_professor){
-        atualizar_professor_orientador($id_projeto,$tipo, $orientador2, $dados->cod_professor2);        
+    if($dados->cod_professor != $dados->cod_professor2){
+        if($dados->cod_professor != $orientador2){
+            atualizar_professor_orientador($id_projeto,$tipo, $orientador1, $dados->cod_professor);
+        }        
+        if($dados->cod_professor2 != '' && $dados->cod_professor2 != $orientador1 ){
+            atualizar_professor_orientador($id_projeto,$tipo, $orientador2, $dados->cod_professor2);        
+        }        
+        if($orientador2 == null && $dados->cod_professor2 != $dados->cod_professor && $dados->cod_professor2 != null && $dados->cod_professor2 != ''){
+            guardar_professor($id_projeto,$dados->cod_professor2,$tipo);        
+        }
     }
     if($orientador2 != null && $dados->cod_professor2 == ''){
         $DB->execute("
@@ -346,9 +347,7 @@ function listar_projetos_aluno($usuario,$id){
                     echo '<th>'.get_string('cod_projeto', 'sepex').'</th>';
                     echo '<th>'.get_string('titulo_projeto', 'sepex').'</th>';                    
                     echo '<th>'.get_string('categoria_projeto', 'sepex').'</th>';
-                    echo '<th>'.get_string('envio', 'sepex').'</th>';
-                    echo '<th>'.get_string('local', 'sepex').'</th>';
-                    echo '<th>'.get_string('apresentacao', 'sepex').'</th>';
+                    echo '<th>'.get_string('envio', 'sepex').'</th>';                    
                     echo '<th>'.strtoupper(get_string('editar', 'sepex')).'</th>';
                     echo '<th>'.get_string('apagar', 'sepex').'</th>';
                 echo '</tr>';
@@ -370,15 +369,7 @@ function listar_projetos_aluno($usuario,$id){
                    
                     echo'<td><a>'.$categoria[$projeto->cod_categoria]->nome_categoria.'</a></td>';
                     
-                    echo'<td><a>'.$projeto->data_cadastro.'</a></td>';
-                    
-                    if (isset($apresentacao[$projeto->id_projeto]->nome_local_apresentacao)){
-                            echo '<td>'.$apresentacao[$projeto->id_projeto]->nome_local_apresentacao.'</td>';
-                            echo '<td>'.date("d/m/Y H:i:s", $apresentacao[$projeto->id_projeto]->data_apresentacao).'</td>';                                
-                        }else{                                
-                        echo '<td>'.'</td>';
-                        echo '<td>'.'</td>';
-                    }
+                    echo'<td><a>'.$projeto->data_cadastro.'</a></td>';                                        
                             
                     $editar  = html_writer::start_tag('td');                                       
                     $editar .= html_writer::start_tag('a', array('id'=> 'btnEdit','href'=> './cadastro_sepex/cadastro_sepex.php?id='.$id.'&data='.$projeto->id_projeto.'&update=1',));
@@ -944,7 +935,7 @@ function atualizar_avaliacao_avaliador($dados,$id){
             resumo4 = ?,
             resumo5 = ?,            
             total_resumo = ?,
-            avaliacao1 = null,
+            avaliacao1 = ?,
             avaliacao2 = ?,
             avaliacao3 = ?,
             avaliacao4 = ?,

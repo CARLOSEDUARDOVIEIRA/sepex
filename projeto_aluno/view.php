@@ -75,14 +75,14 @@ echo $OUTPUT->box(format_string(''), 2);
         echo '<p></br>'.'<b>'.get_string('palavra_chave', 'sepex').'</b>'.':  '.$projeto[$id_projeto]->tags.'</p>';
     }
 
-    echo '<p>'.'</br></br>'.get_string('local_apresentacao', 'sepex').'</p></br>';
-                  
-    echo '<p>'.'<b>'.strtoupper(get_string('avaliadores', 'sepex')).'</b>'.': '.$avaliadores.'</p>';
+    echo '<p>'.'</br></br>'.get_string('local_apresentacao', 'sepex').'</p></br>';                      
     
     if (isset($apresentacao[$projeto[$id_projeto]->id_projeto]->nome_local_apresentacao)){
+        echo '<p>'.'<b>'.strtoupper(get_string('avaliadores', 'sepex')).'</b>'.': '.$avaliadores.'</p>';
         echo '<p>'.'<b>'.get_string('local', 'sepex').'</b>'.':  '.$apresentacao[$projeto[$id_projeto]->id_projeto]->nome_local_apresentacao.'</p>';
         echo '<p>'.'<b>'.get_string('apresentacao', 'sepex').'</b>'.':  '.date("d/m/Y H:i:s", $apresentacao[$projeto[$id_projeto]->id_projeto]->data_apresentacao).'</p>';                        
     }else{
+        echo '<p>'.'<b>'.strtoupper(get_string('avaliadores', 'sepex')).'</b>'.': '.get_string('aguardando_definicao', 'sepex').'</p>';
         echo '<p>'.'<b>'.get_string('local', 'sepex').'</b>'.':  '.get_string('aguardando_definicao', 'sepex').'</p>';
         echo '<p>'.'<b>'.get_string('apresentacao', 'sepex').'</b>'.':  '.get_string('aguardando_definicao', 'sepex').'</p>';                        
     }

@@ -86,8 +86,9 @@ echo $OUTPUT->header();
                     echo "<meta HTTP-EQUIV='refresh' CONTENT='0;URL=view.php?id=$id'>";
                 }
             }
+        }else{
+            listar_projetos_aluno_apresentacao($usuario,$id);
         }
-        listar_projetos_aluno_apresentacao($usuario,$id);
     }        
     //-------------------------------- PROFESSOR
     elseif (has_capability('mod/sepex:openprofessor', $context_course)) {            

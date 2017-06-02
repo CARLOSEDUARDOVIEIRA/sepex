@@ -62,7 +62,9 @@ echo $OUTPUT->box(format_string(''), 2);
         $projeto = listar_projeto_por_id($id_projeto);        
         $tipo = 'orientador';
         $orientadores = listar_nome_professores($id_projeto, $tipo);
-        $categoria = retorna_categoria($projeto[$id_projeto]->cod_categoria);                                   
+        $categoria = retorna_categoria($projeto[$id_projeto]->cod_categoria);
+        $avaliadores = listar_nome_professores($id_projeto, 'avaliador');
+        $apresentacao = obter_dados_apresentacao($projeto[$id_projeto]->id_projeto);
     }
     //View header of page
     $header  = html_writer::start_tag('div', array('style' => 'margin-bottom:5%;'));                                                     
@@ -75,6 +77,11 @@ echo $OUTPUT->box(format_string(''), 2);
     $header.= '<b>'.strtoupper(get_string('categoria', 'sepex')).'</b>'.': '.$categoria[$projeto[$id_projeto]->cod_categoria]->nome_categoria;
     $header .= html_writer::end_tag('div');
     echo $header;
+    
+    echo '<p>'.'<b>'.strtoupper(get_string('avaliadores', 'sepex')).'</b>'.': '.$avaliadores.'</p>';
+    echo '<p>'.'<b>'.get_string('local', 'sepex').'</b>'.':  '.$apresentacao[$projeto[$id_projeto]->id_projeto]->nome_local_apresentacao.'</p>';
+    echo '<p>'.'<b>'.get_string('apresentacao', 'sepex').'</b>'.':  '.date("d/m/Y H:i:s", $apresentacao[$projeto[$id_projeto]->id_projeto]->data_apresentacao).'</p></br>';                        
+    
     if(isset($projeto[$id_projeto]->resumo)){
         $resumo = html_writer::start_tag('div', array('style' => 'margin-left:5%; margin-right:10%;text-align:justify;'));
         $resumo .= html_writer::start_tag('p').$projeto[$id_projeto]->resumo.html_writer::end_tag('p');

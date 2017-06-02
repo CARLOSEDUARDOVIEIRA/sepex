@@ -135,20 +135,20 @@
     <TABLE NAME="sepex_projeto_avaliacao" COMMENT="Tabela de registro de avaliacoes ">
       <FIELDS>
         <FIELD NAME="id_projeto_avaliacao" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>  
-        <FIELD NAME="id_projeto_professor" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="resumo1" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="resumo2" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="resumo3" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="resumo4" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="resumo5" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>        
-        <FIELD NAME="total_resumo" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="avaliacao1" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="avaliacao2" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="avaliacao3" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="avaliacao4" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="avaliacao5" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="avaliacao6" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
-        <FIELD NAME="total_avaliacao" TYPE="float" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>                
+        <FIELD NAME="id_projeto_professor" TYPE="int" LENGTH="10" NOTNULL="true"/>        
+        <FIELD NAME="resumo1" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+        <FIELD NAME="resumo2" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+        <FIELD NAME="resumo3" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+        <FIELD NAME="resumo4" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+        <FIELD NAME="resumo5" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>        
+        <FIELD NAME="total_resumo" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+        <FIELD NAME="avaliacao1" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+        <FIELD NAME="avaliacao2" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+        <FIELD NAME="avaliacao3" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+        <FIELD NAME="avaliacao4" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+        <FIELD NAME="avaliacao5" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+        <FIELD NAME="avaliacao6" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+        <FIELD NAME="total_avaliacao" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>                
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id_projeto_avaliacao"/>
