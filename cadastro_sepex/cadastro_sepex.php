@@ -59,7 +59,7 @@ define('VIEW_URL_LINK', "../view.php?id=" . $id);
         if($dados = $mform->get_data()):        
             $codigo = criarCodigo($dados);
             guardar_projeto($dados,$codigo,$USER);
-//            enviar_email($USER, $dados);
+            enviar_email($USER, $dados);
             header("Location:". VIEW_URL_LINK);
         else:     
             exibir_formulario_inscricao($sepex,$cm,$mform);

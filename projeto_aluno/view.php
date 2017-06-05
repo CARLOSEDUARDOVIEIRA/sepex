@@ -75,10 +75,8 @@ echo $OUTPUT->box(format_string(''), 2);
                
         echo '<p></br>'.'<b>'.get_string('palavra_chave', 'sepex').'</b>'.':  '.$projeto[$id_projeto]->tags.'</p>';
     }
-
-    echo '<p>'.'</br></br>'.get_string('local_apresentacao', 'sepex').'</p></br>';                      
     
-    if($situacao[$id_projeto]->status_resumo != null){
+     if($situacao[$id_projeto]->status_resumo != null){
         if($situacao[$id_projeto]->status_resumo == 0):
             $status = 'Reprovado';
         elseif($situacao[$id_projeto]->status_resumo == 1):
@@ -90,6 +88,8 @@ echo $OUTPUT->box(format_string(''), 2);
         echo '<p>'.'<b>'.get_string('status_resumo', 'sepex').'</b>'.':  '.get_string('aguardando_definicao', 'sepex').'</p>';
         echo '<p>'.'<b>'.get_string('obs_orientador', 'sepex').'</b>'.':  '.get_string('aguardando_definicao', 'sepex').'</p>';
     }
+    
+    echo '<p>'.'</br></br>'.get_string('local_apresentacao', 'sepex').'</p></br>';                             
     
     if (isset($apresentacao[$projeto[$id_projeto]->id_projeto]->nome_local_apresentacao)){        
         echo '<p>'.'<b>'.strtoupper(get_string('avaliadores', 'sepex')).'</b>'.': '.$avaliadores.'</p>';
