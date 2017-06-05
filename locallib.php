@@ -157,9 +157,6 @@ function guardar_projeto($dados, $codigo, $USER)
     
     $tipo='orientador';
     guardar_professor($id,$dados->cod_professor,$tipo);
-    if($dados->cod_professor2!=0 && $dados->cod_professor2 != $dados->cod_professor){
-        guardar_professor($id,$dados->cod_professor2,$tipo);
-    }
 }
 /**Faz a gravação dos professores dos projetos
  * @global type $DB
@@ -183,7 +180,7 @@ function guardar_professor($id,$cod_professor,$tipo){
  * @param type $codigo
  * @param type $id_projeto
  */
-function atualizar_projeto($dados,$id_projeto, $orientador1,$orientador2, $USER)
+function atualizar_projeto($dados,$id_projeto, $orientador1, $USER)
 {
     global $DB;
     
@@ -225,24 +222,9 @@ function atualizar_projeto($dados,$id_projeto, $orientador1,$orientador2, $USER)
     }
     
     $tipo = 'orientador';
-    if($dados->cod_professor != $dados->cod_professor2){
-        if($dados->cod_professor != $orientador2){
-            atualizar_professor_orientador($id_projeto,$tipo, $orientador1, $dados->cod_professor);
-        }        
-        if($dados->cod_professor2 != '' && $dados->cod_professor2 != $orientador1 ){
-            atualizar_professor_orientador($id_projeto,$tipo, $orientador2, $dados->cod_professor2);        
-        }        
-        if($orientador2 == null && $dados->cod_professor2 != $dados->cod_professor && $dados->cod_professor2 != null && $dados->cod_professor2 != ''){
-            guardar_professor($id_projeto,$dados->cod_professor2,$tipo);        
-        }
-    }
-    if($orientador2 != null && $dados->cod_professor2 == ''){
-        $DB->execute("
-            DELETE FROM mdl_sepex_projeto_professor            
-                WHERE id_projeto = {$id_projeto} AND tipo = '{$tipo}' AND professor_cod_professor = {$orientador2}"); 
-    }
-    
-    
+    if($dados->cod_professor != $orientador1){      
+        atualizar_professor_orientador($id_projeto,$tipo, $orientador1, $dados->cod_professor);
+    }           
 }
 
 function atualizar_professor_orientador($id_projeto,$tipo, $prof_antigo, $prof_novo){
@@ -709,18 +691,28 @@ function viewGerente($id){
     echo $listarProjetos;    
 }
 
-function enviar_email($USER){
-    global $PAGE, $OUTPUT;
-    
+function enviar_email($USER, $dados) {
+    global $PAGE;
+    $date = new DateTime("now", core_date::get_user_timezone_object());
+    $dataAtual = userdate($date->getTimestamp());
     $nao_responda = core_user::get_noreply_user();
     $PAGE->navbar->add('email');
-    $titulo_email = 'Titulo do email - Provisório';
-    $corpo_email = 'Se você recebeu este email é porque sua tarefa TESTE SEPEX foi enviada com sucesso!';
-       
-    if(!$resultado = email_to_user($USER, $nao_responda, $titulo_email,$corpo_email)){
+    $categoria = retorna_categoria($dados->cod_categoria);    
+    $alunos = implode(";",$dados->aluno_matricula);          
+    $titulo_email = 'Confirmação de inscrição XIX SEPEX - UCV';      
+    $corpo_email = "Parabéns!\n"
+                ."Você inscreveu seu trabalho na XIX Semana de Ensino Pesquisa e Extensão - SEPEX"
+                ."\nA partir de agora você pode acompanhar o status do seu projeto pelo moodle."
+                ."\nCertifique-se de que a matrícula de todos os integrantes do seu grupo está"
+                ." correta e que todos estão vendo o projeto em sua pagina principal de inscrição SEPEX "                
+                ."\nIntegrantes: ".$alunos
+                ."\nTítulo do trabalho:"  . $dados->titulo
+                ."\nCategoria: "   . $categoria[$dados->cod_categoria]->nome_categoria                
+                ."\nData de inscrição: ". $dataAtual;
+
+    if (!$resultado = email_to_user($USER, $nao_responda, $titulo_email, $corpo_email)) {
         die("Erro no envio do email!");
     }
-    
 }
 
 function obter_dados_apresentacao($projeto){
@@ -1016,4 +1008,17 @@ function listar_presenca_aluno_matricula($id_projeto, $matricula){
             WHERE id_projeto = {$id_projeto} AND aluno_matricula = {$matricula}");        
     return $alunos_presenca; 
     
+}
+
+function listar_situacao_resumo($id_projeto){
+    global $DB;     
+    $situacao_projeto = $DB->get_records_sql("
+        SELECT
+            id_projeto,
+            status_resumo,
+            obs_orientador
+            FROM mdl_sepex_projeto_professor                                    
+            WHERE id_projeto = {$id_projeto} AND tipo = 'orientador'");        
+
+    return $situacao_projeto; 
 }

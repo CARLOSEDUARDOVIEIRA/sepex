@@ -45,7 +45,13 @@ echo $OUTPUT->box(format_string(''), 2);
         $id_projeto = htmlspecialchars($_GET['data']);
         $projeto = listar_projeto_por_id($id_projeto);
         $dados_orientador = listar_dados_avaliacao_orientador($id_projeto, $USER->username);
-        $categoria = retorna_categoria($projeto[$id_projeto]->cod_categoria);                                   
+        $categoria = retorna_categoria($projeto[$id_projeto]->cod_categoria); 
+        $alunos = listar_nome_alunos($id_projeto);
+        $integrantes = array();    
+        foreach($alunos as $aluno){                
+            array_push($integrantes, $aluno->name);                
+        }     
+        $lista_alunos = implode(", ", $integrantes);
     }
     $tipo = 'orientador';
     $orientadores = listar_nome_professores($id_projeto, $tipo);
@@ -55,6 +61,7 @@ echo $OUTPUT->box(format_string(''), 2);
         $header .= html_writer::start_tag('h5', array('class'=>'page-header'));
         $header.= $projeto[$id_projeto]->cod_projeto.' - '.$projeto[$id_projeto]->titulo;
         $header .= html_writer::end_tag('h5');
+        $header.= '<b>'.get_string('alunos_projeto', 'sepex').'</b>'.': '.$lista_alunos.'</br>';
         $header.= '<b>'.get_string('curso', 'sepex').'</b>'.': '.$projeto[$id_projeto]->curso_cod_curso.'</br>';
         $header.= '<b>'.get_string('turno', 'sepex').'</b>'.': '.$projeto[$id_projeto]->turno.'</br>';
         $header.= '<b>'.get_string('orientadores', 'sepex').'</b>'.': '.$orientadores.'</br>';

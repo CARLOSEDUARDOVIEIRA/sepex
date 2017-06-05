@@ -138,17 +138,11 @@ class Formulario extends moodleform {
             $professores[$professor->username] =  $professor->name;
         }
      
-        $mform->addElement('select', 'cod_professor', get_string('orientador', 'sepex'), $professores);
-        $mform->addElement('select', 'cod_professor2', get_string('orientador2', 'sepex'), $professores);
+        $mform->addElement('select', 'cod_professor', get_string('orientador', 'sepex'), $professores);        
         $mform->addRule('cod_professor', get_string('orientadorvazio', 'sepex'), 'required', null, 'client');
         $mform->addHelpButton('cod_professor', 'orientador', 'sepex');
         
-        
-        if(isset($this->_customdata['cod_professor2'])){
-            $mform->setDefault('cod_professor2',$this->_customdata['cod_professor2']);
-        }
-        //RESUMO        
-        
+        //RESUMO                
         $mform->addElement('editor', 'resumo', get_string('resumo', 'sepex'), null, array('context' => $modcontext))->setValue( array('text' => $resumo));        
         $mform->addRule('resumo', get_string('resumovazio', 'sepex'), 'required', null, 'client');
         $mform->addHelpButton('resumo', 'resumo', 'sepex');

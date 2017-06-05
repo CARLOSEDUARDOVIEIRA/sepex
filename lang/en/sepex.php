@@ -195,3 +195,5 @@ $string['local_apresentacao'] = 'INFORMAÇÕES SOBRE APRESENTAÇÃO DO PROJETO';
 $string['aguardando_definicao'] = 'Aguardando definição';
 $string['palavra_chave'] = 'Palavras Chave';
 $string['alunos_projeto'] = 'Aluno(s) integrante(s)';
+$string['status_resumo'] = 'Situação do resumo';
+$string['obs_orientador'] = 'Observações do orientador';

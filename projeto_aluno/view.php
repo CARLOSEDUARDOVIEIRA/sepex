@@ -52,6 +52,7 @@ echo $OUTPUT->box(format_string(''), 2);
             array_push($integrantes, $aluno->name);                
         }     
         $lista_alunos = implode(", ", $integrantes);
+        $situacao = listar_situacao_resumo($id_projeto);
         
     }
     //View header of page
@@ -77,7 +78,20 @@ echo $OUTPUT->box(format_string(''), 2);
 
     echo '<p>'.'</br></br>'.get_string('local_apresentacao', 'sepex').'</p></br>';                      
     
-    if (isset($apresentacao[$projeto[$id_projeto]->id_projeto]->nome_local_apresentacao)){
+    if($situacao[$id_projeto]->status_resumo != null){
+        if($situacao[$id_projeto]->status_resumo == 0):
+            $status = 'Reprovado';
+        elseif($situacao[$id_projeto]->status_resumo == 1):
+            $status = 'Aprovado';
+        endif;        
+        echo '<p>'.'<b>'.get_string('status_resumo', 'sepex').'</b>'.':  '.$status.'</p>';
+        echo '<p>'.'<b>'.get_string('obs_orientador', 'sepex').'</b>'.':  '.$situacao[$id_projeto]->obs_orientador.'</p>';
+    }else{                
+        echo '<p>'.'<b>'.get_string('status_resumo', 'sepex').'</b>'.':  '.get_string('aguardando_definicao', 'sepex').'</p>';
+        echo '<p>'.'<b>'.get_string('obs_orientador', 'sepex').'</b>'.':  '.get_string('aguardando_definicao', 'sepex').'</p>';
+    }
+    
+    if (isset($apresentacao[$projeto[$id_projeto]->id_projeto]->nome_local_apresentacao)){        
         echo '<p>'.'<b>'.strtoupper(get_string('avaliadores', 'sepex')).'</b>'.': '.$avaliadores.'</p>';
         echo '<p>'.'<b>'.get_string('local', 'sepex').'</b>'.':  '.$apresentacao[$projeto[$id_projeto]->id_projeto]->nome_local_apresentacao.'</p>';
         echo '<p>'.'<b>'.get_string('apresentacao', 'sepex').'</b>'.':  '.date("d/m/Y H:i:s", $apresentacao[$projeto[$id_projeto]->id_projeto]->data_apresentacao).'</p>';                        
