@@ -43,7 +43,7 @@ $string['pluginname'] = 'Sepex';
 $string['notopenyet'] = 'Aluno desculpe, esta atividade não está disponível até {$a}';
 $string['expired'] = 'Aluno desculpe, esta atividade encerrou para edição {$a} . Abaixo listaremos informações novas sobre local, hora de apresentação, resultado do seu resumo e feedback do seu orientador. Continue visitando esta página para ficar antenado sobre sua apresentação, até lá!';
 $string['integrantes'] = 'Matricula dos autor(es)/apresentador(es)';
-$string['integrantes_help'] = 'Digite a matricula dos integrantes do projeto e use ; "ponto e virgula" para separar as matriculas dos proximos alunos. É impressindível que a matricula esteja certa e digitada neste formato! Exemplo: 6914001025;6914001026;6914001027';
+$string['integrantes_help'] = 'Digite a matricula dos integrantes do projeto e use ; "ponto e virgula" para separar as matriculas dos proximos alunos. É imprescindível que a matricula esteja certa e digitada neste formato! Exemplo: 6914001025;6914001026;6914001027';
 $string['curso'] = 'Curso';
 $string['curso_help'] = 'Informe o curso em que estão matriculados os integrantes do projeto';
 $string['periodo'] = 'Período';
@@ -186,7 +186,7 @@ $string['temaslivres'] = 8;
 $string['tcc'] = 9;
 $string['video'] = 10;
 $string['fotografia'] = 11;
-
+//Definicao projeto aluno
 $string['presenca_integrantes'] = 'Marque aqui os alunos presentes na apresentação';
 $string['presenca_integrantes_help'] = 'Para afirmar a presença dos alunos na apresentação do projeto marque na caixa ao lado de cada nome.';
 $string['informacao_projeto'] = 'VISUALIZAR INFORMAÇÕES';
@@ -197,3 +197,11 @@ $string['palavra_chave'] = 'Palavras Chave';
 $string['alunos_projeto'] = 'Aluno(s) integrante(s)';
 $string['status_resumo'] = 'Situação do resumo';
 $string['obs_orientador'] = 'Observações do orientador';
+//Relatorios
+$string['solicita_mesa'] = 'SOLICITA MESA';
+$string['aluno_presente'] = 'Aluno presente';
+$string['projeto_nota'] = 'Projeto Com/Sem nota';
+$string['exibir_relatorios'] = 'Exibir Relatórios';
+$string['imprimir'] = 'IMPRIMIR';
+$string['situacao'] = 'SITUAÇÃO';
+$string['nao_avaliado'] = 'Não avaliado';

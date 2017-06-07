@@ -116,7 +116,7 @@ class Formulario extends moodleform {
         
               
         //TITULO DO TRABALHO
-        $mform->addElement('text', 'titulo', get_string('titulo', 'sepex'), array('size' => '64'));
+        $mform->addElement('text', 'titulo', get_string('titulo', 'sepex'), array('placeholder'=> 'Meu título de projeto SEPEX 2017','size' => '64'));
         $mform->setType('titulo', PARAM_RAW); 
         $mform->addRule('titulo', get_string('titulovazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('titulo', get_string('titulo', 'sepex', 255), 'maxlength', 255, 'client');
@@ -124,7 +124,7 @@ class Formulario extends moodleform {
         
         
         //MATRICULA DO ALUNO                           
-        $mform->addElement('text', 'aluno_matricula', get_string('integrantes', 'sepex'), array('size' => '64'));
+        $mform->addElement('text', 'aluno_matricula', get_string('integrantes', 'sepex'), array('placeholder'=> ' 6914001025;6914001026;6914001027', 'size' => '64'));
         $mform->setType('aluno_matricula', PARAM_RAW);
         $mform->addRule('aluno_matricula', get_string('integrantevazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('aluno_matricula', get_string('integrantes', 'sepex', 255), 'maxlength', 255, 'client');
@@ -149,7 +149,7 @@ class Formulario extends moodleform {
         $mform->setType('resumo', PARAM_RAW);
         
         //TAGS       
-        $mform->addElement('text', 'tags', get_string('tags', 'sepex'), array('size' => '64'));
+        $mform->addElement('text', 'tags', get_string('tags', 'sepex'), array('placeholder'=> ' Palavra1;Palavra2;Palavra3','size' => '64'));
         $mform->setType('tags', PARAM_RAW);
         $mform->addRule('tags', get_string('tagsvazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('tags', get_string('tags', '', 255), 'maxlength', 255, 'client');
