@@ -46,7 +46,7 @@ $PAGE->set_heading($course->fullname);
     $projeto = listar_projeto_por_id($id_projeto);
     $dados_apresentacao = obter_dados_apresentacao($id_projeto);           
     $tipo = 'orientador';
-    $orientadores = listar_nome_professores($id_projeto, $tipo);
+    $orientadores = listar_nome_professores($id_projeto, $tipo, $cm->course);
     $tipo2 = 'avaliador';
     $avaliadores = listar_professor_por_id_projeto($id_projeto,$tipo2);
     

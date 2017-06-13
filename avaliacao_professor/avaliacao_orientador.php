@@ -54,7 +54,7 @@ echo $OUTPUT->box(format_string(''), 2);
         $lista_alunos = implode(", ", $integrantes);
     }
     $tipo = 'orientador';
-    $orientadores = listar_nome_professores($id_projeto, $tipo);
+    $orientadores = listar_nome_professores($id_projeto, $tipo, $cm->course);
     
     //VIEW
     $header  = html_writer::start_tag('div', array('style' => 'margin-bottom:5%;'));                                                     

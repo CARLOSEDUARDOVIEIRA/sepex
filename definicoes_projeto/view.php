@@ -83,8 +83,8 @@ $PAGE->set_heading($course->fullname);
                                 $titulo .= html_writer::end_tag('a'); 
                                 $titulo .= html_writer::end_tag('td'); 
                             echo $titulo;                            
-                            $orientadores = listar_nome_professores($projeto->id_projeto, $tipo);
-                            $avaliadores = listar_nome_professores($projeto->id_projeto, 'avaliador');
+                            $orientadores = listar_nome_professores($projeto->id_projeto, $tipo, $cm->course);
+                            $avaliadores = listar_nome_professores($projeto->id_projeto, 'avaliador', $cm->course);
                             echo'<td><a>'.$orientadores.'</a></td>';
                             echo'<td><a>'.$avaliadores.'</a></td>';
                             if (isset($apresentacao[$projeto->id_projeto]->nome_local_apresentacao)){

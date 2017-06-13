@@ -95,13 +95,13 @@ function atualizarCodigo($dados, $id_projeto) {
  */
 function listar_area_curso($cod_curso) {
 
-    if ($cod_curso == 'ADM' || $cod_curso == 'AUR' || $cod_curso == 'CONT' || $cod_curso == 'TDI' || $cod_curso == 'DIR' || $cod_curso == 'FIL' || $cod_curso == 'PIS' || $cod_curso == 'SES'):
+    if ($cod_curso == 'ADM' || $cod_curso == 'AUR' || $cod_curso == 'CONT' || $cod_curso == 'TDI' || $cod_curso == 'DIR' || $cod_curso == 'FIL' || $cod_curso == 'PIS' || $cod_curso == 'SES' || $cod_curso == 'EDF'):
         return 1;
 
     elseif ($cod_curso == 'ENP' || $cod_curso == 'ENC' || $cod_curso == 'SIN' || $cod_curso == 'TADS' || $cod_curso == 'TLO' || $cod_curso == 'RED'):
         return 2;
 
-    elseif ($cod_curso == 'CBB' || $cod_curso == 'CBL' || $cod_curso == 'EDF' || $cod_curso == 'ENF' || $cod_curso == 'FTP' || $cod_curso == 'NUT' || $cod_curso == 'FAR'):
+    elseif ($cod_curso == 'CBB' || $cod_curso == 'CBL' || $cod_curso == 'ENF' || $cod_curso == 'FTP' || $cod_curso == 'NUT' || $cod_curso == 'FAR'):
         return 3;
     endif;
 }
@@ -575,7 +575,7 @@ function listar_professor_por_id_projeto($id_projeto, $tipo) {
     return $orientadores;
 }
 
-function listar_nome_professores($id_projeto, $tipo) {
+function listar_nome_professores($id_projeto, $tipo, $curso) {
     global $DB;
     $resultado = $DB->get_records_sql("
            SELECT                
@@ -589,15 +589,15 @@ function listar_nome_professores($id_projeto, $tipo) {
                 INNER JOIN mdl_sepex_projeto_professor spp
                 ON spp.professor_cod_professor = u.username
                 INNER JOIN mdl_sepex_projeto sp ON sp.id_projeto = spp.id_projeto
-                WHERE ct.contextlevel = 50 AND c.id = 4509 AND r.shortname = 'editingteacher'                                                                                    
+                WHERE ct.contextlevel = 50 AND c.id = {$curso} AND r.shortname = 'editingteacher'                                                                                    
                 AND sp.id_projeto = {$id_projeto} AND spp.tipo = '{$tipo}'");
 
-    $orientadores = array();
-    foreach ($resultado as $orientador) {
-        array_push($orientadores, $orientador->name);
+    $professores = array();
+    foreach ($resultado as $professor) {
+        array_push($professores, $professor->name);
     }
-    $orientador = implode(", ", $orientadores);
-    return $orientador;
+    $professor = implode(", ", $professores);
+    return $professor;
 }
 
 function listar_usuarios_por_curso($user, $course) {
@@ -679,7 +679,7 @@ function viewGerente($id) {
     $localApresentacao .= html_writer::end_tag('div');
 
     $exibirRelatorio = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-    $exibirRelatorio .= html_writer::start_tag('a', array('href' => './pesquisas/listas.php?id=' . $id,));
+    $exibirRelatorio .= html_writer::start_tag('a', array('href' => './relatorios/listas.php?id=' . $id,));
     $exibirRelatorio .= html_writer::start_tag('submit', array('class' => 'btn btn-secondary', 'style' => 'margin-bottom:1%;'));
     $exibirRelatorio .= get_string('exibir_relatorios', 'sepex');
     $exibirRelatorio .= html_writer::end_tag('a');
@@ -1019,25 +1019,33 @@ function listar_situacao_resumo($id_projeto) {
 
 //------------
 
-function filtro_pesquisar($categoria) {
+function filtro_pesquisar($dados) {
     global $DB;
+
+    $consulta = "1 = 1";
+
+    if ($dados->area_curso) {
+        $consulta = $consulta . ' AND area_curso = ' . $dados->area_curso;
+    }
+    if ($dados->mesa != null) {
+        $consulta = $consulta . ' AND aloca_mesa = ' . $dados->mesa;
+    }
+    if ($dados->turno != null) {
+        $consulta = $consulta . ' AND turno = ' . "'" . $dados->turno . "'";
+    }
+    if ($dados->categoria) {
+        $consulta = $consulta . ' AND cod_categoria = ' . $dados->categoria;
+    }
+
+
     $query = $DB->get_records_sql("
-    SELECT sp.id_projeto, sp.cod_projeto, sp.titulo, sp.cod_categoria, sp.aloca_mesa, spp.professor_cod_professor, spp.status_resumo
-    FROM mdl_sepex_projeto sp
-    LEFT JOIN mdl_sepex_projeto_professor spp ON sp.id_projeto = spp.id_projeto
-    WHERE {$categoria} AND spp.tipo = 'orientador'");
+    SELECT sp.id_projeto,spp.status_resumo, sp.cod_projeto, sp.titulo, sp.cod_categoria, sp.aloca_mesa, SUM( spa.total_resumo + spa.total_avaliacao ) nota_final
+    FROM mdl_sepex_projeto_professor spp
+    LEFT JOIN mdl_sepex_projeto sp ON sp.id_projeto = spp.id_projeto
+    LEFT JOIN mdl_sepex_projeto_avaliacao spa ON spp.id_projeto_professor = spa.id_projeto_professor
+    WHERE {$consulta}
+    GROUP BY sp.id_projeto, sp.cod_projeto, sp.titulo, sp.cod_categoria, sp.aloca_mesa
+    ORDER BY nota_final DESC");
     return $query;
 }
 
-function turno($turno) {
-    switch ($turno) {
-        case 1:
-            $turno = 'Matutino';
-            return $turno;
-            break;
-        case 2:
-            $turno = 'Noturno';
-            return $turno;
-            break;
-    }
-}

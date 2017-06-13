@@ -9,6 +9,7 @@ require_once '../classes/FormularioPesquisa.class.php';
 global $DB, $CFG, $PAGE;
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
+
 if ($id) {
     $cm = get_coursemodule_from_id('sepex', $id, 0, false, MUST_EXIST);
     $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
@@ -38,18 +39,10 @@ $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string('DEFINIÇÕES DE APRESENTAÇÃO PROJETO'), 2);
 echo $OUTPUT->box(format_string(''), 2);
-if (isset($_GET['cat']) || isset($_GET['tur'])) {
 
-    $categoria = htmlspecialchars($_GET['cat']);
-    $turno = htmlspecialchars($_GET['tur']);
-    $mesa = htmlspecialchars($_GET['mesa']);
-    $presente = htmlspecialchars($_GET['presente']);
-    $nota = htmlspecialchars($_GET['nota']);
 
-    $mform = new FormularioPesquisa("listas.php?id={$id}", array('turno' => $turno, 'cod_categoria' => $categoria, 'mesa' => $mesa, 'presente' => $presente, 'nota' => $nota));
-} else {
-    $mform = new FormularioPesquisa("listas.php?id={$id}");
-}
+$mform = new FormularioPesquisa("listas.php?id={$id}");
+
 
 $mform->display();
 $link_voltar = html_writer::start_tag('a', array('href' => '../view.php?id=' . $id));
@@ -58,22 +51,7 @@ $link_voltar .= html_writer::end_tag('a');
 echo $link_voltar;
 
 if ($dados = $mform->get_data()) {
-
-    $teste = "1 = 1";
-   
-    if ($dados->mesa != null) {
-        $teste = $teste . ' AND aloca_mesa = ' . $dados->mesa;
-    }
-
-    if ($dados->turno) {
-        $teste = $teste . ' AND turno = ' . "'" . turno($dados->turno) . "'";
-    }
-
-    if ($dados->categoria) {
-        $teste = $teste . ' AND cod_categoria = ' . $dados->categoria;
-    }
-
-    $projetos = filtro_pesquisar($teste);
+    $projetos = filtro_pesquisar($dados);
 
     //------------------------------VIEW---------------------------
     if ($projetos):
@@ -82,28 +60,29 @@ if ($dados = $mform->get_data()) {
         echo '<tr>';
         echo '<th>' . get_string('cod_projeto', 'sepex') . '</th>';
         echo '<th>' . get_string('titulo_projeto', 'sepex') . '</th>';
-        echo '<th>' . get_string('categoria', 'sepex') . '</th>';
-        echo '<th>' . get_string('situacao', 'sepex') . '</th>';
+        echo '<th>' . strtoupper(get_string('categoria', 'sepex')) . '</th>';
+        echo '<th>' . get_string('situacao', 'sepex') . '</th>';        
         echo '<th>' . get_string('orientadores', 'sepex') . '</th>';
-        echo '<th>' . get_string('solicita_mesa', 'sepex') . '</th>';
-        echo '<th>' . get_string('imprimir', 'sepex') . '</th>';
+        echo '<th>' . strtoupper(get_string('solicita_mesa', 'sepex')) . '</th>';
+        echo '<th>' . get_string('nota_final', 'sepex') . '</th>';
+        echo '<th>' . strtoupper(get_string('visualizar', 'sepex')) . '</th>';
         echo '<th>' . '</th>';
         echo '</tr>';
         echo '</thead>';
         $tipo = 'orientador';
         foreach ($projetos as $projeto) {
+            $nota_final = ($projeto->nota_final/4);            
+            
             $apresentacao = obter_dados_apresentacao($projeto->id_projeto);
             $categoria = retorna_categoria($projeto->cod_categoria);
             $tipo = 'orientador';
-            $orientador = listar_nome_professores($projeto->id_projeto, $tipo);
-//                    echo '<pre>';
-//                    print_r($categoria);
-//                    echo '</pre>';
+            $orientador = listar_nome_professores($projeto->id_projeto, $tipo, $cm->course);
+
             echo '<tbody>';
             echo '<tr>';
             echo'<td><a>' . $projeto->cod_projeto . '</a></td>';
             $titulo = html_writer::start_tag('td');
-            $titulo .= html_writer::start_tag('a', array('href' => 'definicao_projeto.php?id=' . $id . '&data=' . $projeto->id_projeto . '&tur=' . $dados->turno . '&cat=' . $dados->categoria,));
+            $titulo .= html_writer::start_tag('a', array('href' => '../projeto_aluno/view.php?id=' . $id . '&data=' . $projeto->id_projeto.'&n='.$nota_final,));
             $titulo .= $projeto->titulo;
             $titulo .= html_writer::end_tag('a');
             $titulo .= html_writer::end_tag('td');
@@ -112,23 +91,29 @@ if ($dados = $mform->get_data()) {
             echo'<td><a>' . $categoria[$projeto->cod_categoria]->nome_categoria . '</a></td>';
 
             //SITUAÇÃO
-            if ($projeto->status_resumo) {
-                echo'<td>' . $projeto->status_resumo . '</td>';
-            } else {
+            if ($projeto->status_resumo != null && $projeto->status_resumo == 1) {
+                echo'<td>' .get_string('aprovado', 'sepex')  . '</td>';
+            }elseif($projeto->status_resumo != null && $projeto->status_resumo == 0){
+                echo'<td>' .get_string('reprovado', 'sepex')  . '</td>';
+            }else {
                 echo '<td>' . get_string('nao_avaliado', 'sepex') . '</td>';
-            }
+            }                        
+            
             //------------
             //ORIENTADOR
             echo'<td>' . $orientador . '</td>';
             //-------------
             if ($projeto->aloca_mesa) {
                 echo '<td>' . 'Sim' . '</td>';
-            }else{
+            } else {
                 echo '<td>' . 'Não' . '</td>';
             }
+            
+            echo '<td>' .$nota_final. '</td>';     
+            
             $btnEditar = html_writer::start_tag('td');
-            //$btnEditar .= html_writer::start_tag('a', array('href'=> 'definicao_projeto.php?id='.$id.'&data='.$projeto->id_projeto.'&tur='.$dados->turno.'&cat='.$dados->categoria,)); 
-            $btnEditar .= html_writer::start_tag('input', array('type' => 'button', 'id' => 'editar', 'value' => get_string('editar', 'sepex'), 'class' => 'btn btn-default'));
+            $btnEditar .= html_writer::start_tag('a', array('href' => '../projeto_aluno/view.php?id=' . $id . '&data=' . $projeto->id_projeto.'&n='.$nota_final,));
+            $btnEditar .= html_writer::start_tag('input', array('type' => 'button', 'id' => 'editar', 'value' => get_string('visualizar', 'sepex'), 'class' => 'btn btn-default'));
             $btnEditar .= html_writer::end_tag('td');
             echo $btnEditar;
             echo '</tr>';

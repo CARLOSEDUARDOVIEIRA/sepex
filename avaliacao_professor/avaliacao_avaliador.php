@@ -61,9 +61,9 @@ echo $OUTPUT->box(format_string(''), 2);
     if (!empty($id_projeto)) {    
         $projeto = listar_projeto_por_id($id_projeto);        
         $tipo = 'orientador';
-        $orientadores = listar_nome_professores($id_projeto, $tipo);
+        $orientadores = listar_nome_professores($id_projeto, $tipo, $cm->course);
         $categoria = retorna_categoria($projeto[$id_projeto]->cod_categoria);
-        $avaliadores = listar_nome_professores($id_projeto, 'avaliador');
+        $avaliadores = listar_nome_professores($id_projeto, 'avaliador', $cm->course);
         $apresentacao = obter_dados_apresentacao($projeto[$id_projeto]->id_projeto);
     }
     //View header of page

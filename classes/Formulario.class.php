@@ -116,7 +116,7 @@ class Formulario extends moodleform {
         
               
         //TITULO DO TRABALHO
-        $mform->addElement('text', 'titulo', get_string('titulo', 'sepex'), array('placeholder'=> 'Meu título de projeto SEPEX 2017','size' => '64'));
+        $mform->addElement('text', 'titulo', get_string('titulo', 'sepex'), array('placeholder'=> 'Meu Título de Projeto SEPEX 2017','size' => '64'));
         $mform->setType('titulo', PARAM_RAW); 
         $mform->addRule('titulo', get_string('titulovazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('titulo', get_string('titulo', 'sepex', 255), 'maxlength', 255, 'client');

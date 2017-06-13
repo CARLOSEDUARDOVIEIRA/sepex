@@ -9,12 +9,22 @@ class FormularioPesquisa extends moodleform {
 
         $mform = $this->_form;
 
+        $area = array(
+            '' => 'Escolher',
+            '1' => 'Ciências Sociais e Aplicadas',
+            '2' => 'Exatas',
+            '3' => 'Saúde'            
+        );
+        $mform->addElement('select', 'area_curso', get_string('area', 'sepex'), $area);       
+        $mform->addRule('area_curso', get_string('area', 'sepex'), 'maxlength', 255, 'client');
+        $mform->addHelpButton('area_curso', 'area', 'sepex');
+                
         $categoria = array(
             '' => 'Escolher',
             '1' => 'Egresso',
             '2' => 'Estágio',
             '3' => 'Iniciação Científica',
-            '4' => 'Inivação',
+            '4' => 'Inovação',
             '5' => 'Projeto de Extensão',
             '6' => 'Projeto Integrador',
             '7' => 'Responsabilidade Social',
@@ -30,8 +40,8 @@ class FormularioPesquisa extends moodleform {
 
         $turno = array(
             '' => 'Escolher',
-            '1' => 'Matutino',
-            '2' => 'Noturno',
+            'Matutino' => 'Matutino',
+            'Noturno' => 'Noturno',
         );
         $mform->addElement('select', 'turno', get_string('turno', 'sepex'), $turno);        
         $mform->addRule('turno', get_string('turno', 'sepex'), 'maxlength', 255, 'client');
@@ -45,28 +55,7 @@ class FormularioPesquisa extends moodleform {
         );
         $mform->addElement('select', 'mesa', get_string('solicita_mesa', 'sepex'), $mesa);        
         $mform->addRule('mesa', get_string('solicita_mesa', 'sepex'), 'maxlength', 255, 'client');
-        $mform->addHelpButton('mesa', 'solicita_mesa', 'sepex');        
-        $mform->setDefault('mesa', $this->_customdata['mesa']);
-
-        $alunoPresente = array(
-            '' => 'Escolher',
-            '1' => 'Sim',
-            '2' => 'Não',
-        );
-        $mform->addElement('select', 'alunoPresente', get_string('aluno_presente', 'sepex'), $alunoPresente);        
-        $mform->addRule('alunoPresente', get_string('aluno_presente', 'sepex'), 'maxlength', 255, 'client');
-        $mform->addHelpButton('alunoPresente', 'aluno_presente', 'sepex');        
-        $mform->setDefault('alunoPresente', $this->_customdata['alunoPresente']);
-
-        $semNota = array(
-            '' => 'Escolher',
-            '1' => 'Sem nota',
-            '2' => 'Com nota',
-        );
-        $mform->addElement('select', 'semNota', get_string('projeto_nota', 'sepex'), $semNota);        
-        $mform->addRule('semNota', get_string('projeto_nota', 'sepex'), 'maxlength', 255, 'client');
-        $mform->addHelpButton('semNota', 'projeto_nota', 'sepex');        
-        $mform->setDefault('semNota', $this->_customdata['semNota']);
+        $mform->addHelpButton('mesa', 'solicita_mesa', 'sepex');                
 
         $this->add_action_buttons($cancel = true, $submitlabel = get_string('listarprojetos', 'sepex'));
     }

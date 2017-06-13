@@ -13,6 +13,7 @@ require_once('../locallib.php');
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
 $id_projeto = optional_param('data', 0, PARAM_INT);
+$nota_final = optional_param('n', 0, PARAM_INT);
 
 if ($id) {
     $cm = get_coursemodule_from_id('sepex', $id, 0, false, MUST_EXIST);
@@ -27,7 +28,7 @@ if ($id) {
 }
 $lang = current_language();
 require_login($course, true, $cm);
-$coursecontext = context_course::instance($course->id);
+$context_course = context_course::instance($course -> id);
 $event = \mod_sepex\event\course_module_viewed::create(array(
             'objectid' => $PAGE->cm->instance,
             'context' => $PAGE->context,
@@ -42,9 +43,9 @@ echo $OUTPUT->box(format_string(''), 2);
 if (!empty($id_projeto)) {
     $projeto = listar_projeto_por_id($id_projeto);
     $tipo = 'orientador';
-    $orientadores = listar_nome_professores($id_projeto, $tipo);
+    $orientadores = listar_nome_professores($id_projeto, $tipo, $cm->course);
     $categoria = retorna_categoria($projeto[$id_projeto]->cod_categoria);
-    $avaliadores = listar_nome_professores($id_projeto, 'avaliador');
+    $avaliadores = listar_nome_professores($id_projeto, 'avaliador', $cm->course);
     $apresentacao = obter_dados_apresentacao($projeto[$id_projeto]->id_projeto);
     $alunos = listar_nome_alunos($id_projeto);
     $integrantes = array();
@@ -54,7 +55,13 @@ if (!empty($id_projeto)) {
     $lista_alunos = implode(", ", $integrantes);
     $situacao = listar_situacao_resumo($id_projeto);
 }
-//View header of page
+
+// View header of page
+$link_voltar = html_writer::start_tag('a', array('href' => '../view.php?id=' . $id));
+$link_voltar .= get_string('voltar_menu', 'sepex');
+$link_voltar .= html_writer::end_tag('a');
+echo $link_voltar;
+
 $header = html_writer::start_tag('div', array('style' => 'margin-bottom:5%;'));
 $header .= html_writer::start_tag('h5', array('class' => 'page-header'));
 $header.= $projeto[$id_projeto]->cod_projeto . ' - ' . $projeto[$id_projeto]->titulo;
@@ -90,6 +97,13 @@ if ($situacao[$id_projeto]->status_resumo != null) {
 
 echo '<p>' . '</br></br>' . get_string('local_apresentacao', 'sepex') . '</p></br>';
 
+if ($projeto->aloca_mesa) {
+    echo '<p>' . '<b>' . strtoupper(get_string('solicita_mesa', 'sepex')) . '</b>' . ':  ' . get_string('projeto_solicita_mesa', 'sepex') . '</p>';
+} else {
+    echo '<p>' . '<b>' . strtoupper(get_string('solicita_mesa', 'sepex')) . '</b>' . ':  ' . get_string('projeto_nao_solicita_mesa', 'sepex') . '</p>';
+}
+
+
 if (isset($apresentacao[$projeto[$id_projeto]->id_projeto]->nome_local_apresentacao)) {
     echo '<p>' . '<b>' . strtoupper(get_string('avaliadores', 'sepex')) . '</b>' . ': ' . $avaliadores . '</p>';
     echo '<p>' . '<b>' . get_string('local', 'sepex') . '</b>' . ':  ' . $apresentacao[$projeto[$id_projeto]->id_projeto]->nome_local_apresentacao . '</p>';
@@ -100,6 +114,9 @@ if (isset($apresentacao[$projeto[$id_projeto]->id_projeto]->nome_local_apresenta
     echo '<p>' . '<b>' . get_string('apresentacao', 'sepex') . '</b>' . ':  ' . get_string('aguardando_definicao', 'sepex') . '</p>';
 }
 
+if (has_capability('mod/sepex:openformulario', $context_course)) {    
+    echo '<p>' . '<b>' . get_string('nota_final', 'sepex') . '</b>' . ':  ' .$nota_final. '</p>';        
+}
 
 //Fim da página
 echo $OUTPUT->footer();
