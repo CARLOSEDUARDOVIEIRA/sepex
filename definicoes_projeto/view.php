@@ -96,7 +96,9 @@ $PAGE->set_heading($course->fullname);
                             }
                                 $btnEditar = html_writer::start_tag('td');
                                 $btnEditar .= html_writer::start_tag('a', array('href'=> 'definicao_projeto.php?id='.$id.'&data='.$projeto->id_projeto.'&are='.$dados->area_curso.'&tur='.$dados->turno.'&cat='.$dados->cod_categoria,)); 
-                                $btnEditar .= html_writer::start_tag('input', array('type'=>'button', 'id'=> 'editar', 'value'=>get_string('editar','sepex'), 'class' => 'btn btn-default' ));                                                                                                                     
+                                $btnEditar .= html_writer::start_tag('button', array('type'=>'button', 'id'=> 'editar', 'class' => 'btn btn-link' ));                                                                                                                     
+                                $btnEditar .= get_string('editar', 'sepex');
+                                $btnEditar .= html_writer::end_tag('button');
                                 $btnEditar .= html_writer::end_tag('td');
                                 echo $btnEditar;
                         echo '</tr>';

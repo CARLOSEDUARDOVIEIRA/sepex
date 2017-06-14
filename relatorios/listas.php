@@ -61,12 +61,11 @@ if ($dados = $mform->get_data()) {
         echo '<th>' . get_string('cod_projeto', 'sepex') . '</th>';
         echo '<th>' . get_string('titulo_projeto', 'sepex') . '</th>';
         echo '<th>' . strtoupper(get_string('categoria', 'sepex')) . '</th>';
-        echo '<th>' . get_string('situacao', 'sepex') . '</th>';        
+        echo '<th>' . strtoupper(get_string('situacao', 'sepex')) . '</th>';        
         echo '<th>' . get_string('orientadores', 'sepex') . '</th>';
         echo '<th>' . strtoupper(get_string('solicita_mesa', 'sepex')) . '</th>';
         echo '<th>' . get_string('nota_final', 'sepex') . '</th>';
-        echo '<th>' . strtoupper(get_string('visualizar', 'sepex')) . '</th>';
-        echo '<th>' . '</th>';
+        echo '<th>' . '</th>';        
         echo '</tr>';
         echo '</thead>';
         $tipo = 'orientador';
@@ -113,7 +112,9 @@ if ($dados = $mform->get_data()) {
             
             $btnEditar = html_writer::start_tag('td');
             $btnEditar .= html_writer::start_tag('a', array('href' => '../projeto_aluno/view.php?id=' . $id . '&data=' . $projeto->id_projeto.'&n='.$nota_final,));
-            $btnEditar .= html_writer::start_tag('input', array('type' => 'button', 'id' => 'editar', 'value' => get_string('visualizar', 'sepex'), 'class' => 'btn btn-default'));
+            $btnEditar .= html_writer::start_tag('button', array('type' => 'button', 'class' => 'btn btn-link', 'id' => 'editar'));
+            $btnEditar .= get_string('visualizar', 'sepex');
+            $btnEditar .= html_writer::end_tag('button');
             $btnEditar .= html_writer::end_tag('td');
             echo $btnEditar;
             echo '</tr>';

@@ -21,18 +21,18 @@ class FormularioPesquisa extends moodleform {
                 
         $categoria = array(
             '' => 'Escolher',
-            '1' => 'Egresso',
-            '2' => 'Estágio',
+            '1' => 'Egressos',
+            '2' => 'Estágios',
             '3' => 'Iniciação Científica',
             '4' => 'Inovação',
             '5' => 'Projeto de Extensão',
             '6' => 'Projeto Integrador',
-            '7' => 'Responsabilidade Social',
-            '8' => 'Tema Livre',
+            '7' => 'Responsábilidade Social',
+            '8' => 'Temas Livres',
             '9' => 'Trabalho de Conclusão de Curso',
-            '10' => 'Mostra Vídeo',
-            '11' => 'Concurso de Fotografia',
-        );
+            '10' => 'Mostra de Vídeos',
+            '11' => 'Concurso de Fotografia'
+        ); 
         $mform->addElement('select', 'categoria', get_string('categoria', 'sepex'), $categoria);
         $mform->addRule('categoria', get_string('categoria', 'sepex'), 'maxlength', 255, 'client');
         $mform->addHelpButton('categoria', 'categoria', 'sepex');
@@ -55,7 +55,18 @@ class FormularioPesquisa extends moodleform {
         );
         $mform->addElement('select', 'mesa', get_string('solicita_mesa', 'sepex'), $mesa);        
         $mform->addRule('mesa', get_string('solicita_mesa', 'sepex'), 'maxlength', 255, 'client');
-        $mform->addHelpButton('mesa', 'solicita_mesa', 'sepex');                
+        $mform->addHelpButton('mesa', 'solicita_mesa', 'sepex');    
+        
+        $resumo = array(
+            '' => 'Escolher',
+            '2' => 'Não Avaliado',
+            '1' => 'Aprovado',
+            '0' => 'Reprovado',
+        );
+        $mform->addElement('select', 'situacao_resumo', get_string('situacao', 'sepex'), $resumo);        
+        $mform->addRule('situacao_resumo', get_string('situacao', 'sepex'), 'maxlength', 255, 'client');
+        $mform->addHelpButton('situacao_resumo', 'situacao', 'sepex'); 
+        
 
         $this->add_action_buttons($cancel = true, $submitlabel = get_string('listarprojetos', 'sepex'));
     }

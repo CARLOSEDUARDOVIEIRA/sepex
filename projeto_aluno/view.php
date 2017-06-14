@@ -13,7 +13,7 @@ require_once('../locallib.php');
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
 $id_projeto = optional_param('data', 0, PARAM_INT);
-$nota_final = optional_param('n', 0, PARAM_INT);
+$nota_final = optional_param('n', 0, PARAM_FLOAT);
 
 if ($id) {
     $cm = get_coursemodule_from_id('sepex', $id, 0, false, MUST_EXIST);
@@ -28,7 +28,7 @@ if ($id) {
 }
 $lang = current_language();
 require_login($course, true, $cm);
-$context_course = context_course::instance($course -> id);
+$context_course = context_course::instance($course->id);
 $event = \mod_sepex\event\course_module_viewed::create(array(
             'objectid' => $PAGE->cm->instance,
             'context' => $PAGE->context,
@@ -114,8 +114,28 @@ if (isset($apresentacao[$projeto[$id_projeto]->id_projeto]->nome_local_apresenta
     echo '<p>' . '<b>' . get_string('apresentacao', 'sepex') . '</b>' . ':  ' . get_string('aguardando_definicao', 'sepex') . '</p>';
 }
 
-if (has_capability('mod/sepex:openformulario', $context_course)) {    
-    echo '<p>' . '<b>' . get_string('nota_final', 'sepex') . '</b>' . ':  ' .$nota_final. '</p>';        
+$alunos = listar_nome_alunos($id_projeto);
+$presentes = array();
+$faltosos = array();
+foreach ($alunos as $aluno) {
+    $presenca_aluno = listar_presenca_aluno_matricula($id_projeto, $aluno->username);
+    if ($presenca_aluno[$id_projeto]->presenca) {
+        array_push($presentes, $aluno->name);        
+    } else {
+        array_push($faltosos, $aluno->name);
+    }
+}
+
+if ($presentes){
+    echo '<p>' . '<b>' . get_string('alunos_prese_apres', 'sepex') . '</b>' . ':  ' . implode(' , ', $presentes) . '</p>';
+} 
+if($faltosos) {
+    echo '<p>' . '<b>' . get_string('alunos_falta_apres', 'sepex') . '</b>' . ':  ' . implode(' , ', $faltosos) . '</p>';
+}
+
+
+if (has_capability('mod/sepex:openformulario', $context_course)) {
+    echo '<p>' . '<b>' . get_string('nota_final', 'sepex') . '</b>' . ':  ' . $nota_final . '</p>';
 }
 
 //Fim da página

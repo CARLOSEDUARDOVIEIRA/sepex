@@ -426,10 +426,11 @@ function header_projetos_professor() {
     echo '<thead>';
     echo '<tr>';
     echo '<th>' . get_string('responsabilidade', 'sepex') . '</th>';
-    echo '<th>' . strtoupper(get_string('categoria', 'sepex')) . '</th>';
-    echo '<th>' . strtoupper(get_string('curso', 'sepex')) . '</th>';
     echo '<th>' . get_string('cod_projeto', 'sepex') . '</th>';
     echo '<th>' . get_string('titulo_projeto', 'sepex') . '</th>';
+    echo '<th>' . strtoupper(get_string('categoria', 'sepex')) . '</th>';
+    echo '<th>' . strtoupper(get_string('curso', 'sepex')) . '</th>';
+    echo '<th>' . get_string('situacao_final', 'sepex') . '</th>';
     echo '<th>' . get_string('avaliar', 'sepex') . '</th>';
     echo '</tr>';
     echo '</thead>';
@@ -444,10 +445,6 @@ function listar_projetos_professor($usuario, $id) {
         foreach ($resultado as $projeto) {
             echo '<tr>';
             echo'<td><a>' . $projeto->tipo . '</a></td>';
-            $categoria = retorna_categoria($projeto->cod_categoria);
-
-            echo'<td><a>' . $categoria[$projeto->cod_categoria]->nome_categoria . '</a></td>';
-            echo'<td><a>' . $projeto->curso_cod_curso . '</a></td>';
             echo'<td><a>' . $projeto->cod_projeto . '</a></td>';
 
             $titulo = html_writer::start_tag('td');
@@ -459,6 +456,25 @@ function listar_projetos_professor($usuario, $id) {
             $titulo .= $projeto->titulo;
             $titulo .= html_writer::end_tag('a');
             $titulo .= html_writer::end_tag('td');
+            echo $titulo;
+
+            $categoria = retorna_categoria($projeto->cod_categoria);
+
+            echo'<td><a>' . $categoria[$projeto->cod_categoria]->nome_categoria . '</a></td>';
+            echo'<td><a>' . $projeto->curso_cod_curso . '</a></td>';
+
+            if ($projeto->tipo == 'avaliador') {
+                echo'<td><a>' . ($projeto->nota_final / 2) . '</a></td>';
+            } else {
+                if ($projeto->status_resumo != null && $projeto->status_resumo == 1) {
+                    echo'<td>' . get_string('aprovado', 'sepex') . '</td>';
+                } elseif ($projeto->status_resumo != null && $projeto->status_resumo == 0) {
+                    echo'<td>' . get_string('reprovado', 'sepex') . '</td>';
+                } else {
+                    echo '<td>' . get_string('nao_avaliado', 'sepex') . '</td>';
+                }
+            }
+
             $avaliar = html_writer::start_tag('td');
             if ($projeto->tipo == 'avaliador') {
                 $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './avaliacao_professor/avaliacao_avaliador.php?id=' . $id . '&data=' . $projeto->id_projeto,));
@@ -468,7 +484,6 @@ function listar_projetos_professor($usuario, $id) {
             $avaliar .= html_writer::start_tag('img', array('src' => 'pix/edit.png'));
             $avaliar .= html_writer::end_tag('a');
             $avaliar .= html_writer::end_tag('td');
-            echo $titulo;
             echo $avaliar;
             echo '</tr>';
         }
@@ -544,11 +559,16 @@ function select_projetos_professor($usuario) {
             sp.cod_categoria,
             sp.data_cadastro,
             spp.tipo,
-            spc.curso_cod_curso
-            FROM mdl_sepex_projeto sp
-            INNER JOIN mdl_sepex_projeto_professor spp ON sp.id_projeto = spp.id_projeto
-            INNER JOIN mdl_sepex_projeto_curso spc ON sp.id_projeto = spc.projeto_id_projeto
-            WHERE spp.professor_cod_professor= ? ORDER BY spp.tipo", array($usuario));
+            spc.curso_cod_curso,
+            spp.status_resumo,
+            SUM( spa.total_resumo + spa.total_avaliacao ) nota_final
+            FROM mdl_sepex_projeto_professor spp 
+            LEFT JOIN mdl_sepex_projeto sp ON sp.id_projeto = spp.id_projeto
+            LEFT JOIN mdl_sepex_projeto_curso spc ON sp.id_projeto = spc.projeto_id_projeto
+            LEFT JOIN mdl_sepex_projeto_avaliacao spa ON spp.id_projeto_professor = spa.id_projeto_professor
+            WHERE spp.professor_cod_professor = ?
+            GROUP BY sp.id_projeto, sp.titulo, sp.cod_projeto, sp.cod_categoria, sp.data_cadastro, spp.tipo, spc.curso_cod_curso, spp.status_resumo ORDER BY spp.tipo"
+            , array($usuario));
     return $resultado;
 }
 
@@ -666,28 +686,28 @@ function viewGerente($id) {
 
     $criarLocalApresentacao = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
     $criarLocalApresentacao .= html_writer::start_tag('a', array('href' => './local_apresentacao/view.php?id=' . $id,));
-    $criarLocalApresentacao .= html_writer::start_tag('submit', array('class' => 'btn btn-secondary', 'style' => 'margin-bottom:1%;'));
+    $criarLocalApresentacao .= html_writer::start_tag('submit', array('class' => 'btn btn-info', 'style' => 'margin-bottom:1%;'));
     $criarLocalApresentacao .= get_string('criar_local_apresentacao', 'sepex');
     $criarLocalApresentacao .= html_writer::end_tag('a');
     $criarLocalApresentacao .= html_writer::end_tag('div');
 
     $localApresentacao = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
     $localApresentacao .= html_writer::start_tag('a', array('href' => './definicoes_projeto/view.php?id=' . $id,));
-    $localApresentacao .= html_writer::start_tag('submit', array('class' => 'btn btn-secondary', 'style' => 'margin-bottom:1%;'));
+    $localApresentacao .= html_writer::start_tag('submit', array('class' => 'btn btn-info', 'style' => 'margin-bottom:1%;'));
     $localApresentacao .= get_string('definir_local_apresentacao', 'sepex');
     $localApresentacao .= html_writer::end_tag('a');
     $localApresentacao .= html_writer::end_tag('div');
 
     $exibirRelatorio = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
     $exibirRelatorio .= html_writer::start_tag('a', array('href' => './relatorios/listas.php?id=' . $id,));
-    $exibirRelatorio .= html_writer::start_tag('submit', array('class' => 'btn btn-secondary', 'style' => 'margin-bottom:1%;'));
+    $exibirRelatorio .= html_writer::start_tag('submit', array('class' => 'btn btn-info', 'style' => 'margin-bottom:1%;'));
     $exibirRelatorio .= get_string('exibir_relatorios', 'sepex');
     $exibirRelatorio .= html_writer::end_tag('a');
     $exibirRelatorio .= html_writer::end_tag('div');
 
-    echo $exibirRelatorio;
     echo $criarLocalApresentacao;
     echo $localApresentacao;
+    echo $exibirRelatorio;
 }
 
 function enviar_email($USER, $dados) {
@@ -1037,15 +1057,20 @@ function filtro_pesquisar($dados) {
         $consulta = $consulta . ' AND cod_categoria = ' . $dados->categoria;
     }
 
+    if ($dados->situacao_resumo == 2) {
+        $consulta = $consulta . ' AND spp.status_resumo is null';
+    }elseif ($dados->situacao_resumo != null) {
+        $consulta = $consulta . ' AND spp.status_resumo = ' . $dados->situacao_resumo;
+    }
+
 
     $query = $DB->get_records_sql("
-    SELECT sp.id_projeto,spp.status_resumo, sp.cod_projeto, sp.titulo, sp.cod_categoria, sp.aloca_mesa, SUM( spa.total_resumo + spa.total_avaliacao ) nota_final
+    SELECT sp.id_projeto, spp.status_resumo, sp.cod_projeto, sp.titulo, sp.cod_categoria, sp.aloca_mesa, SUM( spa.total_resumo + spa.total_avaliacao ) nota_final
     FROM mdl_sepex_projeto_professor spp
     LEFT JOIN mdl_sepex_projeto sp ON sp.id_projeto = spp.id_projeto
     LEFT JOIN mdl_sepex_projeto_avaliacao spa ON spp.id_projeto_professor = spa.id_projeto_professor
     WHERE {$consulta}
-    GROUP BY sp.id_projeto, sp.cod_projeto, sp.titulo, sp.cod_categoria, sp.aloca_mesa
+    GROUP BY sp.id_projeto, spp.status_resumo, sp.cod_projeto, sp.titulo, sp.cod_categoria, sp.aloca_mesa
     ORDER BY nota_final DESC");
     return $query;
 }
-
