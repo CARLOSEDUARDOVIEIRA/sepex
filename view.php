@@ -29,8 +29,9 @@ require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
 
-$id = required_param('id', PARAM_INT); // Course_module ID, ou
-$s  = optional_param('s', 0, PARAM_INT);  // ... Sepex instance ID - deve ser nomeado como o primeiro caractere do módulo.
+$id = required_param('id', PARAM_INT);
+$s  = optional_param('s', 0, PARAM_INT);
+$acao  = optional_param('acao', 0, PARAM_INT);
 
 if ($id) {
     $cm         = get_coursemodule_from_id('sepex', $id, 0, false, MUST_EXIST);
@@ -76,10 +77,18 @@ echo $OUTPUT->header();
         }
         $usuario = $USER->username;
         if ($showactivity) {
+            
+            $linkForm = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:10%;'));
+            $linkForm .= html_writer::start_tag('a', array('href' => './cadastro_sepex/cadastro_sepex.php?id=' . $id . '&add=1',));
+            $linkForm .= html_writer::start_tag('submit', array('class' => 'btn btn-secondary', 'style' => 'margin-bottom:5%;'));
+            $linkForm .= get_string('inscricao', 'sepex');
+            $linkForm .= html_writer::end_tag('a');
+            $linkForm .= html_writer::end_tag('div');
+            echo $linkForm;
+                        
             //Se for aluno redireciono para o formulario.                        
             listar_projetos_aluno($usuario, $id);
-            if (isset($_POST['acao'])){
-                $acao =  htmlspecialchars($_POST['acao']);
+            if ($acao){
                 $proj =  htmlspecialchars($_POST['proj']);
                 if($acao == 2){
                     apagar_formulario($proj);

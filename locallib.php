@@ -318,8 +318,6 @@ function select_projetos_aluno($aluno) {
  */
 function listar_projetos_aluno($usuario, $id) {
 
-    echo criar_link_formulario($id);
-
     $resultado = select_projetos_aluno($usuario);
     if ($resultado != null || $resultado != ''):
         //Caso o moodle tenha o plugin módulo use o css dele através da classe forumheaderlist
@@ -524,8 +522,12 @@ function obter_projetos_por_area_turno_categoria($dados) {
             sp.cod_periodo,
             sp.turno,
             sp.aloca_mesa                    
-            FROM mdl_sepex_projeto sp            
-            WHERE sp.area_curso = ? AND sp.turno = ? AND sp.cod_categoria = ?", array($dados->area_curso, $dados->turno, $dados->cod_categoria));
+            FROM mdl_sepex_projeto sp
+            INNER JOIN mdl_sepex_projeto_curso spc ON spc.projeto_id_projeto = sp.id_projeto
+            INNER JOIN mdl_sepex_projeto_professor spp ON spp.id_projeto = sp.id_projeto 
+            WHERE sp.area_curso = ? AND sp.turno = ? AND sp.cod_categoria = ? AND spp.status_resumo = 1
+            ORDER BY sp.cod_periodo, spc.curso_cod_curso     
+            ", array($dados->area_curso, $dados->turno, $dados->cod_categoria));
     return $projeto;
 }
 
@@ -635,20 +637,6 @@ function listar_usuarios_por_curso($user, $course) {
     return $professores;
 }
 
-/**
- * método responsável por exibir um botão que irá redirecionar para o formulário de inscrição 
- * @return button link
- */
-function criar_link_formulario($id) {
-    $linkForm = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:10%;'));
-    $linkForm .= html_writer::start_tag('a', array('href' => './cadastro_sepex/cadastro_sepex.php?id=' . $id . '&add=1',));
-    $linkForm .= html_writer::start_tag('submit', array('class' => 'btn btn-secondary', 'style' => 'margin-bottom:5%;'));
-    $linkForm .= get_string('inscricao', 'sepex');
-    $linkForm .= html_writer::end_tag('a');
-    $linkForm .= html_writer::end_tag('div');
-    return $linkForm;
-}
-
 /* * Método responsável por obter o código da categoria de um projeto 
  * @global type $DB
  * @param type $cod_categoria
@@ -704,10 +692,18 @@ function viewGerente($id) {
     $exibirRelatorio .= get_string('exibir_relatorios', 'sepex');
     $exibirRelatorio .= html_writer::end_tag('a');
     $exibirRelatorio .= html_writer::end_tag('div');
+    
+    $notas = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
+    $notas .= html_writer::start_tag('a', array('href' => './relatorios/notas.php?id=' . $id,));
+    $notas .= html_writer::start_tag('submit', array('class' => 'btn btn-info', 'style' => 'margin-bottom:1%;'));
+    $notas .= format_string('Exibir relatório de notas e local de apresentação');
+    $notas .= html_writer::end_tag('a');
+    $notas .= html_writer::end_tag('div');
 
     echo $criarLocalApresentacao;
     echo $localApresentacao;
     echo $exibirRelatorio;
+    echo $notas;
 }
 
 function enviar_email($USER, $dados) {
@@ -823,6 +819,7 @@ function header_definicao_projeto($sepex, $cm, $projeto, $orientadores, $id_proj
     $header .= html_writer::end_tag('h5');
     $header.= '<b>' . get_string('curso', 'sepex') . '</b>' . ': ' . $projeto[$id_projeto]->curso_cod_curso . '</br>';
     $header.= '<b>' . get_string('turno', 'sepex') . '</b>' . ': ' . $projeto[$id_projeto]->turno . '</br>';
+    $header.= '<b>' . get_string('periodo', 'sepex') . '</b>' . ': ' . $projeto[$id_projeto]->cod_periodo . '</br>';
     $header.= '<b>' . get_string('orientadores', 'sepex') . '</b>' . ': ' . $orientadores;
     $header .= html_writer::end_tag('div');
     echo $header;
@@ -1044,6 +1041,10 @@ function filtro_pesquisar($dados) {
 
     $consulta = "1 = 1";
 
+    if($dados->cod_curso){
+        $consulta = $consulta . ' AND spc.curso_cod_curso = ' . "'".$dados->cod_curso."'";
+    }
+    
     if ($dados->area_curso) {
         $consulta = $consulta . ' AND area_curso = ' . $dados->area_curso;
     }
@@ -1069,6 +1070,7 @@ function filtro_pesquisar($dados) {
     FROM mdl_sepex_projeto_professor spp
     LEFT JOIN mdl_sepex_projeto sp ON sp.id_projeto = spp.id_projeto
     LEFT JOIN mdl_sepex_projeto_avaliacao spa ON spp.id_projeto_professor = spa.id_projeto_professor
+    LEFT JOIN mdl_sepex_projeto_curso spc ON spc.projeto_id_projeto = sp.id_projeto
     WHERE {$consulta}
     GROUP BY sp.id_projeto, spp.status_resumo, sp.cod_projeto, sp.titulo, sp.cod_categoria, sp.aloca_mesa
     ORDER BY nota_final DESC");

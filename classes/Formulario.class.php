@@ -126,8 +126,7 @@ class Formulario extends moodleform {
         //MATRICULA DO ALUNO                           
         $mform->addElement('text', 'aluno_matricula', get_string('integrantes', 'sepex'), array('placeholder'=> ' 6914001025;6914001026;6914001027', 'size' => '64'));
         $mform->setType('aluno_matricula', PARAM_RAW);
-        $mform->addRule('aluno_matricula', get_string('integrantevazio', 'sepex'), 'required', null, 'client');
-        $mform->addRule('aluno_matricula', get_string('integrantes', 'sepex', 255), 'maxlength', 255, 'client');
+        $mform->addRule('aluno_matricula', get_string('integrantevazio', 'sepex'), 'required', null, 'client');        
         $mform->addHelpButton('aluno_matricula', 'integrantes', 'sepex');                     
               
         //ORIENTADOR

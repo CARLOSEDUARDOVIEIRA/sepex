@@ -211,5 +211,5 @@ $string['situacao_help'] = 'Filtrar os projetos de acordo com a situação dos r
 $string['nao_avaliado'] = 'Não avaliado';
 $string['nota_final'] = 'NOTA FINAL';
 $string['situacao_final'] = 'SITUAÇÃO FINAL';
-$string['alunos_prese_apres'] = 'ALUNOS PRESENTES NA APRESENTAÇÃO :';
-$string['alunos_falta_apres'] = 'ALUNOS QUE FALTARAM A APRESENTAÇÃO :';
+$string['alunos_prese_apres'] = 'ALUNOS PRESENTES NA APRESENTAÇÃO';
+$string['alunos_falta_apres'] = 'ALUNOS QUE FALTARAM A APRESENTAÇÃO';
