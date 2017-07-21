@@ -19,7 +19,7 @@ class Formulario extends moodleform {
         
         if(isset($this->_customdata['modcontext'])){            
             $mform->setDefault('cod_curso',$this->_customdata['cod_curso']);    
-            $mform->setDefault('periodo',$this->_customdata['cod_periodo']);
+            $mform->setDefault('periodo',$this->_customdata['periodo']);
             $mform->setDefault('turno',$this->_customdata['turno']);
             $mform->setDefault('cod_categoria',$this->_customdata['cod_categoria']);
             $mform->setDefault('titulo',$this->_customdata['titulo']);

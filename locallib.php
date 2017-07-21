@@ -31,36 +31,7 @@ require_once(dirname(__FILE__) . '/lib.php');
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * 
- * @global type $DB
- * @param type $dados
- * @return string - Código do projeto(Único).
- */
-function criarCodigo($dados) {
-    global $DB;
-    $numero = $DB->count_records('sepex_projeto');
-    $categoria = [
-        "1" => "EGR",
-        "2" => "EST",
-        "3" => "INC",
-        "4" => "INO",
-        "5" => "PE",
-        "6" => "PI",
-        "7" => "RS",
-        "8" => "TL",
-        "9" => "TCC",
-    ];
 
-    if ($numero != 0):
-        $numero++;
-        $codigo = 'SEP17' . $dados->cod_curso . $categoria[$dados->cod_categoria] . '0' . $numero;
-    else:
-        $codigo = 'SEP17' . $dados->cod_curso . $categoria[$dados->cod_categoria] . '01';
-    endif;
-
-    return $codigo;
-}
 
 /**
  * 
@@ -88,23 +59,7 @@ function atualizarCodigo($dados, $id_projeto) {
     return $codigo;
 }
 
-/**
- * 
- * @param type $cod_curso
- * @return int - Retorna qual a área do curso.
- */
-function listar_area_curso($cod_curso) {
 
-    if ($cod_curso == 'ADM' || $cod_curso == 'AUR' || $cod_curso == 'CONT' || $cod_curso == 'TDI' || $cod_curso == 'DIR' || $cod_curso == 'FIL' || $cod_curso == 'PIS' || $cod_curso == 'SES' || $cod_curso == 'EDF'):
-        return 1;
-
-    elseif ($cod_curso == 'ENP' || $cod_curso == 'ENC' || $cod_curso == 'SIN' || $cod_curso == 'TADS' || $cod_curso == 'TLO' || $cod_curso == 'RED'):
-        return 2;
-
-    elseif ($cod_curso == 'CBB' || $cod_curso == 'CBL' || $cod_curso == 'ENF' || $cod_curso == 'FTP' || $cod_curso == 'NUT' || $cod_curso == 'FAR'):
-        return 3;
-    endif;
-}
 
 /* * Metodo responsável por guardar o projeto no banco de dados
  * 
