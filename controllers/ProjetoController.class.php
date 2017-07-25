@@ -17,7 +17,6 @@ class ProjetoController extends ProjetoModel {
         } catch (Exception $e) {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
-       // return $dados;
     }
 
 }

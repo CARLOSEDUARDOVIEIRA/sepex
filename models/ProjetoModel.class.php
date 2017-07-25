@@ -18,9 +18,18 @@ class ProjetoModel extends Projeto {
         $dados->cod_projeto = "SEP17SIN07001"; //$this->criarCodProjeto($dados->cod_categoria, $dados->cod_curso);
         $dados->area_curso = 1; //$this->criarAreaCurso($dados->cod_curso);
         $dados->email = 'dullvieira';
-        parent::__construct($dados);
-        
-        //return $DB->insert_record("sepex_projeto", $c, $returnid = true);
+        $projeto = parent::__construct($dados);
+        //return $projeto->tags;
+        $values = "data_cadastro = '{$projeto->data_cadastro}',
+                   cod_projeto = '{$projeto->cod_projeto}',
+                   titulo = '{$projeto->titulo}',
+                   resumo = '{$projeto->resumo}',
+                   email = '{$projeto->email}',
+                   tags = '{$projeto->tags}',
+                   periodo = '{$projeto->periodo}',
+                   turno = '{$projeto->turno}',    
+        ";
+        return $DB->insert_record("sepex_projeto", $c, $returnid = true);
     }
 
     /*     * Metodo de criacao do codigo do projeto

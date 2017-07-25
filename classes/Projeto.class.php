@@ -5,7 +5,7 @@
  *
  * @author Carlos Eduardo Vieira
  */
-require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
 
 class Projeto {
 
@@ -23,6 +23,8 @@ class Projeto {
     protected $titulo;
 
     function __construct($dados) {
+        global $DB;
+        
         $this->data_cadastro = $dados->data_cadastro;
         $this->cod_projeto = (string) $dados->cod_projeto;
         $this->titulo = (string) $dados->titulo;
