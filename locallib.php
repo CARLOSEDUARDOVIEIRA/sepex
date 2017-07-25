@@ -90,10 +90,7 @@ function guardar_projeto($dados, $codigo, $USER) {
     $projeto->cod_categoria = $dados->cod_categoria;
     $id = $DB->insert_record("sepex_projeto", $projeto, $returnid = true);
 
-    $curso = new stdClass();
-    $curso->curso_cod_curso = $dados->cod_curso;
-    $curso->projeto_id_projeto = $id;
-    $DB->insert_record("sepex_projeto_curso", $curso);
+    
     //FUNÇÕES MODIFICADAS DEVIDO O MOODLE SE DESATUALIZADO.
     $principal = new stdClass();
     $principal->aluno_matricula = $USER->username;

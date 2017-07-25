@@ -10,33 +10,42 @@ require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
  */
 class ProjetoModel extends Projeto {
 
-        
     protected function save($dados) {
         global $USER, $DB;
         $date = new DateTime("now", core_date::get_user_timezone_object());
         $dados->data_cadastro = userdate($date->getTimestamp());
-        $dados->cod_projeto = "SEP17SIN07001"; //$this->criarCodProjeto($dados->cod_categoria, $dados->cod_curso);
-        $dados->area_curso = 1; //$this->criarAreaCurso($dados->cod_curso);
-        $dados->email = 'dullvieira';
+        $dados->cod_projeto = $this->createCodigoProjeto($dados->cod_categoria, $dados->cod_curso);
+        $dados->area_curso = $this->createAreaCurso($dados->cod_curso);
+        $dados->email = 'dullvieira'; //$USER->email;
         $projeto = parent::__construct($dados);
-        //return $projeto->tags;
-        $values = "data_cadastro = '{$projeto->data_cadastro}',
-                   cod_projeto = '{$projeto->cod_projeto}',
-                   titulo = '{$projeto->titulo}',
-                   resumo = '{$projeto->resumo}',
-                   email = '{$projeto->email}',
-                   tags = '{$projeto->tags}',
-                   periodo = '{$projeto->periodo}',
-                   turno = '{$projeto->turno}',    
-        ";
-        return $DB->insert_record("sepex_projeto", $c, $returnid = true);
+
+        $insert = (object) array('data_cadastro' => $projeto->data_cadastro,
+                    'cod_projeto' => $projeto->cod_projeto,
+                    'titulo' => $projeto->titulo,
+                    'resumo' => $projeto->resumo,
+                    'email' => $projeto->email,
+                    'tags' => $projeto->tags,
+                    'periodo' => $projeto->periodo,
+                    'turno' => $projeto->turno,
+                    'area_curso' => $projeto->area_curso,
+                    'mesa' => $projeto->mesa,
+                    'cod_categoria' => $projeto->cod_categoria
+        );
+        return $DB->insert_record('sepex_projeto', $insert, $returnid = true);
+
+        $curso = new stdClass();
+        $curso->curso_cod_curso = $dados->cod_curso;
+        $curso->projeto_id_projeto = $id;
+        $DB->insert_record("sepex_projeto_curso", $curso);
     }
 
-    /*     * Metodo de criacao do codigo do projeto
+    /** Metodo responsavel por criar o codigo do projeto
+     * @global type $DB
+     * @param type $cod_categoria
+     * @param type $cod_curso
      * @return string
      */
-
-    private function criarCodProjeto($cod_categoria, $cod_curso) {
+    private function createCodigoProjeto($cod_categoria, $cod_curso) {
         global $DB;
         $numero = $DB->count_records('sepex_projeto', array('cod_categoria' => $cod_categoria));
         $categoria = [
@@ -59,7 +68,7 @@ class ProjetoModel extends Projeto {
         return $codigo;
     }
 
-    private function criarAreaCurso($cod_curso) {
+    private function createAreaCurso($cod_curso) {
 
         if ($cod_curso == 'ADM' || $cod_curso == 'AUR' || $cod_curso == 'CONT' || $cod_curso == 'TDI' || $cod_curso == 'DIR' || $cod_curso == 'FIL' || $cod_curso == 'PIS' || $cod_curso == 'SES' || $cod_curso == 'EDF'):
             return 1;
