@@ -42,19 +42,19 @@ global $DB, $CFG, $PAGE;
 //define('VIEW_URL_LINK', "../view.php?id=" . $id);
 //
 $dados = new stdClass();
-$dados->cod_categoria = optional_param('categoria', 0, PARAM_INT);
+$dados->idcategoria = optional_param('idcategoria', 0, PARAM_INT);
 $dados->titulo = optional_param('titulo', null, PARAM_RAW);
 $dados->resumo = optional_param('resumo', null, PARAM_RAW);
 $dados->tags = optional_param('tags', null, PARAM_RAW);
-$dados->periodo = optional_param('periodo', 0, PARAM_INT);
+$dados->idperiodo = optional_param('idperiodo', 0, PARAM_INT);
 $dados->turno = optional_param('turno', null, PARAM_RAW);
-$dados->cod_curso = optional_param('cod_curso',null, PARAM_RAW);
-$dados->mesa = optional_param('mesa', 0, PARAM_INT);
-$dados->matriculaAluno = "6914104289";
-$dados->matriculaProfessor = "691410";
-
+$dados->idcurso = optional_param('idcurso',null, PARAM_RAW);
+$dados->alocamesa = optional_param('alocamesa', 0, PARAM_INT);
+$dados->matraluno = "6914104289";
+$dados->matrprofessor = "6914102";
+$dados->idprojeto = 7;
 $controller = new ProjetoController();
-$result = $controller->save($dados);
+$result = $controller->update($dados);
 
 
 header('Content-Type: application/json; charset=utf-8');

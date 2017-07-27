@@ -30,7 +30,7 @@
         <TABLE NAME="sepex_categoria" COMMENT="Tabela do Projeto">
             <FIELDS>
                 <FIELD NAME="idcategoria" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-                <FIELD NAME="nomecategoria" TYPE="char" LENGTH="200" NOTNULL="true" COMMENT="Nome da categoria"/>
+                <FIELD NAME="nomecategoria" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Nome da categoria"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="idcategoria"/>
@@ -40,10 +40,10 @@
         <TABLE NAME="sepex_curso" COMMENT="Tabela de cursos">
             <FIELDS>
                 <FIELD NAME="idcurso" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
-                <FIELD NAME="nomecurso" TYPE="char" LENGTH="50" NOTNULL="true" COMMENT="Nome do curso"/>
+                <FIELD NAME="nomecurso" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Nome do curso"/>
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="cod_curso"/>
+                <KEY NAME="primary" TYPE="primary" FIELDS="idcurso"/>
             </KEYS>
         </TABLE>
     
@@ -53,15 +53,15 @@
                 <FIELD NAME="codprojeto" TYPE="char" LENGTH="15" NOTNULL="true" UNSIGNED="true"/>
                 <FIELD NAME="titulo" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Titulo do projeto"/>
                 <FIELD NAME="resumo" TYPE="text" NOTNULL="true" COMMENT="Resumo do aluno"/>        
-                <FIELD NAME="datacadastro" TYPE="char" LENGTH="50" NOTNULL="true"/>
+                <FIELD NAME="dtcadastro" TYPE="char" LENGTH="50" NOTNULL="true"/>
                 <FIELD NAME="email" TYPE="char" LENGTH="100" NOTNULL="true"/>
                 <FIELD NAME="tags" TYPE="char" LENGTH="255" NOTNULL="true"/>
-                <FIELD NAME="periodo" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Titulo do projeto"/>
+                <FIELD NAME="idperiodo" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Titulo do projeto"/>
                 <FIELD NAME="turno" TYPE="char" LENGTH="10" NOTNULL="true" COMMENT="turno de apresentacao do projeto"/>
                 <FIELD NAME="areacurso" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="area do curso"/>
-                <FIELD NAME="mesa" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="permite o aluno alocar mesa"/>                    
-                <FIELD NAME="codcategoria" TYPE="int" LENGTH="10" NOTNULL="true"/>
-                <FIELD NAME="codcurso" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="alocamesa" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="permite o aluno alocar mesa"/>                    
+                <FIELD NAME="idcategoria" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="idcurso" TYPE="int" LENGTH="10" NOTNULL="true"/>
                 <FIELD NAME="statusresumo" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="true"/>
                 <FIELD NAME="obsorientador" TYPE="text" NOTNULL="false"/>               
             </FIELDS>
@@ -91,11 +91,11 @@
                 <FIELD NAME="idprofessorprojeto" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>  
                 <FIELD NAME="idprojeto" TYPE="int" LENGTH="10" NOTNULL="true"/>
                 <FIELD NAME="matrprofessor" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true"/>
-                <FIELD NAME="dataavaliacao" TYPE="char" LENGTH="50" NOTNULL="false"/>
+                <FIELD NAME="dtavaliacao" TYPE="char" LENGTH="50" NOTNULL="false"/>
                 <FIELD NAME="tipo" TYPE="char" LENGTH="15" NOTNULL="true" COMMENT="avaliador-orientador"/>
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id_projeto_professor"/>
+                <KEY NAME="primary" TYPE="primary" FIELDS="idprofessorprojeto"/>
                 <KEY NAME="idprojeto" TYPE="foreign" FIELDS="idprojeto" REFTABLE="sepex_projeto" REFFIELDS="idprojeto"/>
                 <KEY NAME="matrprofessor" TYPE="foreign" FIELDS="matrprofessor" REFTABLE="user" REFFIELDS="username"/>
             </KEYS>
@@ -120,7 +120,7 @@
                 <FIELD NAME="totalavaliacao" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>                
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id_avaliacao_projeto"/>
+                <KEY NAME="primary" TYPE="primary" FIELDS="idavaliacaoprojeto"/>
                 <KEY NAME="idprofessorprojeto" TYPE="foreign" FIELDS="idprofessorprojeto" REFTABLE="sepex_professor_projeto" REFFIELDS="idprofessorprojeto"/>        
             </KEYS>
         </TABLE>
@@ -137,9 +137,9 @@
     
         <TABLE NAME="sepex_definicao_projeto" COMMENT="Tabela de registro dos locais de apresentacao">
             <FIELDS>
-                <FIELD NAME="iddefinicao_projeto" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>  
+                <FIELD NAME="iddefinicaoprojeto" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>  
                 <FIELD NAME="idprojeto" TYPE="int" LENGTH="10" NOTNULL="true"/>
-                <FIELD NAME="dataapresentacao" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="data e hora de apresentacao do projeto"/>        
+                <FIELD NAME="dtapresentacao" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="data e hora de apresentacao do projeto"/>        
                 <FIELD NAME="idlocalapresentacao" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true"/>  
             </FIELDS>
             <KEYS>

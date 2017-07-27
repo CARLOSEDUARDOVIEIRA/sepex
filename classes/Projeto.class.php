@@ -5,36 +5,39 @@
  *
  * @author Carlos Eduardo Vieira
  */
-
 class Projeto {
-    
-    protected $id_projeto;
-    protected $area_curso;
-    protected $cod_categoria;
-    protected $cod_projeto;
-    protected $data_cadastro;
+
+    protected $idprojeto;
+    protected $areacurso;
+    protected $idcategoria;
+    protected $codprojeto;
+    protected $dtcadastro;
     protected $email;
-    protected $mesa;
-    protected $periodo;
+    protected $alocamesa;
+    protected $idperiodo;
     protected $resumo;
-    protected $status;
+    protected $statusresumo;
+    protected $obsorientador;
     protected $tags;
     protected $turno;
     protected $titulo;
+    protected $idcurso;
 
-    function __construct($dados) {
-        $this->data_cadastro = $dados->data_cadastro;
-        $this->cod_projeto = (string) $dados->cod_projeto;
-        $this->titulo = (string) $dados->titulo;
-        $this->resumo = (string) $dados->resumo;
+    function validation($dados) {
+        $this->areacurso = (int) $dados->areacurso;
+        $this->idcategoria = (int) $dados->idcategoria;
+        $this->codprojeto = (string) $dados->codprojeto;
+        $this->dtcadastro = (string)$dados->dtcadastro;
         $this->email = $dados->email;
+        $this->alocamesa = (int) $dados->alocamesa;
+        $this->idperiodo = (int) $dados->idperiodo;
+        $this->resumo = (string) $dados->resumo;
+        $this->statusresumo = null;
+        $this->obsorientador = null;
         $this->tags = (string) $dados->tags;
-        $this->periodo = (int) $dados->periodo;
         $this->turno = (string) $dados->turno;
-        $this->area_curso = (int) $dados->area_curso;
-        $this->mesa = (int) $dados->aloca_mesa;
-        $this->cod_categoria = (int) $dados->cod_categoria;
-        $this->status = null;
+        $this->titulo = (string) $dados->titulo;
+        $this->idcurso = (int)$dados->idcurso;
         return $this;
     }
 

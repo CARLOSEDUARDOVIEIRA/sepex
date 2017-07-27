@@ -19,4 +19,11 @@ class ProjetoController extends ProjetoModel {
         }
     }
 
+    public function update($dados) {
+        try {
+           return parent::update($dados);
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
 }
