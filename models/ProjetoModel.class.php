@@ -1,14 +1,29 @@
 <?php
 
-require_once '../classes/Projeto.class.php';
-require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 
 /**
  * Description of ProjetoModel
  *
  * @author Carlos Eduardo Vieira
  */
-class ProjetoModel extends Projeto {
+class ProjetoModel {
+
+    private $idprojeto;
+    private $areacurso;
+    private $idcategoria;
+    private $codprojeto;
+    private $dtcadastro;
+    private $email;
+    private $alocamesa;
+    private $idperiodo;
+    private $resumo;
+    private $statusresumo;
+    private $obsorientador;
+    private $tags;
+    private $turno;
+    private $titulo;
+    private $idcurso;
 
     /** metodo que irah salvar um novo projeto no bd, <b>Optei por nao utilizar 
      * transactions pelo fato de o moodle da ucv estar desatualizado
@@ -18,75 +33,43 @@ class ProjetoModel extends Projeto {
      * caso de necessidade de acordo com a evolucao do evento sepex isso pode 
      * ser implementado.</b>
      */
-    protected function save($dados) {
+    protected function save($projeto) {
         global $USER, $DB;
-        $date = new DateTime("now", core_date::get_user_timezone_object());
-        $dados->dtcadastro = userdate($date->getTimestamp());
-        $dados->codprojeto = $this->createCodigoProjeto($dados->idcategoria);
-        $dados->areacurso = $this->createAreaCurso($dados->idcurso);
-        $dados->email = 'dullvieira'; //$USER->email;
-        $projeto = parent::validation($dados);
 
-        $insert = (object) array('areacurso' => $projeto->areacurso,
-                    'idcategoria' => $projeto->idcategoria,
-                    'codprojeto' => $projeto->codprojeto,
-                    'dtcadastro' => $projeto->dtcadastro,
-                    'email' => $projeto->email,
-                    'alocamesa' => $projeto->alocamesa,
-                    'idperiodo' => $projeto->idperiodo,
-                    'resumo' => $projeto->resumo,
-                    'statusresumo' => $projeto->statusresumo,
-                    'obsorientador' => $projeto->obsorientador,
-                    'tags' => $projeto->tags,
-                    'turno' => $projeto->turno,
-                    'titulo' => $projeto->titulo,
-                    'idcurso' => $projeto->idcurso
-        );
-        $idprojeto = $DB->insert_record('sepex_projeto', $insert, $returnid = true);
+        $date = new DateTime("now", core_date::get_user_timezone_object());
+        $projeto->dtcadastro = userdate($date->getTimestamp());
+        $projeto->codprojeto = $this->createCodigoProjeto($projeto->idcategoria);
+        $projeto->email = 'dullvieira'; //$USER->email;
+        $curso = $DB->get_record('sepex_curso', array('idcurso' => $projeto->idcurso));
+        $projeto->areacurso = $curso->areacurso;
+
+        $idprojeto = $DB->insert_record('sepex_projeto', $projeto, $returnid = true);
 
         $orientador = (object) array('idprojeto' => $idprojeto,
-                    'matrprofessor' => $dados->matrprofessor,
+                    'matrprofessor' => $projeto->matrprofessor,
                     'tipo' => 'Orientador'
         );
 
         $DB->insert_record("sepex_professor_projeto", $orientador);
-        $alunocadastrante = (object) array('matraluno' => $dados->matraluno, //$USER->username;,
-                    'idprojeto' => $idprojeto,
-        );
-        $DB->insert_record("sepex_aluno_projeto", $alunocadastrante);
-
-        $demaisalunos = explode(";", $dados->matraluno);
-        if (count($demaisalunos) > 1) {
-            foreach ($demaisalunos as $aluno) {
-                $matraluno = trim($aluno, " \t,"); //remove espacos e retira uma possivel , da ultima matricula informada.
-                $alunovalido = is_numeric($matraluno) && strlen($matraluno) == 10 && $matraluno != $USER->username;
-                if ($alunovalido) {
-                    $aluno = (object) array('matraluno' => $alunovalido,
-                                'idprojeto' => $idprojeto
-                    );
-                    $DB->insert_record("sepex_aluno_projeto", $aluno);
-                }
-            }
-        }
+        $this->saveAluno($idprojeto, $projeto->matraluno);
     }
 
-    protected function update($dados) {
+    protected function update($projeto) {
         global $USER, $DB;
 
         $date = new DateTime("now", core_date::get_user_timezone_object());
-        $dados->dtcadastro = userdate($date->getTimestamp());
+        $projeto->dtcadastro = userdate($date->getTimestamp());
 
-        $projetoantigo = $DB->get_record("sepex_projeto", array('idprojeto' => $dados->idprojeto));
+        $projetoantigo = $DB->get_record("sepex_projeto", array('idprojeto' => $projeto->idprojeto));
 
-        if ($projetoantigo->idcategoria != $dados->idcategoria) {
-            $dados->codprojeto = $this->createCodigoProjeto($dados->idcategoria);
+        if ($projetoantigo->idcategoria != $projeto->idcategoria) {
+            $projeto->codprojeto = $this->createCodigoProjeto($projeto->idcategoria);
         } else {
-            $dados->codprojeto = $projetoantigo->codprojeto;
+            $projeto->codprojeto = $projetoantigo->codprojeto;
         }
-        $dados->areacurso = 1; //$this->createAreaCurso($dados->idcurso);
-        $dados->email = 'dullvieira'; //$USER->email;
-
-        $projeto = parent::validation($dados);
+        $curso = $DB->get_record('sepex_curso', array('idcurso' => $projeto->idcurso));
+        $projeto->areacurso = $curso->areacurso;
+        $projeto->email = 'dullvieira'; //$USER->email;
 
         $DB->execute("
             UPDATE mdl_sepex_projeto sp
@@ -107,7 +90,7 @@ class ProjetoModel extends Projeto {
                 sp.titulo = ?,
                 sp.idcurso = ?,
                 spp.matrprofessor = ?
-                WHERE sp.idprojeto = {$dados->idprojeto}", array($projeto->areacurso,
+                WHERE sp.idprojeto = {$projeto->idprojeto}", array($projeto->areacurso,
             $projeto->idcategoria,
             $projeto->codprojeto,
             $projeto->dtcadastro,
@@ -121,36 +104,46 @@ class ProjetoModel extends Projeto {
             $projeto->turno,
             $projeto->titulo,
             $projeto->idcurso,
-            $dados->matrprofessor
+            $projeto->matrprofessor
                 )
         );
 
-        return $projeto->codprojeto;
-//
-//        $orientador = (object) array('idprojeto' => $idprojeto,
-//                    'matrprofessor' => $dados->matrprofessor,
-//                    'tipo' => 'Orientador'
-//        );
-//
-//        $DB->insert_record("sepex_professor_projeto", $orientador);
-//        $alunocadastrante = (object) array('matraluno' => $dados->matraluno, //$USER->username;,
-//                    'idprojeto' => $idprojeto,
-//        );
-//        $DB->insert_record("sepex_aluno_projeto", $alunocadastrante);
-//
-//        $demaisalunos = explode(";", $dados->matraluno);
-//        if (count($demaisalunos) > 1) {
-//            foreach ($demaisalunos as $aluno) {
-//                $matraluno = trim($aluno, " \t,"); //remove espacos e retira uma possivel , da ultima matricula informada.
-//                $alunovalido = is_numeric($matraluno) && strlen($matraluno) == 10 && $matraluno != $USER->username;
-//                if ($alunovalido) {
-//                    $aluno = (object) array('matraluno' => $alunovalido,
-//                                'idprojeto' => $idprojeto
-//                    );
-//                    $DB->insert_record("sepex_aluno_projeto", $aluno);
-//                }
-//            }
-//        }
+        //Estudarei como melhorar este update dos alunos.
+        $response = $DB->delete_records('sepex_aluno_projeto', array("idprojeto" => $projeto->idprojeto));
+        if ($response) {
+            $this->saveAluno($projeto->idprojeto, $projeto->matraluno);
+        }
+    }
+
+    protected function delete($idprojeto) {
+        global $DB;
+
+        $avaliadores = $DB->get_records('sepex_professor_projeto', array('idprojeto' => $idprojeto, 'tipo' => 'avaliador'));
+        if ($avaliadores) {
+            foreach ($avaliadores as $avaliacao) {
+                $DB->delete_records('sepex_avaliacao_projeto', array("idprofessorprojeto" => $avaliacao->idprofessorprojeto));
+            }
+        }
+        $DB->delete_records('sepex_aluno_projeto', array("idprojeto" => $idprojeto));
+        $DB->delete_records('sepex_professor_projeto', array("idprojeto" => $idprojeto));
+        $DB->delete_records('sepex_projeto', array("idprojeto" => $idprojeto));
+        $DB->delete_records('sepex_definicao_projeto', array("idprojeto" => $idprojeto));
+    }
+    
+    protected function detail($idprojeto) {
+        global $DB;
+        $projetodetalhado = new stdClass();
+        $projetodetalhado->professores = $DB->get_records('sepex_professor_projeto', array('idprojeto' => $idprojeto));
+        $projetodetalhado->avaliacao = array();
+        if ($projetodetalhado->professores) {
+            foreach ($projetodetalhado->professores as $avaliacao) {
+                array_push($projetodetalhado->avaliacao, $DB->get_records('sepex_avaliacao_projeto', array("idprofessorprojeto" => $avaliacao->idprofessorprojeto)));
+            }
+        }
+        $projetodetalhado->alunos = $DB->get_records('sepex_aluno_projeto', array("idprojeto" => $idprojeto));
+        $projetodetalhado->projeto = $DB->get_records('sepex_projeto', array("idprojeto" => $idprojeto));
+        $projetodetalhado->definicao = $DB->get_records('sepex_definicao_projeto', array("idprojeto" => $idprojeto));
+        return $projetodetalhado;
     }
 
     private function createCodigoProjeto($idcategoria) {
@@ -176,21 +169,25 @@ class ProjetoModel extends Projeto {
         return $codigo;
     }
 
-    private function createAreaCurso($cod_curso) {
+    private function saveAluno($idprojeto, $student) {
+        global $USER, $DB;
+        $alunocadastrante = (object) array('matraluno' => $student, //$USER->username;,
+                    'idprojeto' => $idprojeto
+        );
+        $DB->insert_record("sepex_aluno_projeto", $alunocadastrante);
 
-        if ($cod_curso == 'ADM' || $cod_curso == 'AUR' ||
-                $cod_curso == 'CONT' || $cod_curso == 'TDI' ||
-                $cod_curso == 'DIR' || $cod_curso == 'FIL' ||
-                $cod_curso == 'PIS' || $cod_curso == 'SES' || $cod_curso == 'EDF') {
-            return 1;
-        } elseif ($cod_curso == 'ENP' || $cod_curso == 'ENC' ||
-                $cod_curso == 'SIN' || $cod_curso == 'TADS' ||
-                $cod_curso == 'TLO' || $cod_curso == 'RED') {
-            return 2;
-        } elseif ($cod_curso == 'CBB' || $cod_curso == 'CBL' ||
-                $cod_curso == 'ENF' || $cod_curso == 'FTP' ||
-                $cod_curso == 'NUT' || $cod_curso == 'FAR') {
-            return 3;
+        $demaisalunos = explode(";", $student);
+        if (count($demaisalunos) > 1) {
+            foreach ($demaisalunos as $aluno) {
+                $matraluno = trim($aluno, " \t,"); //remove espacos e retira uma possivel , da ultima matricula informada.
+                $alunovalido = is_numeric($matraluno) && strlen($matraluno) == 10 && $matraluno != $USER->username;
+                if ($alunovalido) {
+                    $aluno = (object) array('matraluno' => $alunovalido,
+                                'idprojeto' => $idprojeto
+                    );
+                    $DB->insert_record("sepex_aluno_projeto", $aluno);
+                }
+            }
         }
     }
 

@@ -1,19 +1,19 @@
 <?php
 
-require_once '../models/ProjetoModel.class.php';
-require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require '../models/ProjetoModel.class.php';
+require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 
 /**
  * Description of ProjetoController
  *
  * @author Carlos Eduardo Vieira
  */
-
 class ProjetoController extends ProjetoModel {
 
-    public function save($dados) {
+    public function save($projeto) {
         try {
-           return parent::save($dados);  // chama da classe pai: ProjetoModel::save()
+            parent::save($projeto);  // chama da classe pai: ProjetoModel::save()
+            return true;
         } catch (Exception $e) {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
@@ -21,9 +21,28 @@ class ProjetoController extends ProjetoModel {
 
     public function update($dados) {
         try {
-           return parent::update($dados);
+            parent::update($dados);
+            return true;
         } catch (Exception $e) {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
+
+    public function delete($dados) {
+        try {
+            parent::delete($dados);
+            return true;
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
+
+    public function detail($idprojeto) {
+        try {
+            return parent::detail($idprojeto);
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
+
 }

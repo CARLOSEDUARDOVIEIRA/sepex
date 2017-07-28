@@ -41,6 +41,7 @@
             <FIELDS>
                 <FIELD NAME="idcurso" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
                 <FIELD NAME="nomecurso" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Nome do curso"/>
+                <FIELD NAME="areacurso" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="area do curso"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="idcurso"/>

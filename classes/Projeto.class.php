@@ -23,7 +23,7 @@ class Projeto {
     protected $titulo;
     protected $idcurso;
 
-    function validation($dados) {
+    function __construct($dados) {
         $this->areacurso = (int) $dados->areacurso;
         $this->idcategoria = (int) $dados->idcategoria;
         $this->codprojeto = (string) $dados->codprojeto;

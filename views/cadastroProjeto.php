@@ -3,10 +3,10 @@
 /* PÁGINA DE EXIBIÇÃO DO FORMULÁRIO DE CADASTRO SEPEX
  */
 
-require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 ////require_once('../locallib.php');
 //require_once('../classes/Formulario.class.php');
-require_once('../controllers/ProjetoController.class.php');
+require('../controllers/ProjetoController.class.php');
 
 global $DB, $CFG, $PAGE;
 
@@ -52,10 +52,10 @@ $dados->idcurso = optional_param('idcurso',null, PARAM_RAW);
 $dados->alocamesa = optional_param('alocamesa', 0, PARAM_INT);
 $dados->matraluno = "6914104289";
 $dados->matrprofessor = "6914102";
-$dados->idprojeto = 7;
-$controller = new ProjetoController();
-$result = $controller->update($dados);
+$dados->idprojeto = 8;
 
+$controller = new ProjetoController();
+$result = $controller->detail($dados->idprojeto);
 
 header('Content-Type: application/json; charset=utf-8');
 $json = file_get_contents('php://input');
