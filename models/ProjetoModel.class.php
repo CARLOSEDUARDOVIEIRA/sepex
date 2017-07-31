@@ -1,6 +1,6 @@
 <?php
 
-require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+//require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 
 /**
  * Description of ProjetoModel
@@ -39,7 +39,7 @@ class ProjetoModel {
         $date = new DateTime("now", core_date::get_user_timezone_object());
         $projeto->dtcadastro = userdate($date->getTimestamp());
         $projeto->codprojeto = $this->createCodigoProjeto($projeto->idcategoria);
-        $projeto->email = 'dullvieira'; //$USER->email;
+        $projeto->email = $USER->email;
         $curso = $DB->get_record('sepex_curso', array('idcurso' => $projeto->idcurso));
         $projeto->areacurso = $curso->areacurso;
 
@@ -69,7 +69,7 @@ class ProjetoModel {
         }
         $curso = $DB->get_record('sepex_curso', array('idcurso' => $projeto->idcurso));
         $projeto->areacurso = $curso->areacurso;
-        $projeto->email = 'dullvieira'; //$USER->email;
+        $projeto->email = $USER->email;
 
         $DB->execute("
             UPDATE mdl_sepex_projeto sp
@@ -129,21 +129,36 @@ class ProjetoModel {
         $DB->delete_records('sepex_projeto', array("idprojeto" => $idprojeto));
         $DB->delete_records('sepex_definicao_projeto', array("idprojeto" => $idprojeto));
     }
-    
+
     protected function detail($idprojeto) {
         global $DB;
-        $projetodetalhado = new stdClass();
-        $projetodetalhado->professores = $DB->get_records('sepex_professor_projeto', array('idprojeto' => $idprojeto));
-        $projetodetalhado->avaliacao = array();
-        if ($projetodetalhado->professores) {
-            foreach ($projetodetalhado->professores as $avaliacao) {
-                array_push($projetodetalhado->avaliacao, $DB->get_records('sepex_avaliacao_projeto', array("idprofessorprojeto" => $avaliacao->idprofessorprojeto)));
+        return $DB->get_records('sepex_projeto', array("idprojeto" => $idprojeto));
+    }
+
+    protected function getProfessorProjeto($idprojeto) {
+        global $DB;
+        return $DB->get_records('sepex_professor_projeto', array('idprojeto' => $idprojeto));
+    }
+
+    protected function getAlunoProjeto($idprojeto) {
+        global $DB;
+        return $DB->get_records('sepex_aluno_projeto', array("idprojeto" => $idprojeto));
+    }
+
+    protected function getDefinicaoProjeto($idprojeto) {
+        global $DB;
+        return $DB->get_records('sepex_definicao_projeto', array("idprojeto" => $idprojeto));
+    }
+
+    protected function getAvaliacaoProjeto($professores) {
+        global $DB;
+        $avaliacaoprojeto = array();
+        if ($professores) {
+            foreach ($professores as $avaliacao) {
+                array_push($avaliacaoprojeto, $DB->get_records('sepex_avaliacao_projeto', array("idprofessorprojeto" => $avaliacao->idprofessorprojeto)));
             }
         }
-        $projetodetalhado->alunos = $DB->get_records('sepex_aluno_projeto', array("idprojeto" => $idprojeto));
-        $projetodetalhado->projeto = $DB->get_records('sepex_projeto', array("idprojeto" => $idprojeto));
-        $projetodetalhado->definicao = $DB->get_records('sepex_definicao_projeto', array("idprojeto" => $idprojeto));
-        return $projetodetalhado;
+        return $avaliacaoprojeto;
     }
 
     private function createCodigoProjeto($idcategoria) {
@@ -171,7 +186,7 @@ class ProjetoModel {
 
     private function saveAluno($idprojeto, $student) {
         global $USER, $DB;
-        $alunocadastrante = (object) array('matraluno' => $student, //$USER->username;,
+        $alunocadastrante = (object) array('matraluno' => $USER->username,
                     'idprojeto' => $idprojeto
         );
         $DB->insert_record("sepex_aluno_projeto", $alunocadastrante);

@@ -24,10 +24,8 @@
  * @copyright  2017 Carlos Eduardo Vieira <dullvieira@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once('./classes/Formulario.class.php');
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
-require_once(dirname(__FILE__).'/locallib.php');
 
 $id = required_param('id', PARAM_INT);
 $s  = optional_param('s', 0, PARAM_INT);
@@ -48,14 +46,6 @@ if ($id) {
 $lang = current_language();
 require_login($course, true, $cm);
 $context_course = context_course::instance($course -> id);       
-$event = \mod_sepex\event\course_module_viewed::create(array(
-    'objectid' => $PAGE->cm->instance,
-    'context' => $PAGE->context,
-));
-
-$event->add_record_snapshot('course', $PAGE->course);
-$event->add_record_snapshot($PAGE->cm->modname, $sepex);
-$event->trigger();
 
 $PAGE->set_url('/mod/sepex/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($sepex->name));
@@ -79,30 +69,30 @@ echo $OUTPUT->header();
         if ($showactivity) {
             
             $linkForm = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:10%;'));
-            $linkForm .= html_writer::start_tag('a', array('href' => './cadastro_sepex/cadastro_sepex.php?id=' . $id . '&add=1',));
-            $linkForm .= html_writer::start_tag('submit', array('class' => 'btn btn-secondary', 'style' => 'margin-bottom:5%;'));
+            $linkForm .= html_writer::start_tag('a', array('href' => './views/cadastroProjeto.php?id=' . $id . '&add=1',));
+            $linkForm .= html_writer::start_tag('submit', array('class' => 'btn btn-primary', 'style' => 'margin-bottom:5%;'));
             $linkForm .= get_string('inscricao', 'sepex');
             $linkForm .= html_writer::end_tag('a');
             $linkForm .= html_writer::end_tag('div');
             echo $linkForm;
                         
             //Se for aluno redireciono para o formulario.                        
-            listar_projetos_aluno($usuario, $id);
-            if ($acao){
-                $proj =  htmlspecialchars($_POST['proj']);
-                if($acao == 2){
-                    apagar_formulario($proj);
-                    echo "<meta HTTP-EQUIV='refresh' CONTENT='0;URL=view.php?id=$id'>";
-                }
-            }
+//            listar_projetos_aluno($usuario, $id);
+//            if ($acao){
+//                $proj =  htmlspecialchars($_POST['proj']);
+//                if($acao == 2){
+//                    apagar_formulario($proj);
+//                    echo "<meta HTTP-EQUIV='refresh' CONTENT='0;URL=view.php?id=$id'>";
+//                }
+//            }
         }else{
-            listar_projetos_aluno_apresentacao($usuario,$id);
+            //listar_projetos_aluno_apresentacao($usuario,$id);
         }
     }        
     //-------------------------------- PROFESSOR
     elseif (has_capability('mod/sepex:openprofessor', $context_course)) {            
             $usuario = $USER->username;
-            listar_projetos_professor($usuario,$id);
+           // listar_projetos_professor($usuario,$id);
 
     }
         //-------------------------------- GERENTE

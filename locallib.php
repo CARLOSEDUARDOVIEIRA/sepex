@@ -32,214 +32,6 @@ require_once(dirname(__FILE__) . '/lib.php');
 defined('MOODLE_INTERNAL') || die();
 
 
-
-/**
- * 
- * @global type $DB
- * @param type $dados
- * @param type $id_projeto
- * @return string - Código do projeto atualizado.
- */
-function atualizarCodigo($dados, $id_projeto) {
-    global $DB;
-    $categoria = [
-        "1" => "EGR",
-        "2" => "EST",
-        "3" => "INC",
-        "4" => "INO",
-        "5" => "PE",
-        "6" => "PI",
-        "7" => "RS",
-        "8" => "TL",
-        "9" => "TCC",
-    ];
-
-    $codigo = 'SEP17' . $dados->cod_curso . $categoria[$dados->cod_categoria] . '0' . $id_projeto;
-
-    return $codigo;
-}
-
-
-
-/* * Metodo responsável por guardar o projeto no banco de dados
- * 
- * @global type $DB
- * @param type $dados
- * @param type $codigo
- * @param type $USER
- */
-
-function guardar_projeto($dados, $codigo, $USER) {
-    global $DB;
-
-    $date = new DateTime("now", core_date::get_user_timezone_object());
-    $dataAtual = userdate($date->getTimestamp());
-    $area = listar_area_curso($dados->cod_curso);
-    $projeto = new stdClass();
-    $projeto->cod_projeto = $codigo;
-    $projeto->titulo = $dados->titulo;
-    $projeto->resumo = $dados->resumo[text];
-    $projeto->status = null;
-    $projeto->data_cadastro = $dataAtual;
-    $projeto->email = $USER->email;
-    $projeto->tags = $dados->tags;
-    $projeto->cod_periodo = $dados->periodo;
-    $projeto->turno = $dados->turno;
-    $projeto->area_curso = $area;
-    $projeto->aloca_mesa = $dados->aloca_mesa;
-    $projeto->cod_categoria = $dados->cod_categoria;
-    $id = $DB->insert_record("sepex_projeto", $projeto, $returnid = true);
-
-    
-    //FUNÇÕES MODIFICADAS DEVIDO O MOODLE SE DESATUALIZADO.
-    $principal = new stdClass();
-    $principal->aluno_matricula = $USER->username;
-    $principal->id_projeto = $id;
-    $DB->insert_record("sepex_aluno_projeto", $principal);
-
-    $aluno = new stdClass();
-    $alunos = explode(";", $dados->aluno_matricula);
-    foreach ($alunos as $i) {
-        if ($i != $USER->username && is_numeric($i) && strlen(trim($i)) == 10) {
-            $aluno->aluno_matricula = $i;
-            $aluno->id_projeto = $id;
-            $DB->insert_record("sepex_aluno_projeto", $aluno);
-        }
-    }
-
-    $tipo = 'orientador';
-    guardar_professor($id, $dados->cod_professor, $tipo);
-}
-
-/* * Faz a gravação dos professores dos projetos
- * @global type $DB
- * @param type $id - Id do projeto no qual se deseja atribuir um professor. 
- * @param type $dados
- * @param type $tipo 
- */
-
-function guardar_professor($id, $cod_professor, $tipo) {
-    global $DB;
-    $professor = new stdClass();
-    $professor->id_projeto = $id;
-    $professor->professor_cod_professor = $cod_professor;
-    $professor->tipo = $tipo;
-    $DB->insert_record("sepex_projeto_professor", $professor);
-}
-
-/**
- * Método responsável por atualizar as tabelas de cadastro de resumo sepex
- * @global type $DB
- * @param type $dados
- * @param type $codigo
- * @param type $id_projeto
- */
-function atualizar_projeto($dados, $id_projeto, $orientador1, $USER) {
-    global $DB;
-
-    $date = new DateTime("now", core_date::get_user_timezone_object());
-    $dataAtual = userdate($date->getTimestamp());
-    $novo_codigo = atualizarCodigo($dados, $id_projeto);
-    $area = listar_area_curso($dados->cod_curso);
-    $DB->execute("
-            UPDATE mdl_sepex_projeto sp
-            INNER JOIN mdl_sepex_projeto_curso pc 
-                ON pc.projeto_id_projeto = sp.id_projeto            
-                SET sp.cod_projeto = ?,
-                sp.titulo = ?, 
-                sp.resumo = ?,
-                sp.data_cadastro = ?,                
-                sp.tags = ?,
-                sp.cod_periodo = ?,
-                sp.turno = ?,
-                sp.area_curso = ?,
-                sp.aloca_mesa = ?,
-                sp.cod_categoria = ?,
-                pc.curso_cod_curso = ?
-                WHERE sp.id_projeto = {$id_projeto} ", array($novo_codigo, $dados->titulo, $dados->resumo[text], $dataAtual, $dados->tags, $dados->periodo, $dados->turno, $area, $dados->aloca_mesa, $dados->cod_categoria, $dados->cod_curso));
-
-    $DB->delete_records('sepex_aluno_projeto', array("id_projeto" => $id_projeto));
-    $principal = new stdClass();
-    $principal->aluno_matricula = $USER->username;
-    $principal->id_projeto = $id_projeto;
-    $DB->insert_record("sepex_aluno_projeto", $principal);
-
-    $aluno = new stdClass();
-    $alunos = explode(";", $dados->aluno_matricula);
-    foreach ($alunos as $i) {
-        if ($i != $USER->username && is_numeric($i) && strlen(trim($i)) == 10) {
-            $aluno->aluno_matricula = $i;
-            $aluno->id_projeto = $id_projeto;
-            $DB->insert_record("sepex_aluno_projeto", $aluno);
-        }
-    }
-
-    $tipo = 'orientador';
-    if ($dados->cod_professor != $orientador1) {
-        atualizar_professor_orientador($id_projeto, $tipo, $orientador1, $dados->cod_professor);
-    }
-}
-
-function atualizar_professor_orientador($id_projeto, $tipo, $prof_antigo, $prof_novo) {
-    global $DB;
-    $DB->execute("
-        UPDATE mdl_sepex_projeto_professor                                          
-            SET professor_cod_professor = ?,
-                data_avaliacao = null,
-                status_resumo = null,
-                obs_orientador = null
-            WHERE id_projeto = {$id_projeto} AND professor_cod_professor = {$prof_antigo} AND tipo = '{$tipo}'", array($prof_novo));
-}
-
-function delete_professor_projeto($id_projeto, $tipo) {
-    global $DB;
-    $DB->execute("
-            DELETE FROM mdl_sepex_projeto_professor            
-                WHERE id_projeto = {$id_projeto} AND tipo = '{$tipo}'");
-}
-
-/* * Metodo responsavel por listar todos os projetos cadastrados no sistema
- * @global type $DB
- * @return array com os projetos cadastrados no sistema
- */
-
-function listar_projetos_cadastrados() {
-    global $DB;
-    $lista_projetos = $DB->get_records("sepex_projeto", array());
-    $projetos = array();
-    foreach ($lista_projetos as $projeto) {
-        array_push($projetos, $projeto);
-    }
-    return $projetos;
-}
-
-/**
- * @global type $DB
- * @param type $codProjeto
- * @return type
- */
-function listar_projeto_por_id($id_projeto) {
-    global $DB;
-    //Exibir os projetos do aluno
-    $query = $DB->get_records_sql("
-            SELECT
-            sp.id_projeto,
-            sp.cod_projeto,
-            sp.titulo,
-            sp.resumo,
-            sp.email,
-            sp.tags,
-            sp.cod_periodo,
-            sp.turno,
-            sp.aloca_mesa,
-            sp.cod_categoria,
-            spc.curso_cod_curso
-            FROM mdl_sepex_projeto sp
-            INNER JOIN mdl_sepex_projeto_curso spc ON spc.projeto_id_projeto  = sp.id_projeto
-            WHERE sp.id_projeto=?", array($id_projeto));
-    return $query;
-}
-
 /* * Método responsável por trazer do banco as informações sobre os projetos de um aluno
  * @param type $aluno -> matricula do aluno que deseja listar as informações
  * @return aluno
@@ -443,17 +235,6 @@ function listar_projetos_professor($usuario, $id) {
     endif;
 }
 
-/** Método responsável por apagar um formulário sepex 
- * @global type $DB
- * @param type $id_projeto
- */
-function apagar_formulario($id_projeto) {
-    global $DB;
-    $DB->delete_records('sepex_aluno_projeto', array("id_projeto" => $id_projeto));
-    $DB->delete_records('sepex_projeto_curso', array("projeto_id_projeto" => $id_projeto));
-    $DB->delete_records('sepex_projeto_professor', array("id_projeto" => $id_projeto));
-    $DB->delete_records('sepex_projeto', array("id_projeto" => $id_projeto));
-}
 
 /* * Exibe os projetos de acordo com um filtro de area, turno, categoria.
  * @global type $DB
@@ -483,18 +264,6 @@ function obter_projetos_por_area_turno_categoria($dados) {
     return $projeto;
 }
 
-function exibir_formulario_inscricao($sepex, $cm, $mform) {
-    global $OUTPUT;
-    // Primeira exibição do formulário.
-    echo $OUTPUT->header();
-    //Titulo
-    echo $OUTPUT->heading(format_string($sepex->name), 2);
-    echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
-
-    $mform->display(); // exibe o formulário        
-
-    echo $OUTPUT->footer();
-}
 
 /* * Método responsável por listar os projetos pelo código do professor. 
  * @global type $DB
@@ -533,21 +302,6 @@ function select_projetos_professor($usuario) {
  * @return type
  */
 
-function listar_professor_por_id_projeto($id_projeto, $tipo) {
-    global $DB;
-
-    $table = 'sepex_projeto_professor';
-    $select = "id_projeto = {$id_projeto} AND tipo = '{$tipo}'";
-    $query = $DB->get_records_select($table, $select);
-
-    $orientadores = array();
-    $i = 0;
-    foreach ($query as $orientador) {
-        $orientadores[$i] = $orientador->professor_cod_professor;
-        $i++;
-    }
-    return $orientadores;
-}
 
 function listar_nome_professores($id_projeto, $tipo, $curso) {
     global $DB;

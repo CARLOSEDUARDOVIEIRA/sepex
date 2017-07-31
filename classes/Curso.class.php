@@ -19,8 +19,7 @@ class Curso {
         
         $this->nomecurso = $data->nomecurso;
         $this->areacurso = $data->areacurso;
-        return $this;
-        //$DB->insert_record("sepex_curso", $this, $returnid = true);
+        $DB->insert_record("sepex_curso", $this);
     }
 
 }
