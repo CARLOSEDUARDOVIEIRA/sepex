@@ -19,18 +19,18 @@ class ProjetoController extends ProjetoModel {
         }
     }
 
-    public function update($dados) {
+    public function update($idprojeto) {
         try {
-            parent::update($dados);
+            parent::update($idprojeto);
             return true;
         } catch (Exception $e) {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
 
-    public function delete($dados) {
+    public function delete($idprojeto) {
         try {
-            parent::delete($dados);
+            parent::delete($idprojeto);
             return true;
         } catch (Exception $e) {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
@@ -44,23 +44,7 @@ class ProjetoController extends ProjetoModel {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
-    
-    public function getProfessorProjeto($idprojeto) {
-        try {
-            return parent::getProfessorProjeto($idprojeto);
-        } catch (Exception $e) {
-            echo 'Exceção capturada: ', $e->getMessage(), "\n";
-        }
-    }
-    
-    public function getAlunoProjeto($idprojeto) {
-        try {
-            return parent::getAlunoProjeto($idprojeto);
-        } catch (Exception $e) {
-            echo 'Exceção capturada: ', $e->getMessage(), "\n";
-        }
-    } 
-    
+           
     public function getDefinicaoProjeto($idprojeto) {
         try {
             return parent::getDefinicaoProjeto($idprojeto);
@@ -76,5 +60,12 @@ class ProjetoController extends ProjetoModel {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
-
+    
+    public function getProjetosDoUsuario() {
+        try {
+            return parent::getProjetosDoUsuario();
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
 }

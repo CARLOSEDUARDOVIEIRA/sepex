@@ -37,21 +37,6 @@ defined('MOODLE_INTERNAL') || die();
  * @return aluno
  */
 
-function select_projetos_aluno($aluno) {
-    global $DB;
-//Exibir os projetos do aluno
-    $resultado = $DB->get_records_sql("
-            SELECT
-            sp.id_projeto,
-            sp.titulo,
-            sp.cod_projeto,
-            sp.cod_categoria,
-            sp.data_cadastro
-            FROM mdl_sepex_aluno_projeto sap
-            INNER JOIN mdl_sepex_projeto sp ON sp.id_projeto = sap.id_projeto
-            WHERE sap.aluno_matricula=?", array($aluno));
-    return $resultado;
-}
 
 /**
  * Método responsável por criar uma tabela listando os projetos de determinado aluno
@@ -343,33 +328,7 @@ function listar_usuarios_por_curso($user, $course) {
     return $professores;
 }
 
-/* * Método responsável por obter o código da categoria de um projeto 
- * @global type $DB
- * @param type $cod_categoria
- * @return type categoria do projeto
- */
 
-function retorna_categoria($cod_categoria) {
-    global $DB;
-    $query = $DB->get_records("sepex_categoria", array("cod_categoria" => $cod_categoria));
-    return $query;
-}
-
-/** Lista os alunos por id de projeto
- * @global type $DB
- * @param type $id_projeto
- * @return type string
- */
-function listar_matricula_alunos_por_id_projeto($id_projeto) {
-    global $DB;
-    $query = $DB->get_records("sepex_aluno_projeto", array("id_projeto" => $id_projeto));
-    $alunos = array();
-    foreach ($query as $aluno) {
-        $alunos[$aluno->id_aluno_projeto] = $aluno->aluno_matricula;
-    }
-    $resultado = implode(";", $alunos);
-    return $resultado;
-}
 
 /** Listar codigo dos professores por id projeto.
  * @global type $DB
@@ -418,7 +377,8 @@ function enviar_email($USER, $dados) {
     $dataAtual = userdate($date->getTimestamp());
     $nao_responda = core_user::get_noreply_user();
     $PAGE->navbar->add('email');
-    $categoria = retorna_categoria($dados->cod_categoria);
+    $constante = new Constantes();
+    
 //    $alunos = implode(";",$dados->aluno_matricula);          
     $titulo_email = 'Confirmação de inscrição XX SEPEX - UCV';
     $corpo_email = "Parabéns!\n"
@@ -427,7 +387,7 @@ function enviar_email($USER, $dados) {
             . "\nCertifique-se de que a matrícula de todos os integrantes do seu grupo está"
             . " correta e que todos estão vendo o projeto em sua pagina principal de inscrição SEPEX "
             . "\nTítulo do trabalho:" . $dados->titulo
-            . "\nCategoria: " . $categoria[$dados->cod_categoria]->nome_categoria
+            . "\nCategoria: " . $constante->detailCategorias($dados->idcategoria)
             . "\nData de inscrição: " . $dataAtual;
 
     if (!$resultado = email_to_user($USER, $nao_responda, $titulo_email, $corpo_email)) {
@@ -435,20 +395,6 @@ function enviar_email($USER, $dados) {
     }
 }
 
-function obter_dados_apresentacao($projeto) {
-    global $DB;
-    $projetos = $DB->get_records_sql("
-        SELECT            
-            sp.id_projeto,
-            sla.nome_local_apresentacao,
-            spd.data_apresentacao,
-            spd.id_local_apresentacao
-            FROM mdl_sepex_projeto sp
-            INNER JOIN mdl_sepex_projeto_definicao spd ON spd.id_projeto  = sp.id_projeto
-            INNER JOIN mdl_sepex_local_apresentacao sla ON sla.id_local_apresentacao = spd.id_local_apresentacao    
-            WHERE sp.id_projeto = ?", array($projeto));
-    return $projetos;
-}
 
 /* * Metodo responsável por criar os locais de apresentação
  * @param type $nome

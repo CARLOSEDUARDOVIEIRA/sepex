@@ -25,6 +25,8 @@ class Constantes {
         'Matutino' => 'Matutino',
         'Noturno' => 'Noturno',
     );
+    
+    /**Caso este codigo mude, altere tambem o metodo <b>createCodigoProjeto</b> em projeto model*/
     const categorias = array(
         '' => 'Escolher',
         '1' => 'Egressos',
@@ -51,5 +53,8 @@ class Constantes {
     public static function getCategorias() {
         return self::categorias;
     }
-
+    
+    public static function detailCategorias($idcategoria){
+        return self::categorias[$idcategoria];
+    }
 }

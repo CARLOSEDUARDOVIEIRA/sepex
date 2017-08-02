@@ -9,7 +9,6 @@ require($CFG->dirroot . '/course/moodleform_mod.php');
 require ('../controllers/CursoController.class.php');
 require ('../constantes/Constantes.class.php');
 
-
 class Formulario extends moodleform {
 
     function definition() {
@@ -22,16 +21,16 @@ class Formulario extends moodleform {
         $modcontext = $this->_customdata['modcontext'];
 
         if (isset($this->_customdata['modcontext'])) {
-            $mform->setDefault('cod_curso', $this->_customdata['cod_curso']);
-            $mform->setDefault('periodo', $this->_customdata['periodo']);
+            $mform->setDefault('idcurso', $this->_customdata['idcurso']);
+            $mform->setDefault('idperiodo', $this->_customdata['idperiodo']);
             $mform->setDefault('turno', $this->_customdata['turno']);
-            $mform->setDefault('cod_categoria', $this->_customdata['cod_categoria']);
+            $mform->setDefault('idcategoria', $this->_customdata['idcategoria']);
             $mform->setDefault('titulo', $this->_customdata['titulo']);
-            $mform->setDefault('aluno_matricula', $this->_customdata['aluno_matricula']);
+            $mform->setDefault('matraluno', $this->_customdata['matraluno']);
             $resumo = $this->_customdata['resumo'];
             $mform->setDefault('tags', $this->_customdata['tags']);
-            $mform->setDefault('aloca_mesa', $this->_customdata['aloca_mesa']);
-            $mform->setDefault('cod_professor', $this->_customdata['cod_professor']);
+            $mform->setDefault('alocamesa', $this->_customdata['alocamesa']);
+            $mform->setDefault('matrprofessor', $this->_customdata['matrprofessor']);
         }
 
         //CURSOS

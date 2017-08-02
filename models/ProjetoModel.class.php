@@ -1,7 +1,5 @@
 <?php
 
-//require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
-
 /**
  * Description of ProjetoModel
  *
@@ -42,7 +40,7 @@ class ProjetoModel {
         $projeto->email = $USER->email;
         $curso = $DB->get_record('sepex_curso', array('idcurso' => $projeto->idcurso));
         $projeto->areacurso = $curso->areacurso;
-
+        $projeto->resumo = $projeto->resumo[text];
         $idprojeto = $DB->insert_record('sepex_projeto', $projeto, $returnid = true);
 
         $orientador = (object) array('idprojeto' => $idprojeto,
@@ -70,7 +68,7 @@ class ProjetoModel {
         $curso = $DB->get_record('sepex_curso', array('idcurso' => $projeto->idcurso));
         $projeto->areacurso = $curso->areacurso;
         $projeto->email = $USER->email;
-
+        $projeto->resumo = $projeto->resumo[text];
         $DB->execute("
             UPDATE mdl_sepex_projeto sp
             INNER JOIN mdl_sepex_professor_projeto spp
@@ -135,19 +133,16 @@ class ProjetoModel {
         return $DB->get_records('sepex_projeto', array("idprojeto" => $idprojeto));
     }
 
-    protected function getProfessorProjeto($idprojeto) {
-        global $DB;
-        return $DB->get_records('sepex_professor_projeto', array('idprojeto' => $idprojeto));
-    }
-
-    protected function getAlunoProjeto($idprojeto) {
-        global $DB;
-        return $DB->get_records('sepex_aluno_projeto', array("idprojeto" => $idprojeto));
-    }
-
     protected function getDefinicaoProjeto($idprojeto) {
         global $DB;
-        return $DB->get_records('sepex_definicao_projeto', array("idprojeto" => $idprojeto));
+        return $DB->get_records_sql("
+        SELECT            
+            sdp.idprojeto,
+            sla.nomelocalapresentacao,
+            sdp.dtapresentacao
+            FROM mdl_sepex_definicao_projeto sdp
+            INNER JOIN mdl_sepex_local_apresentacao sla ON sla.idlocalapresentacao = sdp.idlocalapresentacao    
+            WHERE sdp.idprojeto = ?", array($idprojeto));
     }
 
     protected function getAvaliacaoProjeto($professores) {
@@ -174,6 +169,8 @@ class ProjetoModel {
             "7" => "RS",
             "8" => "TL",
             "9" => "TCC",
+            "10"=> "VID",
+            "11"=> "FOT"
         ];
         if ($numero == null):
             $numero = 0;
@@ -205,5 +202,20 @@ class ProjetoModel {
             }
         }
     }
+    
+     protected function getProjetosDoUsuario() {
+        global $USER, $DB;
 
+        return $DB->get_records_sql("
+            SELECT
+            sp.idprojeto,
+            sp.titulo,
+            sp.codprojeto,
+            sp.idcategoria,
+            sp.dtcadastro
+            FROM mdl_sepex_aluno_projeto sap
+            INNER JOIN mdl_sepex_projeto sp ON sp.idprojeto = sap.idprojeto
+            WHERE sap.matraluno = ? ", array($USER->username));
+    }
+    
 }
