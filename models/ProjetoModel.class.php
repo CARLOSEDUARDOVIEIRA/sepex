@@ -7,22 +7,6 @@
  */
 class ProjetoModel {
 
-    private $idprojeto;
-    private $areacurso;
-    private $idcategoria;
-    private $codprojeto;
-    private $dtcadastro;
-    private $email;
-    private $alocamesa;
-    private $idperiodo;
-    private $resumo;
-    private $statusresumo;
-    private $obsorientador;
-    private $tags;
-    private $turno;
-    private $titulo;
-    private $idcurso;
-
     /** metodo que irah salvar um novo projeto no bd, <b>Optei por nao utilizar 
      * transactions pelo fato de o moodle da ucv estar desatualizado
      * e estudando o forum de desenvolvedores moodle, percebi que estavam com 
@@ -34,12 +18,12 @@ class ProjetoModel {
     protected function save($projeto) {
         global $USER, $DB;
 
+        $area = new Constantes();
         $date = new DateTime("now", core_date::get_user_timezone_object());
         $projeto->dtcadastro = userdate($date->getTimestamp());
         $projeto->codprojeto = $this->createCodigoProjeto($projeto->idcategoria);
         $projeto->email = $USER->email;
-        $curso = $DB->get_record('sepex_curso', array('idcurso' => $projeto->idcurso));
-        $projeto->areacurso = $curso->areacurso;
+        $projeto->areacurso = $area->getAreaCurso($projeto->idcurso);
         $projeto->resumo = $projeto->resumo[text];
         $idprojeto = $DB->insert_record('sepex_projeto', $projeto, $returnid = true);
 
@@ -54,7 +38,8 @@ class ProjetoModel {
 
     protected function update($projeto) {
         global $USER, $DB;
-
+        
+        $area = new Constantes();
         $date = new DateTime("now", core_date::get_user_timezone_object());
         $projeto->dtcadastro = userdate($date->getTimestamp());
 
@@ -65,8 +50,7 @@ class ProjetoModel {
         } else {
             $projeto->codprojeto = $projetoantigo->codprojeto;
         }
-        $curso = $DB->get_record('sepex_curso', array('idcurso' => $projeto->idcurso));
-        $projeto->areacurso = $curso->areacurso;
+        $projeto->areacurso = $area->getAreaCurso($projeto->idcurso);
         $projeto->email = $USER->email;
         $projeto->resumo = $projeto->resumo[text];
         $DB->execute("
@@ -169,8 +153,8 @@ class ProjetoModel {
             "7" => "RS",
             "8" => "TL",
             "9" => "TCC",
-            "10"=> "VID",
-            "11"=> "FOT"
+            "10" => "VID",
+            "11" => "FOT"
         ];
         if ($numero == null):
             $numero = 0;
@@ -202,8 +186,8 @@ class ProjetoModel {
             }
         }
     }
-    
-     protected function getProjetosDoUsuario() {
+
+    protected function getProjetosDoUsuario() {
         global $USER, $DB;
 
         return $DB->get_records_sql("
@@ -217,5 +201,5 @@ class ProjetoModel {
             INNER JOIN mdl_sepex_projeto sp ON sp.idprojeto = sap.idprojeto
             WHERE sap.matraluno = ? ", array($USER->username));
     }
-    
+
 }

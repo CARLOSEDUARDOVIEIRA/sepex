@@ -337,38 +337,7 @@ function listar_usuarios_por_curso($user, $course) {
  */
 function viewGerente($id) {
 
-    $criarLocalApresentacao = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-    $criarLocalApresentacao .= html_writer::start_tag('a', array('href' => './local_apresentacao/view.php?id=' . $id,));
-    $criarLocalApresentacao .= html_writer::start_tag('submit', array('class' => 'btn btn-info', 'style' => 'margin-bottom:1%;'));
-    $criarLocalApresentacao .= get_string('criar_local_apresentacao', 'sepex');
-    $criarLocalApresentacao .= html_writer::end_tag('a');
-    $criarLocalApresentacao .= html_writer::end_tag('div');
-
-    $localApresentacao = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-    $localApresentacao .= html_writer::start_tag('a', array('href' => './definicoes_projeto/view.php?id=' . $id,));
-    $localApresentacao .= html_writer::start_tag('submit', array('class' => 'btn btn-info', 'style' => 'margin-bottom:1%;'));
-    $localApresentacao .= get_string('definir_local_apresentacao', 'sepex');
-    $localApresentacao .= html_writer::end_tag('a');
-    $localApresentacao .= html_writer::end_tag('div');
-
-    $exibirRelatorio = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-    $exibirRelatorio .= html_writer::start_tag('a', array('href' => './relatorios/listas.php?id=' . $id,));
-    $exibirRelatorio .= html_writer::start_tag('submit', array('class' => 'btn btn-info', 'style' => 'margin-bottom:1%;'));
-    $exibirRelatorio .= get_string('exibir_relatorios', 'sepex');
-    $exibirRelatorio .= html_writer::end_tag('a');
-    $exibirRelatorio .= html_writer::end_tag('div');
     
-    $notas = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-    $notas .= html_writer::start_tag('a', array('href' => './relatorios/notas.php?id=' . $id,));
-    $notas .= html_writer::start_tag('submit', array('class' => 'btn btn-info', 'style' => 'margin-bottom:1%;'));
-    $notas .= format_string('Exibir relatório de notas e local de apresentação');
-    $notas .= html_writer::end_tag('a');
-    $notas .= html_writer::end_tag('div');
-
-    echo $criarLocalApresentacao;
-    echo $localApresentacao;
-    echo $exibirRelatorio;
-    echo $notas;
 }
 
 function enviar_email($USER, $dados) {

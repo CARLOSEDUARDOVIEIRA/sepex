@@ -6,14 +6,12 @@
  * @author Carlos Eduardo Vieira. Linkedin<>.
  */
 require($CFG->dirroot . '/course/moodleform_mod.php');
-require ('../controllers/CursoController.class.php');
 require ('../constantes/Constantes.class.php');
 
 class Formulario extends moodleform {
 
     function definition() {
-        global $DB, $PAGE;
-        $cursocontroller = new CursoController();
+
         $constantes = new Constantes();
 
         $mform = $this->_form;
@@ -34,11 +32,7 @@ class Formulario extends moodleform {
         }
 
         //CURSOS
-        $getcursos = $cursocontroller->getCurso();
-        $cursos = array('' => 'Escolher',);
-        foreach ($getcursos as $curso) {
-            $cursos[$curso->idcurso] = $curso->nomecurso;
-        }
+        $cursos = $constantes->getCursos();
         $mform->addElement('select', 'idcurso', get_string('curso', 'sepex'), $cursos);
         $mform->addRule('idcurso', get_string('cursovazio', 'sepex'), 'required', null, 'client');
         $mform->addHelpButton('idcurso', 'curso', 'sepex');
@@ -62,7 +56,7 @@ class Formulario extends moodleform {
         $mform->addHelpButton('idcategoria', 'categoria', 'sepex');
 
         //TITULO DO TRABALHO
-        $mform->addElement('text', 'titulo', get_string('titulo', 'sepex'), array('placeholder' => 'Clique em (?) ao lado para obter ajuda.', 'size' => '60'));
+        $mform->addElement('text', 'titulo', get_string('titulo', 'sepex'), array('placeholder' => get_string('place_ajuda', 'sepex'), 'size' => '60'));
         $mform->setType('titulo', PARAM_RAW);
         $mform->addRule('titulo', get_string('titulovazio', 'sepex'), 'required', null, 'client');
         $mform->addRule('titulo', get_string('titulo', 'sepex', 255), 'maxlength', 255, 'client');
@@ -70,7 +64,7 @@ class Formulario extends moodleform {
 
 
         //MATRICULA DO ALUNO                           
-        $mform->addElement('text', 'matraluno', get_string('integrantes', 'sepex'), array('placeholder' => 'Clique em (?) ao lado para obter ajuda.', 'size' => '60'));
+        $mform->addElement('text', 'matraluno', get_string('integrantes', 'sepex'), array('placeholder' => get_string('place_ajuda', 'sepex'), 'size' => '60'));
         $mform->setType('matraluno', PARAM_RAW);
         $mform->addRule('matraluno', get_string('integrantevazio', 'sepex'), 'required', null, 'client');
         $mform->addHelpButton('matraluno', 'integrantes', 'sepex');

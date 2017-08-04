@@ -18,4 +18,12 @@ class ProfessorController extends ProfessorModel {
         }
     }
 
+    public function getProjetosProfessor($professor) {
+        try {
+            return parent::getProjetosProfessor($professor);
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
+    
 }

@@ -38,6 +38,7 @@ $string['sepexfieldset'] = 'Custom example fieldset';
 $string['sepexname'] = 'Sepex name';
 $string['sepexname_help'] = 'This is the content of the help tooltip associated with the sepexname field. Markdown syntax is supported.';
 $string['sepex'] = 'sepex';
+$string['availabilityaluno'] = 'Disponibilidade Aluno';
 $string['pluginadministration'] = 'sepex administration';
 $string['pluginname'] = 'Sepex';
 $string['notopenyet'] = 'Aluno desculpe, esta atividade não está disponível até {$a}';
@@ -124,6 +125,9 @@ $string['comentario_help'] = 'Informar um feedback sobre a situação atribuida 
 $string['resumo_orientador_help'] = 'O campo de resumo do projeto permite que o orientador realize modificações no resumo original postado pelos alunos. O moodle não possui nenhum backup do resumo. É importante que ao editar o resumo insira o feedback no campo de observações para que tenha um registro das modificações realizadas.';
 $string['responsabilidade'] = 'RESPONSABILIDADE';
 $string['resumo_orientador'] = 'Avaliar resumo';
+$string['place_ajuda'] = 'Clique em (?) acima para obter ajuda.';
+$string['numeroregistros'] = '<b>{$a} Registros</b>';
+$string['organizacaosepex'] = 'Menu principal de organizaçao do evento SEPEX';
 //-- Campos de avaliar resumo
 $string['criterio_resumo'] = 'Critério';
 $string['criterio_resumo_help'] = 'Campo help de critério de avaliação do resumo';
