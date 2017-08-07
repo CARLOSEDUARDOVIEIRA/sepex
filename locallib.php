@@ -616,18 +616,7 @@ function listar_dados_avaliacao_avaliador($id_projeto, $cod_professor) {
     return $avaliacao_avaliador;
 }
 
-function listar_nome_alunos($id_projeto) {
-    global $DB;
-    $alunos_projeto = $DB->get_records_sql("
-        SELECT
-            u.username,
-            CONCAT(u.firstname,' ',u.lastname) as name            
-            FROM mdl_sepex_aluno_projeto sap                        
-            INNER JOIN mdl_user u ON u.username = sap.aluno_matricula            
-            WHERE sap.id_projeto = {$id_projeto}");
 
-    return $alunos_projeto;
-}
 
 function listar_presenca_aluno_matricula($id_projeto, $matricula) {
     global $DB;

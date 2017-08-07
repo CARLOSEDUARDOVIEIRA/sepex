@@ -88,8 +88,8 @@ foreach ($projetos as $projeto) {
     echo'<td>' . $projeto->dtcadastro . '</td>';
     if ($showactivity) {
         
-        $chat = html_writer::start_tag('td');
-        $chat .= html_writer::start_tag('a', array('href' => './cadastroProjeto.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&delete=1',));
+        $chat = html_writer::start_tag('td');        
+        $chat .= html_writer::start_tag('a', array('href' => '../../../message/index.php?id=' . $id . '&user=' . $USER->id,));
         $chat .= html_writer::start_tag('img', array('src' => '../pix/chat.png'));
         $chat .= html_writer::end_tag('a');
         $chat .= html_writer::end_tag('td');

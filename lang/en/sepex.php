@@ -128,6 +128,7 @@ $string['resumo_orientador'] = 'Avaliar resumo';
 $string['place_ajuda'] = 'Clique em (?) acima para obter ajuda.';
 $string['numeroregistros'] = '<b>{$a} Registros</b>';
 $string['organizacaosepex'] = 'Menu principal de organizaçao do evento SEPEX';
+$string['avaliar_resumo'] = 'Avaliar resumo do projeto';
 //-- Campos de avaliar resumo
 $string['criterio_resumo'] = 'Critério';
 $string['criterio_resumo_help'] = 'Campo help de critério de avaliação do resumo';

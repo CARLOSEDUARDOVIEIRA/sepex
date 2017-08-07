@@ -2,7 +2,6 @@
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 require ('../controllers/ProfessorController.class.php');
-require ('../controllers/ProjetoController.class.php');
 require ('../constantes/Constantes.class.php');
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
@@ -28,7 +27,6 @@ $PAGE->set_title(format_string($sepex->name));
 $PAGE->set_heading(format_string($sepex->name));
 
 $professorcontroller = new ProfessorController();
-$projetocontroller = new ProjetoController();
 $constantes = new Constantes();
 
 echo $OUTPUT->header();
@@ -57,7 +55,7 @@ foreach ($projetos as $projeto) {
     if ($projeto->tipo == 'Avaliador') {
         $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './avaliacao_professor/avaliacao_avaliador.php?id=' . $id . '&data=' . $projeto->idprojeto,));
     } else {
-        $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './avaliacao_professor/avaliacao_orientador.php?id=' . $id . '&data=' . $projeto->idprojeto,));
+        $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './orientador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto,));
     }
 
     $titulo .= $projeto->titulo;
@@ -84,7 +82,7 @@ foreach ($projetos as $projeto) {
     if ($projeto->tipo == 'Avaliador') {
         $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './avaliacao_professor/avaliacao_avaliador.php?id=' . $id . '&data=' . $projeto->idprojeto,));
     } else {
-        $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './avaliacao_professor/avaliacao_orientador.php?id=' . $id . '&data=' . $projeto->idprojeto,));
+        $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './orientador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto,));
     }
     $avaliar .= html_writer::start_tag('img', array('src' => '../pix/edit.png'));
     $avaliar .= html_writer::end_tag('a');

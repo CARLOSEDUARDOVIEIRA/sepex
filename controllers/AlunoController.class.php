@@ -18,4 +18,12 @@ class AlunoController extends AlunoModel {
         }
     }
 
+    public function getNameAlunos($idprojeto) {
+        try {
+            return parent::getNameAlunos($idprojeto);
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
+
 }
