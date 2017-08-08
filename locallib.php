@@ -450,23 +450,7 @@ function header_definicao_projeto($sepex, $cm, $projeto, $orientadores, $id_proj
     echo $OUTPUT->footer();
 }
 
-function guardar_avaliacao_orientador($dados, $id_projeto, $cod_professor) {
-    global $DB;
 
-    $date = new DateTime("now", core_date::get_user_timezone_object());
-    $dataAtual = userdate($date->getTimestamp());
-
-    $DB->execute("
-        UPDATE mdl_sepex_projeto sp
-        INNER JOIN mdl_sepex_projeto_professor spp
-        ON sp.id_projeto = spp.id_projeto
-        SET sp.resumo = ?,
-        sp.tags = ?,
-        spp.status_resumo = ?,        
-        spp.obs_orientador = ?,
-        spp.data_avaliacao = ?
-        WHERE sp.id_projeto = {$id_projeto} AND professor_cod_professor = {$cod_professor} AND tipo = 'orientador' ", array($dados->resumo[text], $dados->tags, $dados->condicao, $dados->comentario, $dataAtual));
-}
 
 function listar_dados_avaliacao_orientador($id_projeto, $cod_professor) {
     global $DB;

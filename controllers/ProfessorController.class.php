@@ -25,5 +25,14 @@ class ProfessorController extends ProfessorModel {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
-    
+
+    public function saveAvaliacaoOrientador($avaliacao, $idprojeto, $professor) {
+        try {
+            parent::saveAvaliacaoOrientador($avaliacao, $idprojeto, $professor);
+            return true;
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
+
 }

@@ -7,6 +7,8 @@ require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 require('../classes/FormularioOrientador.class.php');
 require ('../controllers/ProjetoController.class.php');
 require ('../controllers/AlunoController.class.php');
+require ('../controllers/ProfessorController.class.php');
+require ('../classes/SendMessage.class.php');
 require ('../constantes/Constantes.class.php');
 
 $id = required_param('id', PARAM_INT);
@@ -36,20 +38,23 @@ define('VIEW_URL_LINK', "../view.php?id=" . $id);
 echo $OUTPUT->header();
 
 $projetocontroller = new ProjetoController();
-$alunocontroller = new AlunoController();
-$constantes = new Constantes();
-
 $projeto = $projetocontroller->detail($idprojeto);
-$alunos = $alunocontroller->getNameAlunos($idprojeto);
+$alunocontroller = new AlunoController();
 
 $avaliacao = new FormularioOrientador("orientador.php?id={$id}&idprojeto={$idprojeto}", array('modcontext' => $modcontext, 'resumo' => $projeto[$idprojeto]->resumo, 'tags' => $projeto[$idprojeto]->tags, 'statusresumo' => $projeto[$idprojeto]->statusresumo, 'obsorientador' => $projeto[$idprojeto]->obsorientador));
 
 if ($avaliacao->is_cancelled()) {
     redirect(VIEW_URL_LINK);
-} else if ($avaliacao->get_data()) {
-    $controller->save($avaliacao->get_data());
+} else if ($feedback = $avaliacao->get_data()) {
+    $alunos = $alunocontroller->getAlunosProjeto($idprojeto);
+    $chat->send($projeto[$idprojeto]->codprojeto, $projeto[$idprojeto]->titulo, $alunos, $feedback->statusresumo, $feedback->obsorientador);
+    $professorcontroller = new ProfessorController();
+    $professorcontroller->saveAvaliacaoOrientador($feedback, $idprojeto, $USER->username);
+    $chat = new SendMessage();
     redirect(VIEW_URL_LINK);
 } else {
+    $alunos = $alunocontroller->getNameAlunos($idprojeto);
+    $constantes = new Constantes();
     echo $OUTPUT->heading(get_string('avaliar_resumo', 'sepex'), 3);
     echo $OUTPUT->heading($projeto[$idprojeto]->codprojeto . ' - ' . $projeto[$idprojeto]->titulo, 4);
     $header = html_writer::start_tag('div', array('style' => 'margin-bottom:5%;'));
@@ -61,6 +66,5 @@ if ($avaliacao->is_cancelled()) {
     echo $header;
     $avaliacao->display();
 }
-
 
 echo $OUTPUT->footer();

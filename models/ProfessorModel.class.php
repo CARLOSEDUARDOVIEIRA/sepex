@@ -37,5 +37,23 @@ class ProfessorModel {
             GROUP BY sp.idprojeto, sp.titulo, sp.idcategoria, sp.idcurso, sp.statusresumo, spp.tipo ORDER BY spp.tipo"
                         , array($professor));
     }
-    
+
+    protected function saveAvaliacaoOrientador($avaliacao, $idprojeto, $matrprofessor) {
+        global $DB;
+
+        $date = new DateTime("now", core_date::get_user_timezone_object());
+        $dataAtual = userdate($date->getTimestamp());
+
+        return $DB->execute("
+        UPDATE mdl_sepex_projeto sp
+        INNER JOIN mdl_sepex_professor_projeto spp
+        ON sp.idprojeto = spp.idprojeto
+        SET sp.resumo = ?,
+        sp.tags = ?,
+        sp.statusresumo = ?,        
+        sp.obsorientador = ?,
+        spp.dtavaliacao = ?
+        WHERE sp.idprojeto = {$idprojeto} AND matrprofessor = {$matrprofessor} AND tipo = 'Orientador' ", array($avaliacao->resumo[text], $avaliacao->tags, $avaliacao->statusresumo, $avaliacao->obsorientador, $dataAtual));
+    }
+
 }
