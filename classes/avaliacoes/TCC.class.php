@@ -26,7 +26,7 @@ class TCC extends moodleform {
             $mform->setDefault('resumo3',$this->_customdata['resumo3']);    
             $mform->setDefault('resumo4',$this->_customdata['resumo4']);    
             $mform->setDefault('resumo5',$this->_customdata['resumo5']);    
-            $mform->setDefault('total_resumo',$this->_customdata['total_resumo']);            
+            $mform->setDefault('totalresumo',$this->_customdata['totalresumo']);            
         }
         //CAMPOS DE AVALIAÇÃO DO RESUMO PELO AVALIADOR
         $mform->addElement('header', 'resumo_orientador', get_string('resumo','sepex'),array('size' => '15'));               
@@ -67,8 +67,8 @@ class TCC extends moodleform {
         $mform->setType('resumo5', PARAM_RAW);
 
         //Total
-        $mform->addElement('static', 'total_resumo', get_string('total_resumo', 'sepex'));               
-        $mform->setType('total_resumo', PARAM_RAW);
+        $mform->addElement('static', 'totalresumo', get_string('total_resumo', 'sepex'));               
+        $mform->setType('totalresumo', PARAM_RAW);
         
         $this->add_action_buttons();
     }

@@ -26,4 +26,12 @@ class AlunoController extends AlunoModel {
         }
     }
 
+    public function getPresencaAluno($idprojeto, $matraluno) {
+        try {
+            return parent::getPresencaAluno($idprojeto, $matraluno);
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
+
 }

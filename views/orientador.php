@@ -47,13 +47,14 @@ if ($avaliacao->is_cancelled()) {
     redirect(VIEW_URL_LINK);
 } else if ($feedback = $avaliacao->get_data()) {
     $alunos = $alunocontroller->getAlunosProjeto($idprojeto);
+    $chat = new SendMessage();
     $chat->send($projeto[$idprojeto]->codprojeto, $projeto[$idprojeto]->titulo, $alunos, $feedback->statusresumo, $feedback->obsorientador);
     $professorcontroller = new ProfessorController();
     $professorcontroller->saveAvaliacaoOrientador($feedback, $idprojeto, $USER->username);
-    $chat = new SendMessage();
     redirect(VIEW_URL_LINK);
 } else {
-    $alunos = $alunocontroller->getNameAlunos($idprojeto);
+    $alunos = implode(", ", $alunocontroller->getNameAlunos($idprojeto));
+
     $constantes = new Constantes();
     echo $OUTPUT->heading(get_string('avaliar_resumo', 'sepex'), 3);
     echo $OUTPUT->heading($projeto[$idprojeto]->codprojeto . ' - ' . $projeto[$idprojeto]->titulo, 4);

@@ -146,6 +146,7 @@ $string['total_resumo'] = 'Nota total resumo';
 //-- Campos de avaliar apressentação
 $string['header_apresentacao'] = 'Avaliar Apresentação';
 $string['criterio_apresentacao'] = 'Critério avaliação';
+$string['required_number'] = 'Este campo deve ser numerico, para separar casas decimais use ponto(.)';
 $string['criterio_apresentacao_help'] = 'Use . "Ponto" para separar as casas decimais de sua nota';
 $string['exposicao_apresentacao'] = 'Exposição com clareza e objetividade';
 $string['exposicao_apresentacao_help'] = 'Use . "Ponto" para separar as casas decimais de sua nota';

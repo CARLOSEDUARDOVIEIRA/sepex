@@ -11,7 +11,7 @@ class SendMessage {
     public function send($codprojeto,$titulo, $alunos, $statusresumo, $obsorientador) {
         global $USER, $DB;
         
-        $status = $statusresumo = 0 ? 'Reprovado' : 'Aprovado';
+        $status = $statusresumo = 0 ? 'Aprovado' : 'Reprovado';
 
         foreach (explode(';', $alunos) as $aluno) {
             $user = $DB->get_record('user', array('username' => $aluno));
@@ -24,13 +24,13 @@ class SendMessage {
             $message->fullmessage = 'message body';
             $message->fullmessageformat = FORMAT_MARKDOWN;
             $message->fullmessagehtml = '<p>message body</p>';
-            $message->smallmessage = "Mensagem referente ao projeto {$codprojeto} - {$titulo}. </br> <b>Seu projeto esta {$status}</b> </br> <b>Feedback do orientador: </b> </br> {$obsorientador}";
+            $message->smallmessage = "Mensagem referente ao projeto {$codprojeto} - {$titulo}. </br> <b>Seu projeto esta {$status}.</b> </br> <b>Feedback do orientador: </b> </br> {$obsorientador}";
             $message->notification = '0';
-            $message->contexturl = 'http://GalaxyFarFarAway.com';
-            $message->contexturlname = 'Context name';
+            //$message->contexturl = 'http://GalaxyFarFarAway.com';
+            //$message->contexturlname = 'Context name';
             $message->replyto = $USER->email;
-            $content = array('*' => array('header' => ' test ', 'footer' => ' test ')); // Extra content for specific processor
-            $message->set_additional_content('email', $content);
+            //$content = array('*' => array('header' => ' test ', 'footer' => ' test ')); // Extra content for specific processor
+            //$message->set_additional_content('email', $content);
             message_send($message);
         }
         return true;

@@ -18,7 +18,6 @@ if ($id) {
     error('Você deve especificar um course_module ID ou um ID de instância');
 }
 
-$lang = current_language();
 require_login($course, true, $cm);
 $context_course = context_course::instance($course->id);
 
@@ -53,7 +52,7 @@ foreach ($projetos as $projeto) {
 
     $titulo = html_writer::start_tag('td');
     if ($projeto->tipo == 'Avaliador') {
-        $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './avaliacao_professor/avaliacao_avaliador.php?id=' . $id . '&data=' . $projeto->idprojeto,));
+        $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './avaliador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto. '&idcategoria='.$projeto->idcategoria,));
     } else {
         $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './orientador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto,));
     }
@@ -80,11 +79,11 @@ foreach ($projetos as $projeto) {
 
     $avaliar = html_writer::start_tag('td');
     if ($projeto->tipo == 'Avaliador') {
-        $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './avaliacao_professor/avaliacao_avaliador.php?id=' . $id . '&data=' . $projeto->idprojeto,));
+        $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './avaliador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto. '&idcategoria='.$projeto->idcategoria,));
     } else {
         $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './orientador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto,));
     }
-    $avaliar .= html_writer::start_tag('img', array('src' => '../pix/edit.png'));
+    $avaliar .= html_writer::start_tag('img', array('src' => '../pix/avaliar.png'));
     $avaliar .= html_writer::end_tag('a');
     $avaliar .= html_writer::end_tag('td');
     echo $avaliar;
