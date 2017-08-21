@@ -1,86 +1,51 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of FormularioAvaliador
+ * FORMULARIO DE AVALIACAO DA CATEGORIA FOTOGRAFIA
  *
- * @author Lucas
+ * @author Carlos Eduardo Vieira
  */
-require_once(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/config.php');
-require_once($CFG->dirroot . '/course/moodleform_mod.php');
+require("$CFG->libdir/formslib.php");
 
 class Fotografia extends moodleform {
 
     function definition() {
-        global $DB, $PAGE;
 
-        $mform = $this->_form;                                                      
-        $id_projeto = $this->_customdata['id_projeto'];
-        if($this->_customdata['apresentacao1']){
-            $mform->setDefault('apresentacao1',$this->_customdata['apresentacao1']);
-            $mform->setDefault('apresentacao2',$this->_customdata['apresentacao2']);
-            $mform->setDefault('apresentacao3',$this->_customdata['apresentacao3']);
-            $mform->setDefault('apresentacao4',$this->_customdata['apresentacao4']);
-            $mform->setDefault('apresentacao5',$this->_customdata['apresentacao5']);
-            $mform->setDefault('apresentacao6',$this->_customdata['apresentacao6']);
-            $mform->setDefault('total_apresentacao',$this->_customdata['total_apresentacao']);                                                
+        $mform = $this->_form;
+
+        $placeholder = '20 pontos';
+        $placeholder2 = '10 pontos';
+
+        $idprojeto = $this->_customdata['idprojeto'];
+        if (!empty($idprojeto)) {
+            $avaliacaocontroller = new AvaliacaoController();
+            $dataavaliacao = $avaliacaocontroller->getAvaliacao($idprojeto);
         }
         
-        $mform->addElement('header', 'header_apresentacao', get_string('header_apresentacao','sepex'));
-        //CAMPOS DE ALUNOS POR PROJETO               
-        $alunos = listar_nome_alunos($id_projeto);
-        $lista_aluno = array();
-        foreach($alunos as $aluno){
-            $lista_aluno[$aluno->username] =  $aluno->name;
-        }    
-        $typeitem = array();
-        foreach ($lista_aluno as $key => $value) {
-            $aluno = listar_presenca_aluno_matricula($id_projeto, $key);                                    
-         $typeitem[] = &$mform->createElement('advcheckbox',$key, '', $value, array('name' => $key,'group'=>1), array(0,1));
-         $mform->setDefault("types[$key]", $aluno[$id_projeto]->presenca);         
+        if (!empty($dataavaliacao)) {
+            $mform->setDefault('avaliacao1', $dataavaliacao->avaliacao1);
+            $mform->setDefault('avaliacao2', $dataavaliacao->avaliacao2);
+            $mform->setDefault('avaliacao3', $dataavaliacao->avaliacao3);
+            $mform->setDefault('avaliacao4', $dataavaliacao->avaliacao4);
+            $mform->setDefault('avaliacao5', $dataavaliacao->avaliacao5);
+            $mform->setDefault('avaliacao6', $dataavaliacao->avaliacao6);
+            $mform->setDefault('totalavaliacao', $dataavaliacao->totalavaliacao);
+            $mform->addElement('hidden','update', true);
         }
-        $mform->addGroup($typeitem, 'types',get_string('presenca_integrantes','sepex'));
-        $mform->addHelpButton('types', 'presenca_integrantes', 'sepex');
-        
-        $mform->addElement('text', 'apresentacao1', get_string('adequacao_foto', 'sepex'), array('placeholder'=> '20 pontos', 'size' => '15'));        
-        $mform->addRule('apresentacao1', get_string('adequacao_foto', 'sepex'), 'numeric', null, 'client');
-        $mform->addHelpButton('apresentacao1', 'adequacao_foto', 'sepex');
-        $mform->setType('apresentacao1', PARAM_RAW);
 
-        $mform->addElement('text', 'apresentacao2', get_string('qualidade_foto', 'sepex'), array('placeholder'=> '10 pontos', 'size' => '15'));        
-        $mform->addRule('apresentacao2', get_string('qualidade_foto', 'sepex'), 'numeric', null, 'client');
-        $mform->addHelpButton('apresentacao2', 'qualidade_foto', 'sepex');
-        $mform->setType('apresentacao2', PARAM_RAW);
+        $mform->addElement('header', 'header_apresentacao', get_string('header_apresentacao', 'sepex'));
 
-        $mform->addElement('text', 'apresentacao3', get_string('originalidade_video', 'sepex'), array('placeholder'=> '10 pontos', 'size' => '15'));        
-        $mform->addRule('apresentacao3', get_string('originalidade_video', 'sepex'), 'numeric', null, 'client');
-        $mform->addHelpButton('apresentacao3', 'originalidade_video', 'sepex');
-        $mform->setType('apresentacao3', PARAM_RAW);
+        Avaliacoes::getAlunos($mform, $idprojeto);
 
-        $mform->addElement('text', 'apresentacao4', get_string('emocao_foto', 'sepex'), array('placeholder'=> '20 pontos', 'size' => '15'));        
-        $mform->addRule('apresentacao4', get_string('emocao_foto', 'sepex'), 'numeric', null, 'client');
-        $mform->addHelpButton('apresentacao4', 'emocao_foto', 'sepex');
-        $mform->setType('apresentacao4', PARAM_RAW);
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao1', $placeholder, 'adequacao_foto');
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao2', $placeholder2, 'qualidade_foto');
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao3', $placeholder2, 'originalidade_video');
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao4', $placeholder, 'emocao_foto');
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao5', $placeholder, 'coerencia_foto');
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao6', $placeholder, 'qualidade_resumo');
+        $mform->addElement('static', 'totalavaliacao', get_string('total_apresentacao', 'sepex'));
+        $mform->setType('totalavaliacao', PARAM_RAW);
 
-        $mform->addElement('text', 'apresentacao5', get_string('coerencia_foto', 'sepex'), array('placeholder'=> '20 pontos', 'size' => '15'));        
-        $mform->addRule('apresentacao5', get_string('coerencia_foto', 'sepex'), 'numeric', null, 'client');
-        $mform->addHelpButton('apresentacao5', 'coerencia_foto', 'sepex');
-        $mform->setType('apresentacao5', PARAM_RAW);
-
-        $mform->addElement('text', 'apresentacao6', get_string('qualidade_resumo', 'sepex'), array('placeholder'=> '20 pontos', 'size' => '15'));        
-        $mform->addRule('apresentacao6', get_string('qualidade_resumo', 'sepex'), 'numeric', null, 'client');
-        $mform->addHelpButton('apresentacao6', 'qualidade_resumo', 'sepex');
-        $mform->setType('apresentacao6', PARAM_RAW);
-        
-        //total
-        $mform->addElement('static', 'total_apresentacao', get_string('total_apresentacao', 'sepex'));               
-        $mform->setType('total_apresentacao', PARAM_RAW);
-        
         $this->add_action_buttons();
     }
 

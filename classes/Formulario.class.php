@@ -13,7 +13,8 @@ class Formulario extends moodleform {
     function definition() {
 
         $constantes = new Constantes();
-
+        $projetocontroller = new ProjetoController();
+        
         $mform = $this->_form;
         $course = $this->_customdata['course'];
         $modcontext = $this->_customdata['modcontext'];
@@ -70,8 +71,7 @@ class Formulario extends moodleform {
         $mform->addHelpButton('matraluno', 'integrantes', 'sepex');
 
         //ORIENTADOR
-        $teacher = 'editingteacher';
-        $orientadores = listar_usuarios_por_curso($teacher, $course);
+        $orientadores = $projetocontroller->getUsuarioPorCurso('editingteacher', $course);
         $professores = array('' => 'Escolher',);
         foreach ($orientadores as $professor) {
             $professores[$professor->username] = $professor->name;

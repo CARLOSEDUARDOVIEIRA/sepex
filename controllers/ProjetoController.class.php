@@ -44,7 +44,7 @@ class ProjetoController extends ProjetoModel {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
-           
+
     public function getDefinicaoProjeto($idprojeto) {
         try {
             return parent::getDefinicaoProjeto($idprojeto);
@@ -52,7 +52,7 @@ class ProjetoController extends ProjetoModel {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
-    
+
     public function getAvaliacaoProjeto($professores) {
         try {
             return parent::getAvaliacaoProjeto($professores);
@@ -60,10 +60,26 @@ class ProjetoController extends ProjetoModel {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
-    
+
     public function getProjetosDoUsuario() {
         try {
             return parent::getProjetosDoUsuario();
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
+
+    public function getUsuarioPorCurso($typeuser, $course) {
+        try {
+            return parent::getUsuarioPorCurso($typeuser, $course);
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
+    
+    public function getProjetosFiltrados($filtro) {
+        try {
+            return parent::getProjetosFiltrados($filtro);
         } catch (Exception $e) {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }

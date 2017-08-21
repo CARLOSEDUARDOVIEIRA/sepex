@@ -1,77 +1,58 @@
 <?php
 
-require_once ("../../../config.php");
-require_once($CFG->dirroot.'/course/moodleform_mod.php');
+require_once($CFG->dirroot . '/course/moodleform_mod.php');
 
 class FormularioPesquisa extends moodleform {
-    function definition(){
-        global $DB, $PAGE;
+
+    function definition() {
+
+        $constantes = new Constantes();
 
         $mform = $this->_form;
+        
+        $cursos = $constantes->getCursos();
+        $mform->addElement('select', 'idcurso', get_string('curso', 'sepex'), $cursos);
+        $mform->addHelpButton('idcurso', 'curso', 'sepex');
+        
+        $area = $constantes->getAreas();
+        $mform->addElement('select', 'areacurso', get_string('area', 'sepex'), $area);
+        $mform->addHelpButton('areacurso', 'area', 'sepex');
+        
+        $categoria = $constantes->getCategorias();
+        $mform->addElement('select', 'idcategoria', get_string('categoria', 'sepex'), $categoria);
+        $mform->addHelpButton('idcategoria', 'categoria', 'sepex');
+        $mform->setDefault('idcategoria', $this->_customdata['idcategoria']);
 
-        $area = array(
-            '' => 'Escolher',
-            '1' => 'Ciências Sociais e Aplicadas',
-            '2' => 'Exatas',
-            '3' => 'Saúde'            
-        );
-        $mform->addElement('select', 'area_curso', get_string('area', 'sepex'), $area);       
-        $mform->addRule('area_curso', get_string('area', 'sepex'), 'maxlength', 255, 'client');
-        $mform->addHelpButton('area_curso', 'area', 'sepex');
-                
-        $categoria = array(
-            '' => 'Escolher',
-            '1' => 'Egressos',
-            '2' => 'Estágios',
-            '3' => 'Iniciação Científica',
-            '4' => 'Inovação',
-            '5' => 'Projeto de Extensão',
-            '6' => 'Projeto Integrador',
-            '7' => 'Responsábilidade Social',
-            '8' => 'Temas Livres',
-            '9' => 'Trabalho de Conclusão de Curso',
-            '10' => 'Mostra de Vídeos',
-            '11' => 'Concurso de Fotografia'
-        ); 
-        $mform->addElement('select', 'categoria', get_string('categoria', 'sepex'), $categoria);
-        $mform->addRule('categoria', get_string('categoria', 'sepex'), 'maxlength', 255, 'client');
-        $mform->addHelpButton('categoria', 'categoria', 'sepex');
-        $mform->setDefault('categoria', $this->_customdata['categoria']);
-
-        $turno = array(
-            '' => 'Escolher',
-            'Matutino' => 'Matutino',
-            'Noturno' => 'Noturno',
-        );
-        $mform->addElement('select', 'turno', get_string('turno', 'sepex'), $turno);        
-        $mform->addRule('turno', get_string('turno', 'sepex'), 'maxlength', 255, 'client');
-        $mform->addHelpButton('turno', 'turno', 'sepex');        
+        $turno = $constantes->getTurnos();
+        $mform->addElement('select', 'turno', get_string('turno', 'sepex'), $turno);
+        $mform->addHelpButton('turno', 'turno', 'sepex');
         $mform->setDefault('turno', $this->_customdata['turno']);
 
         $mesa = array(
             '' => 'Escolher',
             '1' => 'Sim',
-            '0' => 'Não',
+            '0' => 'Não'
         );
-        $mform->addElement('select', 'mesa', get_string('solicita_mesa', 'sepex'), $mesa);        
-        $mform->addRule('mesa', get_string('solicita_mesa', 'sepex'), 'maxlength', 255, 'client');
-        $mform->addHelpButton('mesa', 'solicita_mesa', 'sepex');    
-        
+        $mform->addElement('select', 'alocamesa', get_string('solicita_mesa', 'sepex'), $mesa);
+        $mform->addHelpButton('alocamesa', 'solicita_mesa', 'sepex');
+
         $resumo = array(
             '' => 'Escolher',
             '2' => 'Não Avaliado',
             '1' => 'Aprovado',
-            '0' => 'Reprovado',
+            '0' => 'Reprovado'
         );
-        $mform->addElement('select', 'situacao_resumo', get_string('situacao', 'sepex'), $resumo);        
-        $mform->addRule('situacao_resumo', get_string('situacao', 'sepex'), 'maxlength', 255, 'client');
-        $mform->addHelpButton('situacao_resumo', 'situacao', 'sepex'); 
+        $mform->addElement('select', 'statusresumo', get_string('situacao', 'sepex'), $resumo);
+        $mform->addHelpButton('statusresumo', 'situacao', 'sepex');
         
+        $nota = array(
+            '' => 'Escolher',
+            '1' => 'Sim',
+            '0' => 'Não',
+        );
+        $mform->addElement('select', 'nota', get_string('exibir_notas', 'sepex'), $nota);
 
-        $this->add_action_buttons($cancel = true, $submitlabel = get_string('listarprojetos', 'sepex'));
+        $this->add_action_buttons($cancel = true, get_string('listarprojetos', 'sepex'));
     }
 
-    function validation($data, $files) {
-        return array();
-    }
 }

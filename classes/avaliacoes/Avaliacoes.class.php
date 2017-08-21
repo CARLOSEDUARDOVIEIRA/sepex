@@ -46,8 +46,8 @@ class Avaliacoes {
         $mform->addHelpButton('resumo5', 'conclusao_objetivos', 'sepex');
         $mform->setType('resumo5', PARAM_RAW);
 
-        $mform->addElement('static', 'total_resumo', get_string('total_resumo', 'sepex'));
-        $mform->setType('total_resumo', PARAM_RAW);
+        $mform->addElement('static', 'totalresumo', get_string('total_resumo', 'sepex'));
+        $mform->setType('totalresumo', PARAM_RAW);
     }
 
     /** Metodo responsavel por criar os campos para o formulario de avaliacao de apresentacao SEPEX

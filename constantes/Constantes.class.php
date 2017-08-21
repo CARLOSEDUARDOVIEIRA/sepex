@@ -65,7 +65,6 @@ class Constantes {
         '20' => 'Tecnologia em Logística',
         '21' => 'Tecnologia em Redes de Computadores'
     );
-    
     const areacurso = array(
         '' => 'Escolher',
         '1' => 1,
@@ -90,7 +89,13 @@ class Constantes {
         '20' => 2,
         '21' => 2
     );
-    
+    const areas = array(
+        '' => 'Escolher',
+        '1' => 'Ciências Sociais e Aplicadas',
+        '2' => 'Exatas',
+        '3' => 'Saúde'
+    );
+
     public static function getPeriodos() {
         return self::periodos;
     }
@@ -107,6 +112,10 @@ class Constantes {
         return self::cursos;
     }
 
+    public static function getAreas() {
+        return self::areas;
+    }
+
     public static function detailCategorias($idcategoria) {
         return self::categorias[$idcategoria];
     }
@@ -114,9 +123,9 @@ class Constantes {
     public static function detailCursos($idcurso) {
         return self::cursos[$idcurso];
     }
-    
+
     public static function getAreaCurso($idcurso) {
         return self::areacurso[$idcurso];
     }
-    
+
 }

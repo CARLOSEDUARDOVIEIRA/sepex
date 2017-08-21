@@ -41,7 +41,8 @@ echo '<th>' . get_string('titulo_projeto', 'sepex') . '</th>';
 echo '<th>' . strtoupper(get_string('categoria', 'sepex')) . '</th>';
 echo '<th>' . strtoupper(get_string('curso', 'sepex')) . '</th>';
 echo '<th>' . get_string('situacao_final', 'sepex') . '</th>';
-echo '<th>' . get_string('avaliar', 'sepex') . '</th>';
+echo '<th></th>';
+//echo '<th>' . get_string('avaliar', 'sepex') . '</th>';
 echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
@@ -52,7 +53,7 @@ foreach ($projetos as $projeto) {
 
     $titulo = html_writer::start_tag('td');
     if ($projeto->tipo == 'Avaliador') {
-        $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './avaliador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto. '&idcategoria='.$projeto->idcategoria,));
+        $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './avaliador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&idcategoria=' . $projeto->idcategoria,));
     } else {
         $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './orientador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto,));
     }
@@ -79,7 +80,7 @@ foreach ($projetos as $projeto) {
 
     $avaliar = html_writer::start_tag('td');
     if ($projeto->tipo == 'Avaliador') {
-        $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './avaliador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto. '&idcategoria='.$projeto->idcategoria,));
+        $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './avaliador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&idcategoria=' . $projeto->idcategoria,));
     } else {
         $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './orientador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto,));
     }

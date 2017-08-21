@@ -73,7 +73,7 @@ if (!empty($add)) {
         'resumo' => $projeto[$idprojeto]->resumo,
         'tags' => $projeto[$idprojeto]->tags,
         'alocamesa' => $projeto[$idprojeto]->alocamesa,
-        'matrprofessor' => $professores));
+        'matrprofessor' => $professores[0]));
 
     if ($formulario->is_cancelled()) {
         redirect(VIEW_URL_LINK);

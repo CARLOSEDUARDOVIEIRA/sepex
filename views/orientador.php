@@ -58,13 +58,13 @@ if ($avaliacao->is_cancelled()) {
     $constantes = new Constantes();
     echo $OUTPUT->heading(get_string('avaliar_resumo', 'sepex'), 3);
     echo $OUTPUT->heading($projeto[$idprojeto]->codprojeto . ' - ' . $projeto[$idprojeto]->titulo, 4);
-    $header = html_writer::start_tag('div', array('style' => 'margin-bottom:5%;'));
+    
     $header.= '<b>' . get_string('alunos_projeto', 'sepex') . '</b>' . ': ' . $alunos . '</br>';
     $header.= '<b>' . get_string('curso', 'sepex') . '</b>' . ': ' . $constantes->detailCursos($projeto[$idprojeto]->idcurso) . ' - ';
     $header.= '<b>' . get_string('turno', 'sepex') . '</b>' . ': ' . $projeto[$idprojeto]->turno . '</br>';
     $header.= '<b>' . strtoupper(get_string('categoria', 'sepex')) . '</b>' . ': ' . $constantes->detailCategorias($projeto[$idprojeto]->idcategoria);
-    $header .= html_writer::end_tag('div');
     echo $header;
+    
     $avaliacao->display();
 }
 

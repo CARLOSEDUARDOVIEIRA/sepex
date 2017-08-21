@@ -5,60 +5,52 @@
  */
 class AvaliacaoModel {
 
-    function save($idprojeto, $notas) {
+    protected function save($idprojeto, $notas) {
         global $DB, $USER;
 
-        $notas->idprofessorprojeto = $DB->get_records('sepex_professor_projeto', array('matrprofessor' => $USER->username, 'idprojeto' => $idprojeto), null, 'idprofessorprojeto')[1]->idprofessorprojeto;
+        $notas->idprofessorprojeto = $DB->get_records('sepex_professor_projeto', array('matrprofessor' => $USER->username, 'idprojeto' => $idprojeto), null, 'idprojeto,idprofessorprojeto')[$idprojeto]->idprofessorprojeto;
         $DB->insert_record("sepex_avaliacao_projeto", $notas);
     }
 
-    function atualizar_avaliacao_avaliador($dados, $id) {
-        global $DB;
-
-        $total_resumo = $dados->resumo1 + $dados->resumo2 + $dados->resumo3 + $dados->resumo4 + $dados->resumo5;
-        $total_avaliacao = $dados->apresentacao1 + $dados->apresentacao2 + $dados->apresentacao3 + $dados->apresentacao4 + $dados->apresentacao5 + $dados->apresentacao6;
-        if ($dados->apresentacao1 == '') {
-            $dados->apresentacao1 = NULL;
-        }
-        if ($dados->apresentacao2 == '') {
-            $dados->apresentacao2 = NULL;
-        }
-        if ($dados->apresentacao3 == '') {
-            $dados->apresentacao3 = NULL;
-        }
-        if ($dados->apresentacao4 == '') {
-            $dados->apresentacao4 = NULL;
-        }
-        if ($dados->apresentacao5 == '') {
-            $dados->apresentacao5 = NULL;
-        }
-        if ($dados->apresentacao6 == '') {
-            $dados->apresentacao6 = NULL;
-        }
+    protected function update($idprojeto, $notas) {
+        global $DB, $USER;
 
         $DB->execute("
-            UPDATE mdl_sepex_projeto_avaliacao               
+            UPDATE mdl_sepex_avaliacao_projeto sap
+            INNER JOIN mdl_sepex_professor_projeto spp
+            ON sap.idprofessorprojeto = spp.idprofessorprojeto
             SET resumo1 = ?,
             resumo2 = ?,
             resumo3 = ?,
             resumo4 = ?,
             resumo5 = ?,            
-            total_resumo = ?,
+            totalresumo = ?,
             avaliacao1 = ?,
             avaliacao2 = ?,
             avaliacao3 = ?,
             avaliacao4 = ?,
             avaliacao5 = ?,
             avaliacao6 = ?,
-            total_avaliacao = ?
-            WHERE id_projeto_professor = {$id}", array($dados->resumo1, $dados->resumo2, $dados->resumo3,
-            $dados->resumo4, $dados->resumo5, $total_resumo,
-            $dados->apresentacao1, $dados->apresentacao2, $dados->apresentacao3,
-            $dados->apresentacao4, $dados->apresentacao5, $dados->apresentacao6,
-            $total_avaliacao
+            totalavaliacao = ?
+            WHERE spp.matrprofessor = {$USER->username} AND spp.idprojeto = {$idprojeto}", array($notas->resumo1,
+            $notas->resumo2,
+            $notas->resumo3,
+            $notas->resumo4,
+            $notas->resumo5,
+            $notas->totalresumo,
+            $notas->avaliacao1,
+            $notas->avaliacao2,
+            $notas->avaliacao3,
+            $notas->avaliacao4,
+            $notas->avaliacao5,
+            $notas->avaliacao6,
+            $notas->totalavaliacao
         ));
     }
 
+    /** Retorna as notas inseridas de avaliacao do projeto, pelo professor logado.
+     * @return - array de notas referentes a apresentacao do projeto.
+     */
     protected function getAvaliacao($idprojeto) {
         global $DB, $USER;
 
@@ -82,7 +74,18 @@ class AvaliacaoModel {
             FROM mdl_sepex_professor_projeto spp
             INNER JOIN mdl_sepex_avaliacao_projeto sap
             ON sap.idprofessorprojeto = spp.idprofessorprojeto
-            WHERE spp.idprojeto = ? AND spp.matrprofessor = ? AND spp.tipo = 'Avaliador'", array($idprojeto, $USER->username));
+            WHERE spp.idprojeto = ? AND spp.matrprofessor = ? AND spp.tipo = 'Avaliador'", array($idprojeto, $USER->username))[$idprojeto];
+    }
+
+    protected function savePresencaAlunos($idprojeto, $alunos) {
+        global $DB;
+
+        foreach ($alunos as $matricula => $presenca) {
+            $DB->execute("
+            UPDATE mdl_sepex_aluno_projeto                
+                SET presenca = ?
+                WHERE idprojeto = {$idprojeto} AND matraluno = {$matricula}", array($presenca));
+        }
     }
 
 }
