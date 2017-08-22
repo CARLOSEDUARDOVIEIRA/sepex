@@ -57,13 +57,13 @@ $relprojetos .= html_writer::end_tag('div');
 echo $relprojetos;
 echo '<hr>';
 
-$relnotas = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-$relnotas .= html_writer::start_tag('a', array('href' => './relatorios/notas.php?id=' . $id,));
-$relnotas .= html_writer::start_tag('img', array('src' => '../pix/relnotas.png'));
-$relnotas .= format_string('Exibir relatório de notas e local de apresentação');
-$relnotas .= html_writer::end_tag('a');
-$relnotas .= html_writer::end_tag('div');
-echo $relnotas;
+$resumorevista = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
+$resumorevista .= html_writer::start_tag('a', array('href' => './GerarResumoRevista.php?id=' . $id,));
+$resumorevista .= html_writer::start_tag('img', array('src' => '../pix/doc.png'));
+$resumorevista .= get_string('resumo_revista', 'sepex');
+$resumorevista .= html_writer::end_tag('a');
+$resumorevista .= html_writer::end_tag('div');
+echo $resumorevista;
 echo '<hr>';
 
 echo $OUTPUT->footer();

@@ -5,7 +5,7 @@
  *
  * @author Carlos Eduardo Vieira
  */
-require("$CFG->libdir/formslib.php");
+require($CFG->dirroot . '/course/moodleform_mod.php');
 
 class Fotografia extends moodleform {
 

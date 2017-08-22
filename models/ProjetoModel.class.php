@@ -234,13 +234,13 @@ class ProjetoModel {
         if ($filtro->turno != null) {
             $consulta = $consulta . ' AND turno = ' . "'" . $filtro->turno . "'";
         }
-        if ($filtro->categoria) {
+        if ($filtro->idcategoria) {
             $consulta = $consulta . ' AND idcategoria = ' . $filtro->idcategoria;
         }
 
-        if ($filtro->situacaoresumo == 2) {
+        if ($filtro->statusresumo == 2) {
             $consulta = $consulta . ' AND statusresumo is null';
-        } elseif ($filtro->situacaoresumo != null) {
+        } elseif ($filtro->statusresumo != null) {
             $consulta = $consulta . ' AND statusresumo = ' . $filtro->statusresumo;
         }
 
@@ -248,7 +248,7 @@ class ProjetoModel {
             SELECT sp.idprojeto, sp.statusresumo, sp.codprojeto, sp.titulo, sp.idcategoria, sp.alocamesa, SUM( sap.totalresumo + sap.totalavaliacao ) notafinal
             FROM mdl_sepex_professor_projeto spp
             INNER JOIN mdl_sepex_projeto sp ON sp.idprojeto = spp.idprojeto
-            INNER JOIN mdl_sepex_avaliacao_projeto sap ON spp.idprofessorprojeto = sap.idprofessorprojeto            
+            LEFT JOIN mdl_sepex_avaliacao_projeto sap ON spp.idprofessorprojeto = sap.idprofessorprojeto            
             WHERE {$consulta}
             GROUP BY sp.idprojeto, sp.statusresumo, sp.codprojeto, sp.titulo, sp.idcategoria, sp.alocamesa
             ORDER BY notafinal DESC");

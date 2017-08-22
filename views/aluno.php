@@ -20,7 +20,6 @@ if ($id) {
 }
 
 $lang = current_language();
-require_login($course, true, $cm);
 $context_course = context_course::instance($course->id);
 
 $PAGE->set_url('/mod/sepex/views/aluno.php', array('id' => $cm->id));

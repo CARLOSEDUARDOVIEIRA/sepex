@@ -19,7 +19,7 @@ require ('../controllers/ProjetoController.class.php');
 
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
-$idprojeto = optional_param('idprojeto', 0, PARAM_INT);
+$idprojeto = required_param('idprojeto', PARAM_INT);
 $idcategoria = required_param('idcategoria', PARAM_INT);
 
 if ($id) {

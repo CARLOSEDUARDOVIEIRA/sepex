@@ -103,7 +103,7 @@ class Formulario extends moodleform {
         $mform->addRule('alocamesa', get_string('alocamesavazio', 'sepex'), 'required', null, 'client');
         $mform->addHelpButton('alocamesa', 'alocamesa', 'sepex');
 
-        $this->add_action_buttons($cancel = true, $submitlabel = get_string('btnEnviar', 'sepex'));
+        $this->add_action_buttons($cancel = true, get_string('btnEnviar', 'sepex'));
     }
 
     function validation($data, $files) {

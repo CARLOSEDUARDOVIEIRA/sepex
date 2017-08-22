@@ -136,6 +136,7 @@ $string['campo_requerido'] = 'Campo requerido!';
 $string['campo_limite'] = 'Este campo espera no maximo 255 caracteres!';
 $string['definir_apresentacao'] = 'DEFINIÇÕES DE APRESENTAÇÃO PROJETO';
 $string['exibir_notas'] = 'Exibir nota final';
+$string['resumo_revista'] = 'Gerar documento com resumos padrao revista';
 //-- Campos de avaliar resumo
 $string['criterio_resumo'] = 'Critério';
 $string['criterio_resumo_help'] = 'Campo help de critério de avaliação do resumo';

@@ -29,9 +29,9 @@ if ($id) {
 
 require_login($course, true, $cm);
 
-//$PAGE->set_url('/mod/sepex/avaliacao_avaliador.php', array('id' => $cm->id));
-//$PAGE->set_title(format_string($sepex->name));
-//$PAGE->set_heading($course->fullname);
+$PAGE->set_url('/mod/sepex/avaliacao_avaliador.php', array('id' => $cm->id));
+$PAGE->set_title(format_string($sepex->name));
+$PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string('PROJETO ALUNO'), 2);
 echo $OUTPUT->box(format_string(''), 2);

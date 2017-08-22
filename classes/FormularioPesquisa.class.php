@@ -21,12 +21,10 @@ class FormularioPesquisa extends moodleform {
         $categoria = $constantes->getCategorias();
         $mform->addElement('select', 'idcategoria', get_string('categoria', 'sepex'), $categoria);
         $mform->addHelpButton('idcategoria', 'categoria', 'sepex');
-        $mform->setDefault('idcategoria', $this->_customdata['idcategoria']);
 
         $turno = $constantes->getTurnos();
         $mform->addElement('select', 'turno', get_string('turno', 'sepex'), $turno);
         $mform->addHelpButton('turno', 'turno', 'sepex');
-        $mform->setDefault('turno', $this->_customdata['turno']);
 
         $mesa = array(
             '' => 'Escolher',
