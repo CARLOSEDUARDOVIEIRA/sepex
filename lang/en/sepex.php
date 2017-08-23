@@ -151,6 +151,7 @@ $string['resultados_resumo_help'] = 'Use . "Ponto" para separar as casas decimai
 $string['conclusao_objetivos'] = 'Adequação da conclusão aos objetivos propostos';
 $string['conclusao_objetivos_help'] = 'Use . "Ponto" para separar as casas decimais de sua nota';
 $string['total_resumo'] = 'Nota total resumo';
+$string['exportar_dados'] = 'Exportar dados e realizar download';
 //-- Campos de avaliar apressentação
 $string['header_apresentacao'] = 'Avaliar Apresentação';
 $string['criterio_apresentacao'] = 'Critério avaliação';

@@ -43,13 +43,6 @@ class FormularioPesquisa extends moodleform {
         $mform->addElement('select', 'statusresumo', get_string('situacao', 'sepex'), $resumo);
         $mform->addHelpButton('statusresumo', 'situacao', 'sepex');
         
-        $nota = array(
-            '' => 'Escolher',
-            '1' => 'Sim',
-            '0' => 'Não',
-        );
-        $mform->addElement('select', 'nota', get_string('exibir_notas', 'sepex'), $nota);
-
         $this->add_action_buttons($cancel = true, get_string('listarprojetos', 'sepex'));
     }
 

@@ -77,9 +77,9 @@ class ProjetoController extends ProjetoModel {
         }
     }
     
-    public function getProjetosFiltrados($filtro) {
+    public function getProjetosFiltrados($consulta) {
         try {
-            return parent::getProjetosFiltrados($filtro);
+            return parent::getProjetosFiltrados($consulta);
         } catch (Exception $e) {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }

@@ -25,7 +25,7 @@ if ($id) {
 
 require_login($course, true, $cm);
 
-$PAGE->set_url('/mod/sepex/relProjetos.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/sepex/views/relProjetos.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($sepex->name));
 $PAGE->set_heading($course->fullname);
 
@@ -45,11 +45,44 @@ $projetocontroller = new ProjetoController();
 $constantes = new Constantes();
 $professorcontroller = new ProfessorController();
 
-if (!empty($filtro->get_data())) {
-    $projetos = $projetocontroller->getProjetosFiltrados($filtro->get_data());
-    echo get_string('numeroregistros', 'sepex', count($projetos));
+if (!empty($dados = $filtro->get_data())) {
+
+    $consulta = "1 = 1";
+
+    if ($dados->idcurso) {
+        $consulta = $consulta . ' AND idcurso = ' . "'" . $dados->idcurso . "'";
+    }
+
+    if ($dados->areacurso) {
+        $consulta = $consulta . ' AND areacurso = ' . $dados->areacurso;
+    }
+    if ($dados->alocamesa != null) {
+        $consulta = $consulta . ' AND alocamesa = ' . $dados->alocamesa;
+    }
+    if ($dados->turno != null) {
+        $consulta = $consulta . ' AND turno = ' . "'" . $dados->turno . "'";
+    }
+    if ($dados->idcategoria) {
+        $consulta = $consulta . ' AND idcategoria = ' . $dados->idcategoria;
+    }
+
+    if ($dados->statusresumo == 2) {
+        $consulta = $consulta . ' AND statusresumo is null';
+    } elseif ($dados->statusresumo != null) {
+        $consulta = $consulta . ' AND statusresumo = ' . $dados->statusresumo;
+    }
+
+    $exportar = html_writer::start_tag('a', array('href' => "./exportarRelatorio.php?id={$id}&consulta={$consulta}",));
+    $exportar .= html_writer::start_tag('img', array('src' => '../pix/export.png'));
+    $exportar .= ' ' . get_string('exportar_dados', 'sepex');
+    $exportar .= html_writer::end_tag('a');
+    echo $exportar;
+    echo '<br>';
     
-//------------------------------VIEW---------------------------
+    $projetos = $projetocontroller->getProjetosFiltrados($consulta);
+    echo get_string('numeroregistros', 'sepex', count($projetos));
+
+    //------------------------------VIEW---------------------------
     if (isset($projetos)) {
         echo '<table class="forumheaderlist table table-striped">';
         echo '<thead>';
@@ -58,7 +91,6 @@ if (!empty($filtro->get_data())) {
         echo '<th>' . get_string('titulo_projeto', 'sepex') . '</th>';
         echo '<th>' . strtoupper(get_string('categoria', 'sepex')) . '</th>';
         echo '<th>' . get_string('situacao', 'sepex') . '</th>';
-        echo '<th>' . get_string('orientadores', 'sepex') . '</th>';
         echo '<th>' . strtoupper(get_string('solicita_mesa', 'sepex')) . '</th>';
         echo '<th>' . get_string('nota_final', 'sepex') . '</th>';
         echo '<th>' . '</th>';
@@ -68,34 +100,26 @@ if (!empty($filtro->get_data())) {
             $notafinal = ($projeto->notafinal / 4);
             echo '<tbody>';
             echo'<td>' . $projeto->codprojeto . '</td>';
-
             $titulo = html_writer::start_tag('td');
             $titulo .= html_writer::start_tag('a', array('href' => '../projetoAluno/view.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&n=' . $notafinal,));
             $titulo .= $projeto->titulo;
             $titulo .= html_writer::end_tag('a');
             $titulo .= html_writer::end_tag('td');
             echo $titulo;
-
             echo'<td>' . $constantes->detailCategorias($projeto->idcategoria) . '</td>';
-
             if ($projeto->statusresumo == 1) {
                 echo'<td>' . get_string('aprovado', 'sepex') . '</td>';
             } elseif ($projeto->statusresumo == 0) {
                 echo'<td>' . get_string('reprovado', 'sepex') . '</td>';
             } else {
                 echo '<td>' . get_string('nao_avaliado', 'sepex') . '</td>';
-            }
-
-            echo '<td>' . implode(',', $professorcontroller->getNameProfessores($projeto->idprojeto, 'Orientador')) . '</td>';
-
+            }            
             if ($projeto->alocamesa) {
                 echo '<td>' . 'Sim' . '</td>';
             } else {
                 echo '<td>' . 'Não' . '</td>';
             }
-
             echo '<td>' . $notafinal . '</td>';
-
             $btnEditar = html_writer::start_tag('td');
             $btnEditar .= html_writer::start_tag('a', array('href' => '../projeto_aluno/view.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&n=' . $notafinal,));
             $btnEditar .= html_writer::start_tag('button', array('type' => 'button', 'class' => 'btn btn-link', 'id' => 'editar'));
@@ -104,7 +128,6 @@ if (!empty($filtro->get_data())) {
             $btnEditar .= html_writer::end_tag('td');
             echo $btnEditar;
         }
-
         echo '</table>';
     }
 }

@@ -216,33 +216,8 @@ class ProjetoModel {
             WHERE ct.contextlevel = 50 AND c.id = {$course} AND r.shortname = '{$typeuser}' ORDER BY u.firstname");
     }
 
-    protected function getProjetosFiltrados($filtro) {
+    protected function getProjetosFiltrados($consulta) {
         global $DB;
-
-        $consulta = "1 = 1";
-
-        if ($filtro->idcurso) {
-            $consulta = $consulta . ' AND idcurso = ' . "'" . $filtro->idcurso . "'";
-        }
-
-        if ($filtro->areacurso) {
-            $consulta = $consulta . ' AND areacurso = ' . $filtro->areacurso;
-        }
-        if ($filtro->alocamesa != null) {
-            $consulta = $consulta . ' AND alocamesa = ' . $filtro->alocamesa;
-        }
-        if ($filtro->turno != null) {
-            $consulta = $consulta . ' AND turno = ' . "'" . $filtro->turno . "'";
-        }
-        if ($filtro->idcategoria) {
-            $consulta = $consulta . ' AND idcategoria = ' . $filtro->idcategoria;
-        }
-
-        if ($filtro->statusresumo == 2) {
-            $consulta = $consulta . ' AND statusresumo is null';
-        } elseif ($filtro->statusresumo != null) {
-            $consulta = $consulta . ' AND statusresumo = ' . $filtro->statusresumo;
-        }
 
         return $DB->get_records_sql("
             SELECT sp.idprojeto, sp.statusresumo, sp.codprojeto, sp.titulo, sp.idcategoria, sp.alocamesa, SUM( sap.totalresumo + sap.totalavaliacao ) notafinal

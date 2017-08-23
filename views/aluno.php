@@ -19,7 +19,7 @@ if ($id) {
     error('Você deve especificar um course_module ID ou um ID de instância');
 }
 
-$lang = current_language();
+require_login($course, true, $cm);
 $context_course = context_course::instance($course->id);
 
 $PAGE->set_url('/mod/sepex/views/aluno.php', array('id' => $cm->id));
@@ -67,6 +67,7 @@ echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
 $projetos = $projetocontroller->getProjetosDoUsuario();
+echo get_string('numeroregistros', 'sepex', count($projetos));
 foreach ($projetos as $projeto) {
     echo '<tr>';
     echo'<td>' . $projeto->codprojeto . '</td>';
