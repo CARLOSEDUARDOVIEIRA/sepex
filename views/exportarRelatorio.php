@@ -48,13 +48,13 @@ $table->set_count_sql("SELECT COUNT(1) FROM mdl_sepex_projeto WHERE {$consulta}"
 
 $table->set_sql("DISTINCT sp.idprojeto,  sp.codprojeto,sp.titulo,sp.resumo,sp.tags, sp.dtcadastro,sp.email,
                  sp.idperiodo, sp.turno, sp.idcurso, sp.statusresumo, sp.obsorientador, sp.idcategoria,
-                 sp.alocamesa, SUM( sap.totalresumo + sap.totalavaliacao ) notafinal
+                 sp.alocamesa,sp.areacurso, SUM( sap.totalresumo + sap.totalavaliacao ) notafinal
                 ", "mdl_sepex_professor_projeto spp 
                  INNER JOIN mdl_sepex_projeto sp ON sp.idprojeto = spp.idprojeto 
                  LEFT JOIN mdl_sepex_avaliacao_projeto sap ON spp.idprofessorprojeto = sap.idprofessorprojeto
                 ", "{$consulta} GROUP BY  sp.idprojeto, sp.codprojeto,sp.titulo,sp.resumo, sp.tags,
                  sp.dtcadastro,sp.email, sp.idperiodo, sp.turno, sp.idcurso, sp.statusresumo, sp.obsorientador,
-                 sp.idcategoria, sp.alocamesa
+                 sp.idcategoria, sp.alocamesa, sp.areacurso
                 ");
 
 // Define table columns.
