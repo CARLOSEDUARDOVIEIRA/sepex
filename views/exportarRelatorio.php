@@ -3,7 +3,7 @@
 /* Pagina de exibicao e exportacao de arquivos dos projetos */
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
-require "$CFG->libdir/tablelib.php";
+require '../classes/Report.class.php';
 
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
@@ -27,9 +27,8 @@ $PAGE->set_context($context);
 
 $download = optional_param('download', '', PARAM_ALPHA);
 
-$table = new table_sql('uniqueid');
+$table = new Report('uniqueid');
 $table->is_downloading($download, 'exportacao', 'exportacao');
-
 
 if (!$table->is_downloading()) {
     $PAGE->set_url('/mod/sepex/views/exportarRelatorio.php', array('id' => $cm->id));
@@ -45,13 +44,101 @@ if (!$table->is_downloading()) {
     echo '<hr>';
 }
 
-$table->set_sql("DISTINCT CONCAT(u.firstname,' ',u.lastname) nomeprofessor, spp.tipo, sp.idprojeto, sp.codprojeto,sp.titulo,sp.resumo,sp.tags, sp.dtcadastro,sp.email, sp.idperiodo, sp.turno, sp.idcurso, sp.statusresumo, sp.obsorientador, sp.idcategoria, sp.alocamesa, SUM( sap.totalresumo + sap.totalavaliacao ) notafinal",
-                "mdl_sepex_professor_projeto spp 
-                 INNER JOIN mdl_sepex_projeto sp ON sp.idprojeto = spp.idprojeto
-                 INNER JOIN mdl_user u ON u.username = spp.matrprofessor   
-                 LEFT JOIN mdl_sepex_avaliacao_projeto sap ON spp.idprofessorprojeto = sap.idprofessorprojeto",
-                 "{$consulta} GROUP BY spp.tipo, sp.idprojeto, sp.statusresumo, sp.codprojeto, sp.titulo, sp.idcategoria, sp.alocamesa
+$table->set_count_sql("SELECT COUNT(1) FROM mdl_sepex_projeto WHERE {$consulta}");
+
+$table->set_sql("DISTINCT sp.idprojeto,  sp.codprojeto,sp.titulo,sp.resumo,sp.tags, sp.dtcadastro,sp.email,
+                 sp.idperiodo, sp.turno, sp.idcurso, sp.statusresumo, sp.obsorientador, sp.idcategoria,
+                 sp.alocamesa, SUM( sap.totalresumo + sap.totalavaliacao ) notafinal
+                ", "mdl_sepex_professor_projeto spp 
+                 INNER JOIN mdl_sepex_projeto sp ON sp.idprojeto = spp.idprojeto 
+                 LEFT JOIN mdl_sepex_avaliacao_projeto sap ON spp.idprofessorprojeto = sap.idprofessorprojeto
+                ", "{$consulta} GROUP BY  sp.idprojeto, sp.codprojeto,sp.titulo,sp.resumo, sp.tags,
+                 sp.dtcadastro,sp.email, sp.idperiodo, sp.turno, sp.idcurso, sp.statusresumo, sp.obsorientador,
+                 sp.idcategoria, sp.alocamesa
                 ");
+
+// Define table columns.
+$columns = array();
+$headers = array();
+$help = array();
+
+$columns[] = 'idprojeto';
+$headers[] = format_string('Id');
+$help[] = NULL;
+
+$columns[] = 'codprojeto';
+$headers[] = format_string('Codigo');
+$help[] = NULL;
+
+$columns[] = 'titulo';
+$headers[] = format_string('Titulo');
+$help[] = NULL;
+
+$columns[] = 'resumo';
+$headers[] = format_string('Resumo');
+$help[] = NULL;
+
+$columns[] = 'tags';
+$headers[] = format_string('Tags');
+$help[] = NULL;
+
+$columns[] = 'dtcadastro';
+$headers[] = format_string('Data de Cadastro');
+$help[] = NULL;
+
+$columns[] = 'periodo';
+$headers[] = format_string('Periodo');
+$help[] = NULL;
+
+$columns[] = 'turno';
+$headers[] = format_string('Turno');
+$help[] = NULL;
+
+$columns[] = 'areacurso';
+$headers[] = format_string('Area Curso');
+$help[] = NULL;
+
+$columns[] = 'alocamesa';
+$headers[] = format_string('Solicita mesa');
+$help[] = NULL;
+
+$columns[] = 'categoria';
+$headers[] = format_string('Categoria');
+$help[] = NULL;
+
+$columns[] = 'curso';
+$headers[] = format_string('Curso');
+$help[] = NULL;
+
+$columns[] = 'alunos';
+$headers[] = format_string('Aluno(s)');
+$help[] = NULL;
+
+$columns[] = 'orientador';
+$headers[] = format_string('Orientador');
+$help[] = NULL;
+
+$columns[] = 'avaliador';
+$headers[] = format_string('Avaliador(es)');
+$help[] = NULL;
+
+$columns[] = 'nomelocalapresentacao';
+$headers[] = format_string('Local Apresentacao');
+$help[] = NULL;
+
+$columns[] = 'dtapresentacao';
+$headers[] = format_string('Data Apresentacao');
+$help[] = NULL;
+
+$columns[] = 'notafinal';
+$headers[] = format_string('Nota final');
+$help[] = NULL;
+
+$table->define_columns($columns);
+$table->define_headers($headers);
+$table->define_help_for_headers($help);
+$table->sortable(true, 'uniqueid');
+
 $table->define_baseurl("$CFG->wwwroot/mod/sepex/views//exportarRelatorio.php?id={$id}&consulta={$consulta}");
 $table->out(40, true);
 

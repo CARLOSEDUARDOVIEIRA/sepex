@@ -127,5 +127,8 @@ class Constantes {
     public static function getAreaCurso($idcurso) {
         return self::areacurso[$idcurso];
     }
+    public static function detailAreas($area){
+        return self::areas[$area];
+    }
 
 }
