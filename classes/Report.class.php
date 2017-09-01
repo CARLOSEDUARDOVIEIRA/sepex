@@ -13,6 +13,13 @@ require "../controllers/ApresentacaoController.class.php";
 
 class Report extends table_sql {
 
+    private $id;
+
+    function __construct($uniqueid, $id) {
+        parent::__construct($uniqueid);
+        $this->id = $id;
+    }
+
     /**
      * Essa função é chamada para cada linha de dados para permitir o processamento do
      * Valor do nome de usuário.
@@ -32,7 +39,11 @@ class Report extends table_sql {
 
     function col_titulo($values) {
 
-        return $values->titulo;
+        if ($this->is_downloading()) {
+            return $values->titulo;
+        } else {
+            return '<a href="./projetoAluno.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto . '</a>';
+        }
     }
 
     function col_resumo($values) {
@@ -101,22 +112,21 @@ class Report extends table_sql {
     function col_nomelocalapresentacao($values) {
         $apresentacaocontroller = new ApresentacaoController();
         return $apresentacaocontroller->detailApresentacao($values->idprojeto)->nomelocalapresentacao;
-        
     }
 
     function col_dtapresentacao($values) {
         $apresentacaocontroller = new ApresentacaoController();
         $date = $apresentacaocontroller->detailApresentacao($values->idprojeto)->dtapresentacao;
-        if($date){
-            return date("d/m/Y H:i:s",$date);
+        if ($date) {
+            return date("d/m/Y H:i:s", $date);
         }
         return 'Nao definido';
     }
-    
+
     function col_notafinal($values) {
         if ($values->notafinal) {
             return ($values->notafinal / 4);
         }
     }
-    
+
 }

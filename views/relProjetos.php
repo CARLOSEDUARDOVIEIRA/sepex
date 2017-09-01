@@ -82,10 +82,16 @@ if (!empty($dados = $filtro->get_data())) {
     $exportar .= ' ' . get_string('exportar_dados', 'sepex');
     $exportar .= html_writer::end_tag('a');
     echo $exportar;
-    echo '<br>';
+    echo '<hr>';
+    
+    $relavaliacao = html_writer::start_tag('a', array('href' => "./relAvaliacao.php?id={$id}&consulta={$consulta}",));
+    $relavaliacao .= html_writer::start_tag('img', array('src' => '../pix/relnotas.png'));
+    $relavaliacao .= ' ' . get_string('rel_avaliacao', 'sepex');
+    $relavaliacao .= html_writer::end_tag('a');
+    echo $relavaliacao;
+    echo '<hr>';
     
 }
-
 
 
 

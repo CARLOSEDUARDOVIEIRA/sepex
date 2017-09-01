@@ -229,4 +229,17 @@ class ProjetoModel {
             ORDER BY notafinal DESC");
     }
 
+    protected function getProjetosPorCategoria($idcategoria) {
+        global $DB;
+
+        return $DB->get_records_sql("
+            SELECT sp.idprojeto, CONCAT(u.firstname,' ',u.lastname) as orientador, sp.titulo,
+            sp.resumo, sp.tags, sp.turno, sp.idcurso
+            FROM mdl_sepex_projeto sp
+            INNER JOIN mdl_sepex_professor_projeto spp ON sp.idprojeto = spp.idprojeto
+            INNER JOIN mdl_user u ON spp.matrprofessor = u.username
+            WHERE sp.idcategoria = ? AND spp.tipo = 'Orientador' AND sp.statusresumo = 1       
+            ORDER BY sp.idcurso, sp.turno, sp.idprojeto", array($idcategoria));
+    }
+
 }

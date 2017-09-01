@@ -76,7 +76,7 @@ foreach ($projetos as $projeto) {
     if ($showactivity) {
         $titulo .= html_writer::start_tag('a', array('href' => './cadastroProjeto.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&update=1',));
     } else {
-        $titulo .= html_writer::start_tag('a', array('href' => './projeto_aluno/view.php?id=' . $id . '&data=' . $projeto->id_projeto,));
+        $titulo .= html_writer::start_tag('a', array('href' => './projetoAluno.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto,));
     }
     $titulo .= $projeto->titulo;
     $titulo .= html_writer::end_tag('a');
@@ -111,7 +111,7 @@ foreach ($projetos as $projeto) {
         
     } else {
         $link = html_writer::start_tag('td');
-        $link .= html_writer::start_tag('a', array('href' => '../projeto_aluno/view.php?id=' . $id . '&data=' . $projeto->idprojeto,));
+        $link .= html_writer::start_tag('a', array('href' => './projetoAluno.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto,));
         $link .= get_string('visualizar', 'sepex');
         $link .= html_writer::end_tag('a');
         $link .= html_writer::end_tag('td');

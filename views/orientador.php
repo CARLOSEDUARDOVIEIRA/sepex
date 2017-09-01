@@ -53,13 +53,11 @@ if ($avaliacao->is_cancelled()) {
     $professorcontroller->saveAvaliacaoOrientador($feedback, $idprojeto, $USER->username);
     redirect(VIEW_URL_LINK);
 } else {
-    $alunos = implode(", ", $alunocontroller->getNameAlunos($idprojeto));
-
     $constantes = new Constantes();
     echo $OUTPUT->heading(get_string('avaliar_resumo', 'sepex'), 3);
     echo $OUTPUT->heading($projeto[$idprojeto]->codprojeto . ' - ' . $projeto[$idprojeto]->titulo, 4);
     
-    $header.= '<b>' . get_string('alunos_projeto', 'sepex') . '</b>' . ': ' . $alunos . '</br>';
+    $header.= '<b>' . get_string('alunos_projeto', 'sepex') . '</b>' . ': ' . implode(", ", $alunocontroller->getNameAlunos($idprojeto)) . '</br>';
     $header.= '<b>' . get_string('curso', 'sepex') . '</b>' . ': ' . $constantes->detailCursos($projeto[$idprojeto]->idcurso) . ' - ';
     $header.= '<b>' . get_string('turno', 'sepex') . '</b>' . ': ' . $projeto[$idprojeto]->turno . '</br>';
     $header.= '<b>' . strtoupper(get_string('categoria', 'sepex')) . '</b>' . ': ' . $constantes->detailCategorias($projeto[$idprojeto]->idcategoria);

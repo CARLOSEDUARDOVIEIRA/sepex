@@ -33,5 +33,13 @@ class AlunoController extends AlunoModel {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
+    
+    public function getNotaFinalProjetoAluno($idprojeto) {
+        try {
+            return parent::getNotaFinalProjetoAluno($idprojeto);
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
 
 }

@@ -229,3 +229,4 @@ $string['nota_final'] = 'NOTA FINAL';
 $string['situacao_final'] = 'SITUAÇÃO';
 $string['alunos_prese_apres'] = 'ALUNOS PRESENTES NA APRESENTAÇÃO';
 $string['alunos_falta_apres'] = 'ALUNOS QUE FALTARAM A APRESENTAÇÃO';
+$string['rel_avaliacao'] = 'Relatorio de avaliaçao dos professores';

@@ -76,7 +76,7 @@ class ProjetoController extends ProjetoModel {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
-    
+
     public function getProjetosFiltrados($consulta) {
         try {
             return parent::getProjetosFiltrados($consulta);
@@ -84,4 +84,13 @@ class ProjetoController extends ProjetoModel {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
+
+    public function getProjetosPorCategoria($idcategoria) {
+        try {
+            return parent::getProjetosPorCategoria($idcategoria);
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
+
 }

@@ -27,7 +27,7 @@ $PAGE->set_context($context);
 
 $download = optional_param('download', '', PARAM_ALPHA);
 
-$table = new Report('uniqueid');
+$table = new Report('uniqueid', $id);
 $table->is_downloading($download, 'exportacao', 'exportacao');
 
 if (!$table->is_downloading()) {

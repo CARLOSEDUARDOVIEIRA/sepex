@@ -45,5 +45,16 @@ class AlunoModel {
             FROM mdl_sepex_aluno_projeto                                    
             WHERE idprojeto = {$idprojeto} AND matraluno = {$matraluno}");
     }
+    
+    protected function getNotaFinalProjetoAluno($idprojeto){
+        global $DB;
 
+        return $DB->get_records_sql("
+        SELECT
+            spp.idprofessorprojeto, (sap.totalresumo + sap.totalavaliacao) notafinal
+            FROM mdl_sepex_professor_projeto spp
+            LEFT JOIN mdl_sepex_avaliacao_projeto sap ON spp.idprofessorprojeto = sap.idprofessorprojeto
+            WHERE spp.idprojeto = {$idprojeto}");
+        
+    }
 }
