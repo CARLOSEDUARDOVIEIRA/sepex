@@ -42,7 +42,7 @@ class Report extends table_sql {
         if ($this->is_downloading()) {
             return $values->titulo;
         } else {
-            return '<a href="./projetoAluno.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto . '</a>';
+            return '<a href="./projetoAluno.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto .'">' . $values->titulo . '</a>';
         }
     }
 
@@ -126,6 +126,8 @@ class Report extends table_sql {
     function col_notafinal($values) {
         if ($values->notafinal) {
             return ($values->notafinal / 4);
+        }else{
+            return 'nao avaliado';
         }
     }
 

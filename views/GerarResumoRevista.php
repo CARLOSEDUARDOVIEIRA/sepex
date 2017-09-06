@@ -10,6 +10,7 @@ require('../PHPWord.php');
 
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
+$download = optional_param('download', 0, PARAM_INT);
 
 if ($id) {
     $cm = get_coursemodule_from_id('sepex', $id, 0, false, MUST_EXIST);
@@ -26,15 +27,19 @@ if ($id) {
 require_login($course, true, $cm);
 $context_course = context_course::instance($course->id);
 
+define('VIEW_URL_LINK', "../view.php?id=" . $id);
+
 $PAGE->set_url('/mod/sepex/views/GerarResumoRevista.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($sepex->name));
 $PAGE->set_heading(format_string($sepex->name));
 
-echo $OUTPUT->header();
-echo $OUTPUT->heading(strtoupper(get_string('resumo_revista', 'sepex')), 2);
 
-$categoria = new GerarResumoRevista("GerarResumoRevista.php?id={$id}");
-$categoria->display();
+$categoria = new GerarResumoRevista("GerarResumoRevista.php?id={$id}&download=1");
+if (empty($download)) {
+    echo $OUTPUT->header();
+    echo $OUTPUT->heading(strtoupper(get_string('resumo_revista', 'sepex')), 2);
+    $categoria->display();
+}
 
 if ($categoria->is_cancelled()) {
     redirect(VIEW_URL_LINK);
@@ -89,6 +94,14 @@ if ($categoria->is_cancelled()) {
 
     $objWriter = PHPWord_IOFactory::createWriter($PHPWord, 'Word2007');
     $objWriter->save("Revista{$constantes->detailCategorias($categoria->get_data()->idcategoria)}.docx");
-}
 
-echo $OUTPUT->footer();
+    $file = "Revista{$constantes->detailCategorias($categoria->get_data()->idcategoria)}.docx";
+    header("Content-Disposition: attachment; filename={$file}");
+    header("Content-Length: " . filesize($file));
+    header("Content-Type: application/octet-stream;");
+    readfile($file);
+    unlink($file);
+}
+if (empty($download)) {
+    echo $OUTPUT->footer();
+}

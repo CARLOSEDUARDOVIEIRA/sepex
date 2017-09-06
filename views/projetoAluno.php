@@ -84,8 +84,8 @@ if (isset($projeto[$idprojeto]->statusresumo)) {
     echo '<p>' . '<b>' . get_string('status_resumo', 'sepex') . '</b>' . ':  ' . $status . '</p>';
     echo '<p>' . '<b>' . get_string('obs_orientador', 'sepex') . '</b>' . ':  ' . $projeto[$idprojeto]->obsorientador . '</p>';
 } else {
-    echo '<p>' . '<b>' . get_string('status_resumo', 'sepex') . '</b>' . ':  ' . get_string('aguardando_definicao', 'sepex') . '</p>';
-    echo '<p>' . '<b>' . get_string('obs_orientador', 'sepex') . '</b>' . ':  ' . get_string('aguardando_definicao', 'sepex') . '</p>';
+    echo '<p>' . '<b>' . get_string('status_resumo', 'sepex') . '</b>' . ':  ' . get_string('em_avaliacao', 'sepex') . '</p>';
+    echo '<p>' . '<b>' . get_string('obs_orientador', 'sepex') . '</b>' . ':  ' . get_string('em_avaliacao', 'sepex') . '</p>';
 }
 
 echo '<p>' . '</br></br>' . get_string('local_apresentacao', 'sepex') . '</p></br>';

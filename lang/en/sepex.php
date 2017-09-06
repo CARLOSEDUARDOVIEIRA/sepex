@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,7 +26,6 @@
  * @copyright  2017 Carlos Eduardo Vieira <dullvieira@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
 $string['modulename'] = 'Sepex';
@@ -151,7 +151,7 @@ $string['resultados_resumo_help'] = 'Use . "Ponto" para separar as casas decimai
 $string['conclusao_objetivos'] = 'Adequação da conclusão aos objetivos propostos';
 $string['conclusao_objetivos_help'] = 'Use . "Ponto" para separar as casas decimais de sua nota';
 $string['total_resumo'] = 'Nota total resumo';
-$string['exportar_dados'] = 'Exportar dados e realizar download';
+$string['exportar_dados'] = 'Relatorio geral';
 //-- Campos de avaliar apressentação
 $string['header_apresentacao'] = 'Avaliar Apresentação';
 $string['criterio_apresentacao'] = 'Critério avaliação';
@@ -208,6 +208,7 @@ $string['informacao_projeto'] = 'VISUALIZAR INFORMAÇÕES';
 $string['visualizar'] = 'Visualizar';
 $string['local_apresentacao'] = 'INFORMAÇÕES SOBRE APRESENTAÇÃO DO PROJETO';
 $string['aguardando_definicao'] = 'Aguardando definição';
+$string['em_avaliacao'] = 'Em avaliaçao';
 $string['palavra_chave'] = 'Palavras Chave';
 $string['alunos_projeto'] = 'Aluno(s) integrante(s)';
 $string['status_resumo'] = 'Situação do resumo';

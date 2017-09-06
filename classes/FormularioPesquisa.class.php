@@ -9,15 +9,15 @@ class FormularioPesquisa extends moodleform {
         $constantes = new Constantes();
 
         $mform = $this->_form;
-        
+
         $cursos = $constantes->getCursos();
         $mform->addElement('select', 'idcurso', get_string('curso', 'sepex'), $cursos);
         $mform->addHelpButton('idcurso', 'curso', 'sepex');
-        
+
         $area = $constantes->getAreas();
         $mform->addElement('select', 'areacurso', get_string('area', 'sepex'), $area);
         $mform->addHelpButton('areacurso', 'area', 'sepex');
-        
+
         $categoria = $constantes->getCategorias();
         $mform->addElement('select', 'idcategoria', get_string('categoria', 'sepex'), $categoria);
         $mform->addHelpButton('idcategoria', 'categoria', 'sepex');
@@ -42,7 +42,7 @@ class FormularioPesquisa extends moodleform {
         );
         $mform->addElement('select', 'statusresumo', get_string('situacao', 'sepex'), $resumo);
         $mform->addHelpButton('statusresumo', 'situacao', 'sepex');
-        
+
         $this->add_action_buttons($cancel = true, get_string('listarprojetos', 'sepex'));
     }
 

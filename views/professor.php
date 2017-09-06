@@ -1,8 +1,12 @@
 <?php
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
-require ('../controllers/ProfessorController.class.php');
+require "$CFG->libdir/tablelib.php";
 require ('../constantes/Constantes.class.php');
+require ('../classes/ReportProfessores.class.php');
+require '../controllers/AlunoController.class.php';
+require '../controllers/ApresentacaoController.class.php';
+
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
 
@@ -19,81 +23,89 @@ if ($id) {
 }
 
 require_login($course, true, $cm);
-$context_course = context_course::instance($course->id);
+$context = context_system::instance();
+$PAGE->set_context($context);
 
-$PAGE->set_url('/mod/sepex/views/professor.php', array('id' => $cm->id));
-$PAGE->set_title(format_string($sepex->name));
-$PAGE->set_heading(format_string($sepex->name));
+$download = optional_param('download', '', PARAM_ALPHA);
+$table = new ReportProfessores('uniqueid', $id);
+$table->is_downloading($download, 'tableprofessor', 'tableprofessor');
 
-$professorcontroller = new ProfessorController();
-$constantes = new Constantes();
-
-echo $OUTPUT->header();
-
-$projetos = $professorcontroller->getProjetosProfessor($USER->username);
-echo get_string('numeroregistros', 'sepex', count($projetos));
-
-echo '<table class="forumheaderlist table table-striped">';
-echo '<thead>';
-echo '<tr>';
-echo '<th></th>';
-echo '<th>' . get_string('titulo_projeto', 'sepex') . '</th>';
-echo '<th>' . strtoupper(get_string('categoria', 'sepex')) . '</th>';
-echo '<th>' . strtoupper(get_string('curso', 'sepex')) . '</th>';
-echo '<th>' . get_string('situacao_final', 'sepex') . '</th>';
-echo '<th></th>';
-//echo '<th>' . get_string('avaliar', 'sepex') . '</th>';
-echo '</tr>';
-echo '</thead>';
-echo '<tbody>';
-
-foreach ($projetos as $projeto) {
-    echo '<tr>';
-    echo'<td>' . $projeto->tipo . '</td>';
-
-    $titulo = html_writer::start_tag('td');
-    if ($projeto->tipo == 'Avaliador') {
-        $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './avaliador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&idcategoria=' . $projeto->idcategoria,));
-    } else {
-        $titulo .= html_writer::start_tag('a', array('id' => 'titulo', 'href' => './orientador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto,));
-    }
-
-    $titulo .= $projeto->titulo;
-    $titulo .= html_writer::end_tag('a');
-    $titulo .= html_writer::end_tag('td');
-    echo $titulo;
-
-    echo'<td>' . $constantes->detailCategorias($projeto->idcategoria) . '</td>';
-    echo'<td>' . $constantes->detailCursos($projeto->idcurso) . '</td>';
-
-    if ($projeto->tipo == 'Avaliador') {
-        echo'<td>' . ($projeto->notafinal / 2) . '</td>';
-    } else {
-        if (!isset($projeto->statusresumo)) {
-            echo '<td>' . get_string('nao_avaliado', 'sepex') . '</td>';
-        } elseif ($projeto->statusresumo) {
-            echo'<td>' . get_string('aprovado', 'sepex') . '</td>';
-        } else {
-            echo'<td>' . get_string('reprovado', 'sepex') . '</td>';
-        }
-    }
-
-    $avaliar = html_writer::start_tag('td');
-    if ($projeto->tipo == 'Avaliador') {
-        $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './avaliador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&idcategoria=' . $projeto->idcategoria,));
-    } else {
-        $avaliar .= html_writer::start_tag('a', array('id' => 'btnEdit', 'href' => './orientador.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto,));
-    }
-    $avaliar .= html_writer::start_tag('img', array('src' => '../pix/avaliar.png'));
-    $avaliar .= html_writer::end_tag('a');
-    $avaliar .= html_writer::end_tag('td');
-    echo $avaliar;
-    echo '</tr>';
-
-    echo '</tbody>';
+if (!$table->is_downloading()) {
+    $PAGE->set_url('/mod/sepex/views/professor.php', array('id' => $cm->id));
+    $PAGE->set_title(format_string($sepex->name));
+    $PAGE->set_heading(format_string($sepex->name));
+    echo $OUTPUT->header();
 }
-echo '</table>';
 
-echo $OUTPUT->footer();
+/* Isso nao eh uma escolha o moodle definiu que essa table_sql so recebe um sql.
+  por isso que estou inserindo este sql junto com php na view.
+ */
+$table->set_sql(
+        "sp.idprojeto,
+        sp.titulo,
+        sp.idcategoria,
+        sp.idcurso,
+        sp.statusresumo,
+        spp.tipo,
+        SUM(sap.totalresumo + sap.totalavaliacao) notafinal
+        ", "mdl_sepex_professor_projeto spp 
+        INNER JOIN mdl_sepex_projeto sp ON spp.idprojeto = sp.idprojeto
+        LEFT JOIN mdl_sepex_avaliacao_projeto sap ON spp.idprofessorprojeto = sap.idprofessorprojeto
+        ", "spp.matrprofessor = {$USER->username}
+        GROUP BY sp.idprojeto, sp.titulo, sp.idcategoria, sp.idcurso, sp.statusresumo, spp.tipo"
+);
 
+// Define table columns.
+$columns = array();
+$headers = array();
+$help = array();
+
+$columns[] = 'button';
+$headers[] = format_string('');
+$help[] = NULL;
+
+$columns[] = 'tipo';
+$headers[] = format_string('Metodo');
+$help[] = NULL;
+
+$columns[] = 'categoria';
+$headers[] = format_string('Categoria');
+$help[] = NULL;
+
+$columns[] = 'curso';
+$headers[] = format_string('Curso');
+$help[] = NULL;
+
+$columns[] = 'titulo';
+$headers[] = format_string('Titulo');
+$help[] = NULL;
+
+$columns[] = 'alunos';
+$headers[] = format_string('Alunos');
+$help[] = NULL;
+
+$columns[] = 'nomelocalapresentacao';
+$headers[] = format_string('Local Apresentacao');
+$help[] = NULL;
+
+$columns[] = 'dtapresentacao';
+$headers[] = format_string('Data Apresentacao');
+$help[] = NULL;
+
+$columns[] = 'notafinal';
+$headers[] = format_string('Nota final');
+$help[] = NULL;
+
+$table->define_columns($columns);
+$table->define_headers($headers);
+$table->define_help_for_headers($help);
+$table->sortable(true, 'uniqueid');
+
+
+$table->define_baseurl("$CFG->wwwroot/mod/sepex/views/professor.php?id={$id}");
+$table->out(40, true);
+
+if (!$table->is_downloading()) {
+    echo $OUTPUT->footer();
+}
 

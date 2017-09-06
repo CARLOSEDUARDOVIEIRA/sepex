@@ -35,15 +35,13 @@ echo $OUTPUT->heading(get_string('header_relatorios', 'sepex'), 3);
 $filtro = new FormularioPesquisa("relProjetos.php?id={$id}");
 $filtro->display();
 
-$linkvoltar = html_writer::start_tag('a', array('href' => '../view.php?id=' . $id));
-$linkvoltar .= get_string('voltar_menu', 'sepex');
-$linkvoltar .= html_writer::end_tag('a');
-echo $linkvoltar;
-echo '<hr>';
-
 $projetocontroller = new ProjetoController();
 $constantes = new Constantes();
 $professorcontroller = new ProfessorController();
+
+if ($filtro->is_cancelled()) {
+    redirect("../view.php?id={$id}");
+}
 
 if (!empty($dados = $filtro->get_data())) {
 
@@ -72,25 +70,24 @@ if (!empty($dados = $filtro->get_data())) {
         $consulta = $consulta . ' AND statusresumo = ' . $dados->statusresumo;
     }
 
-    
+
     $projetos = $projetocontroller->getProjetosFiltrados($consulta);
     echo get_string('numeroregistros', 'sepex', count($projetos));
     echo '<br><br>';
-    
+    echo '<hr>';
     $exportar = html_writer::start_tag('a', array('href' => "./exportarRelatorio.php?id={$id}&consulta={$consulta}",));
     $exportar .= html_writer::start_tag('img', array('src' => '../pix/export.png'));
     $exportar .= ' ' . get_string('exportar_dados', 'sepex');
     $exportar .= html_writer::end_tag('a');
     echo $exportar;
     echo '<hr>';
-    
+
     $relavaliacao = html_writer::start_tag('a', array('href' => "./relAvaliacao.php?id={$id}&consulta={$consulta}",));
     $relavaliacao .= html_writer::start_tag('img', array('src' => '../pix/relnotas.png'));
     $relavaliacao .= ' ' . get_string('rel_avaliacao', 'sepex');
     $relavaliacao .= html_writer::end_tag('a');
     echo $relavaliacao;
     echo '<hr>';
-    
 }
 
 
