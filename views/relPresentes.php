@@ -1,10 +1,10 @@
 <?php
 
-/* Pagina de exibicao e exportacao de relatorio de professores */
+/* Pagina de exibicao e exportacao de relatorio de alunos presentes na apresentacao */
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 require "$CFG->libdir/tablelib.php";
-require ('../classes/ReportAvaliacao.class.php');
+require ('../classes/ReportPresentes.class.php');
 
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
@@ -27,12 +27,12 @@ $context = context_system::instance();
 $PAGE->set_context($context);
 
 $download = optional_param('download', '', PARAM_ALPHA);
-$table = new ReportAvaliacao('uniqueid', $id);
-$table->is_downloading($download, 'exportacao', 'exportacao');
+$table = new ReportPresentes('uniqueid', $id);
+$table->is_downloading($download, 'relatoriopresencas', 'relatoriopresencas');
 
 
 if (!$table->is_downloading()) {
-    $PAGE->set_url('/mod/sepex/views/relAvaliacao.php', array('id' => $cm->id));
+    $PAGE->set_url('/mod/sepex/views/relPresentes.php', array('id' => $cm->id));
     $PAGE->set_title(format_string($sepex->name));
     $PAGE->set_heading($course->fullname);
     echo $OUTPUT->header();
@@ -45,17 +45,18 @@ if (!$table->is_downloading()) {
     echo '<hr>';
 }
 
-$table->set_sql("spp.idprofessorprojeto, sp.idprojeto, sp.titulo, sp.turno, sp.areacurso,sp.idcategoria, sp.idcurso, CONCAT(u.firstname,' ',u.lastname) nomeprofessor,
-                (sap.totalresumo + sap.totalavaliacao) notafinal
-                ", "mdl_sepex_professor_projeto spp
-                    LEFT JOIN mdl_sepex_avaliacao_projeto sap on spp.idprofessorprojeto = sap.idprofessorprojeto
-                    INNER JOIN mdl_user u on spp.matrprofessor = u.username
-                    INNER JOIN mdl_sepex_projeto sp ON sp.idprojeto = spp.idprojeto 
-                ", "{$consulta} AND tipo = 'Avaliador'");
+$table->set_sql("sap.idalunoprojeto, sap.presenca, sp.codprojeto, sp.idprojeto, sp.titulo, sp.turno, sp.idcategoria, sp.idcurso, sp.idperiodo, sp.turno, CONCAT(u.firstname,' ',u.lastname) nomealuno                
+                ", "mdl_sepex_aluno_projeto sap
+                    INNER JOIN mdl_user u on sap.matraluno = u.username
+                    INNER JOIN mdl_sepex_projeto sp ON sp.idprojeto = sap.idprojeto 
+                ", "1 = 1");
 
 // Define table columns.
 $columns = array();
 $headers = array();
+
+$columns[] = 'codprojeto';
+$headers[] = format_string('Codigo');
 
 $columns[] = 'titulo';
 $headers[] = format_string('Titulo');
@@ -63,21 +64,23 @@ $headers[] = format_string('Titulo');
 $columns[] = 'curso';
 $headers[] = format_string('Curso');
 
-$columns[] = 'area';
-$headers[] = format_string('Area do curso');
+$columns[] = 'periodo';
+$headers[] = format_string('Periodo');
 
-$columns[] = 'nomeprofessor';
-$headers[] = format_string('Nome do professor');
+$columns[] = 'turno';
+$headers[] = format_string('Turno');
 
-$columns[] = 'notafinal';
-$headers[] = format_string('Nota final');
+$columns[] = 'alunos';
+$headers[] = format_string('Aluno');
+
+$columns[] = 'presenca';
+$headers[] = format_string('Presenca');
 
 $table->define_columns($columns);
 $table->define_headers($headers);
 $table->sortable(false, 'uniqueid');
-                
-                
-$table->define_baseurl("$CFG->wwwroot/mod/sepex/views/relAvaliacao.php?id={$id}&consulta={$consulta}");
+
+$table->define_baseurl("$CFG->wwwroot/mod/sepex/views/relPresentes.php?id={$id}&consulta={$consulta}");
 $table->out(40, true);
 
 if (!$table->is_downloading()) {

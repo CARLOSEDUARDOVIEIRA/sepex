@@ -88,8 +88,7 @@ if (!empty($dados = $filtro->get_data())) {
     $relavaliacao .= html_writer::end_tag('a');
     echo $relavaliacao;
     echo '<hr>';
+    
 }
-
-
 
 echo $OUTPUT->footer();

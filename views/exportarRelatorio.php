@@ -28,7 +28,7 @@ $PAGE->set_context($context);
 $download = optional_param('download', '', PARAM_ALPHA);
 
 $table = new Report('uniqueid', $id);
-$table->is_downloading($download, 'exportacao', 'exportacao');
+$table->is_downloading($download, 'relatoriogeral', 'relatoriogeral');
 
 if (!$table->is_downloading()) {
     $PAGE->set_url('/mod/sepex/views/exportarRelatorio.php', array('id' => $cm->id));
@@ -54,7 +54,7 @@ $table->set_sql("DISTINCT sp.idprojeto,  sp.codprojeto,sp.titulo,sp.resumo,sp.ta
                  LEFT JOIN mdl_sepex_avaliacao_projeto sap ON spp.idprofessorprojeto = sap.idprofessorprojeto
                 ", "{$consulta} GROUP BY  sp.idprojeto, sp.codprojeto,sp.titulo,sp.resumo, sp.tags,
                  sp.dtcadastro,sp.email, sp.idperiodo, sp.turno, sp.idcurso, sp.statusresumo, sp.obsorientador,
-                 sp.idcategoria, sp.alocamesa, sp.areacurso
+                 sp.idcategoria, sp.alocamesa, sp.areacurso 
                 ");
 
 // Define table columns.
@@ -117,8 +117,7 @@ $headers[] = format_string('Nota final');
 
 $table->define_columns($columns);
 $table->define_headers($headers);
-$table->define_help_for_headers($help);
-$table->sortable(true, 'uniqueid');
+$table->sortable(false, 'uniqueid');
 
 $table->define_baseurl("$CFG->wwwroot/mod/sepex/views//exportarRelatorio.php?id={$id}&consulta={$consulta}");
 $table->out(40, true);

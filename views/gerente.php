@@ -26,12 +26,12 @@ $PAGE->set_title(format_string($sepex->name));
 $PAGE->set_heading(format_string($sepex->name));
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('organizacaosepex','sepex'), 2);
+echo $OUTPUT->heading(get_string('organizacaosepex', 'sepex'), 2);
 echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
 echo '<hr>';
 
 $criarlocal = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
-$criarlocal .= html_writer::start_tag('a', array('href' => './cadastroLocais.php?id=' . $id.'&add=1',));
+$criarlocal .= html_writer::start_tag('a', array('href' => './cadastroLocais.php?id=' . $id . '&add=1',));
 $criarlocal .= html_writer::start_tag('img', array('src' => '../pix/cadloc.png'));
 $criarlocal .= get_string('criar_local_apresentacao', 'sepex');
 $criarlocal .= html_writer::end_tag('a');
@@ -55,6 +55,13 @@ $relprojetos .= get_string('exibir_relatorios', 'sepex');
 $relprojetos .= html_writer::end_tag('a');
 $relprojetos .= html_writer::end_tag('div');
 echo $relprojetos;
+echo '<hr>';
+
+$relpresentes .= html_writer::start_tag('a', array('href' => "./relPresentes.php?id={$id}&consulta={$consulta}"));
+$relpresentes .= html_writer::start_tag('img', array('src' => '../pix/relpresentes.png'));
+$relpresentes .= get_string('rel_presentes', 'sepex');
+$relpresentes .= html_writer::end_tag('a');
+echo $relpresentes;
 echo '<hr>';
 
 $resumorevista = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:2%;'));
