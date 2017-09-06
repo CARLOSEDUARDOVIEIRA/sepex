@@ -58,43 +58,33 @@ $table->set_sql(
 // Define table columns.
 $columns = array();
 $headers = array();
-$help = array();
 
 $columns[] = 'button';
 $headers[] = format_string('');
-$help[] = NULL;
 
 $columns[] = 'tipo';
 $headers[] = format_string('Metodo');
-$help[] = NULL;
 
 $columns[] = 'categoria';
 $headers[] = format_string('Categoria');
-$help[] = NULL;
 
 $columns[] = 'curso';
 $headers[] = format_string('Curso');
-$help[] = NULL;
 
 $columns[] = 'titulo';
 $headers[] = format_string('Titulo');
-$help[] = NULL;
 
 $columns[] = 'alunos';
 $headers[] = format_string('Alunos');
-$help[] = NULL;
 
 $columns[] = 'nomelocalapresentacao';
 $headers[] = format_string('Local Apresentacao');
-$help[] = NULL;
 
 $columns[] = 'dtapresentacao';
 $headers[] = format_string('Data Apresentacao');
-$help[] = NULL;
 
 $columns[] = 'notafinal';
 $headers[] = format_string('Nota final');
-$help[] = NULL;
 
 $table->define_columns($columns);
 $table->define_headers($headers);

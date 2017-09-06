@@ -56,27 +56,21 @@ $table->set_sql("spp.idprofessorprojeto, sp.idprojeto, sp.titulo, sp.turno, sp.a
 // Define table columns.
 $columns = array();
 $headers = array();
-$help = array();
 
 $columns[] = 'titulo';
 $headers[] = format_string('Titulo');
-$help[] = NULL;
 
 $columns[] = 'curso';
 $headers[] = format_string('Curso');
-$help[] = NULL;
 
 $columns[] = 'area';
 $headers[] = format_string('Area do curso');
-$help[] = NULL;
 
 $columns[] = 'nomeprofessor';
 $headers[] = format_string('Nome do professor');
-$help[] = NULL;
 
 $columns[] = 'notafinal';
 $headers[] = format_string('Nota final');
-$help[] = NULL;
 
 $table->define_columns($columns);
 $table->define_headers($headers);

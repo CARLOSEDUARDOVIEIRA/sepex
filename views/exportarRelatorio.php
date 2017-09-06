@@ -60,79 +60,60 @@ $table->set_sql("DISTINCT sp.idprojeto,  sp.codprojeto,sp.titulo,sp.resumo,sp.ta
 // Define table columns.
 $columns = array();
 $headers = array();
-$help = array();
 
 $columns[] = 'idprojeto';
 $headers[] = format_string('Id');
-$help[] = NULL;
 
 $columns[] = 'codprojeto';
 $headers[] = format_string('Codigo');
-$help[] = NULL;
 
 $columns[] = 'titulo';
 $headers[] = format_string('Titulo');
-$help[] = NULL;
 
 $columns[] = 'resumo';
 $headers[] = format_string('Resumo');
-$help[] = NULL;
 
 $columns[] = 'tags';
 $headers[] = format_string('Tags');
-$help[] = NULL;
 
 $columns[] = 'dtcadastro';
 $headers[] = format_string('Data de Cadastro');
-$help[] = NULL;
 
 $columns[] = 'periodo';
 $headers[] = format_string('Periodo');
-$help[] = NULL;
 
 $columns[] = 'turno';
 $headers[] = format_string('Turno');
-$help[] = NULL;
 
 $columns[] = 'areacurso';
 $headers[] = format_string('Area Curso');
-$help[] = NULL;
 
 $columns[] = 'alocamesa';
 $headers[] = format_string('Solicita mesa');
-$help[] = NULL;
 
 $columns[] = 'categoria';
 $headers[] = format_string('Categoria');
-$help[] = NULL;
 
 $columns[] = 'curso';
 $headers[] = format_string('Curso');
-$help[] = NULL;
 
 $columns[] = 'alunos';
 $headers[] = format_string('Aluno(s)');
-$help[] = NULL;
 
 $columns[] = 'orientador';
 $headers[] = format_string('Orientador');
-$help[] = NULL;
 
 $columns[] = 'avaliador';
 $headers[] = format_string('Avaliador(es)');
-$help[] = NULL;
 
 $columns[] = 'nomelocalapresentacao';
 $headers[] = format_string('Local Apresentacao');
-$help[] = NULL;
 
 $columns[] = 'dtapresentacao';
 $headers[] = format_string('Data Apresentacao');
-$help[] = NULL;
 
 $columns[] = 'notafinal';
 $headers[] = format_string('Nota final');
-$help[] = NULL;
 
 $table->define_columns($columns);
 $table->define_headers($headers);
