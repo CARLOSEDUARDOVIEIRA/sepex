@@ -15,6 +15,9 @@ class ReportProfessores extends table_sql {
     }
 
     function col_button($values) {
+        if ($this->is_downloading()) {
+            return $values->codprojeto;
+        }
 
         if ($values->tipo == 'Avaliador') {
             return '<a href="./avaliador.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto . '&idcategoria=' . $values->idcategoria . '">' . "<img src='../pix/avaliar.png'></a>";
@@ -40,7 +43,7 @@ class ReportProfessores extends table_sql {
 
     function col_categoria($values) {
         $constantes = new Constantes();
-        return $constantes->detailCategorias($values->idprojeto);
+        return $constantes->detailCategorias($values->idcategoria);
     }
 
     function col_notafinal($values) {

@@ -41,5 +41,13 @@ class AlunoController extends AlunoModel {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
-
+    
+    public function getLocalApresentacaoAluno($matraluno) {
+        try {
+            return parent::getLocalApresentacaoAluno($matraluno);
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ', $e->getMessage(), "\n";
+        }
+    }
+    
 }

@@ -42,6 +42,7 @@ if (!$table->is_downloading()) {
  */
 $table->set_sql(
         "sp.idprojeto,
+        sp.codprojeto,
         sp.titulo,
         sp.idcategoria,
         sp.idcurso,
@@ -89,7 +90,7 @@ $headers[] = format_string('Nota final');
 $table->define_columns($columns);
 $table->define_headers($headers);
 $table->define_help_for_headers($help);
-$table->sortable(true, 'uniqueid');
+$table->sortable(FALSE, 'uniqueid');
 
 
 $table->define_baseurl("$CFG->wwwroot/mod/sepex/views/professor.php?id={$id}");

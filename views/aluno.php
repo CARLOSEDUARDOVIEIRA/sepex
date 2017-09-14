@@ -1,9 +1,13 @@
 <?php
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
-require ('../controllers/AlunoController.class.php');
+require '../controllers/AlunoController.class.php';
+require '../controllers/ApresentacaoController.class.php';
 require ('../controllers/ProjetoController.class.php');
 require ('../constantes/Constantes.class.php');
+require "$CFG->libdir/tablelib.php";
+require ('../classes/ReportAlunos.class.php');
+
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
 
@@ -20,107 +24,119 @@ if ($id) {
 }
 
 require_login($course, true, $cm);
-$context_course = context_course::instance($course->id);
-
-$PAGE->set_url('/mod/sepex/views/aluno.php', array('id' => $cm->id));
-$PAGE->set_title(format_string($sepex->name));
-$PAGE->set_heading(format_string($sepex->name));
-
-$alunocontroller = new AlunoController();
-$projetocontroller = new ProjetoController();
-$constantes = new Constantes();
-
-
-echo $OUTPUT->header();
+$context = context_system::instance();
+$PAGE->set_context($context);
 
 $showactivity = true;
-
 $timenow = time();
-if (!empty($sepex->timeavailablefrom) && $sepex->timeavailablefrom > $timenow) {
-    echo $OUTPUT->notification(get_string('notopenyet', 'sepex', userdate($sepex->timeavailablefrom)));
-    $showactivity = false;
-} else if (!empty($sepex->timeavailableto) && $timenow > $sepex->timeavailableto) {
-    echo $OUTPUT->notification(get_string('expired', 'sepex', userdate($sepex->timeavailableto)));
+if ((!empty($sepex->timeavailablefrom) && $sepex->timeavailablefrom > $timenow) || (!empty($sepex->timeavailableto) && $timenow > $sepex->timeavailableto)) {
     $showactivity = false;
 }
+
+$download = optional_param('download', '', PARAM_ALPHA);
+$table = new ReportAlunos('uniqueid', $id, $showactivity);
+$table->is_downloading($download, 'tableprofessor', 'tableprofessor');
+
+if (!$table->is_downloading()) {
+    $PAGE->set_url('/mod/sepex/views/aluno.php', array('id' => $cm->id));
+    $PAGE->set_title(format_string($sepex->name));
+    $PAGE->set_heading(format_string($sepex->name));
+    echo $OUTPUT->header();
+}
+
+if (!$table->is_downloading()) {
+    
+    if (!empty($sepex->timeavailablefrom) && $sepex->timeavailablefrom > $timenow) {
+        echo $OUTPUT->notification(get_string('notopenyet', 'sepex', userdate($sepex->timeavailablefrom)));
+    } else if (!empty($sepex->timeavailableto) && $timenow > $sepex->timeavailableto) {
+        echo $OUTPUT->notification(get_string('expired', 'sepex', userdate($sepex->timeavailableto)));
+    }
+
+    if ($showactivity) {
+        $linkForm = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:10%;'));
+        $linkForm .= html_writer::start_tag('a', array('href' => './cadastroProjeto.php?id=' . $id . '&add=1',));
+        $linkForm .= html_writer::start_tag('submit', array('class' => 'btn btn-primary', 'style' => 'margin-bottom:5%;'));
+        $linkForm .= get_string('inscricao', 'sepex');
+        $linkForm .= html_writer::end_tag('a');
+        $linkForm .= html_writer::end_tag('div');
+        echo $linkForm;
+    }
+}
+
+/* Isso nao eh uma escolha o moodle definiu que essa table_sql so recebe um sql.
+  por isso que estou inserindo este sql junto com php na view.
+ */
+$table->set_sql(
+        "sp.idprojeto,
+        sp.codprojeto,
+        sp.titulo,
+        sp.idcategoria,
+        sp.idcurso,
+        sp.statusresumo,
+        sp.dtcadastro
+        ", "mdl_sepex_aluno_projeto sap
+        INNER JOIN mdl_sepex_professor_projeto spp ON sap.idprojeto = spp.idprojeto
+        INNER JOIN mdl_sepex_projeto sp ON spp.idprojeto = sp.idprojeto
+        ", "sap.matraluno = {$USER->username}"
+);
+
+// Define table columns.
+$columns = array();
+$headers = array();
 
 if ($showactivity) {
-    $linkForm = html_writer::start_tag('div', array('id' => 'cabecalho', 'style' => 'margin-top:10%;'));
-    $linkForm .= html_writer::start_tag('a', array('href' => './cadastroProjeto.php?id=' . $id . '&add=1',));
-    $linkForm .= html_writer::start_tag('submit', array('class' => 'btn btn-primary', 'style' => 'margin-bottom:5%;'));
-    $linkForm .= get_string('inscricao', 'sepex');
-    $linkForm .= html_writer::end_tag('a');
-    $linkForm .= html_writer::end_tag('div');
-    echo $linkForm;
+
+    $columns[] = 'chat';
+    $headers[] = format_string('');
+
+    $columns[] = 'edit';
+    $headers[] = format_string('');
+
+    $columns[] = 'delete';
+    $headers[] = format_string('');
+}
+if(!$showactivity){
+    $columns[] = 'view';
+    $headers[] = format_string('');
+}
+$columns[] = 'codprojeto';
+$headers[] = format_string('Codigo');
+
+$columns[] = 'alunos';
+$headers[] = format_string('Alunos');
+
+$columns[] = 'titulo';
+$headers[] = format_string('Titulo');
+
+$columns[] = 'idcategoria';
+$headers[] = format_string('Categoria');
+
+$columns[] = 'curso';
+$headers[] = format_string('Curso');
+
+$columns[] = 'dtcadastro';
+$headers[] = format_string('Envio');
+
+if (!$showactivity) {
+    $columns[] = 'statusresumo';
+    $headers[] = format_string('Condiçao do Resumo');
+
+    $columns[] = 'nomelocalapresentacao';
+    $headers[] = format_string('Local Apresentacao');
+
+    $columns[] = 'dtapresentacao';
+    $headers[] = format_string('Data Apresentacao');
 }
 
-echo '<table class="forumheaderlist table table-striped">';
-echo '<thead>';
-echo '<tr>';
-echo '<th>' . get_string('cod_projeto', 'sepex') . '</th>';
-echo '<th>' . get_string('titulo_projeto', 'sepex') . '</th>';
-echo '<th>' . get_string('categoria_projeto', 'sepex') . '</th>';
-echo '<th>' . get_string('envio', 'sepex') . '</th>';
-echo '<th> </th>';
-echo '<th> </th>';
-echo '</tr>';
-echo '</thead>';
-echo '<tbody>';
-$projetos = $projetocontroller->getProjetosDoUsuario();
-echo get_string('numeroregistros', 'sepex', count($projetos));
-foreach ($projetos as $projeto) {
-    echo '<tr>';
-    echo'<td>' . $projeto->codprojeto . '</td>';
+$table->define_columns($columns);
+$table->define_headers($headers);
+$table->define_help_for_headers($help);
+$table->sortable(FALSE, 'uniqueid');
 
-    $titulo = html_writer::start_tag('td');
-    if ($showactivity) {
-        $titulo .= html_writer::start_tag('a', array('href' => './cadastroProjeto.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&update=1',));
-    } else {
-        $titulo .= html_writer::start_tag('a', array('href' => './projetoAluno.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto,));
-    }
-    $titulo .= $projeto->titulo;
-    $titulo .= html_writer::end_tag('a');
-    $titulo .= html_writer::end_tag('td');
-    echo $titulo;
+$table->define_baseurl("$CFG->wwwroot/mod/sepex/views/aluno.php?id={$id}");
+$table->out(40, true);
 
-    echo'<td>' . $constantes->detailCategorias($projeto->idcategoria) . '</td>';
-
-    echo'<td>' . $projeto->dtcadastro . '</td>';
-    if ($showactivity) {
-        
-        $chat = html_writer::start_tag('td');        
-        $chat .= html_writer::start_tag('a', array('href' => '../../../message/index.php?id=' . $id . '&user=' . $USER->id,));
-        $chat .= html_writer::start_tag('img', array('src' => '../pix/chat.png'));
-        $chat .= html_writer::end_tag('a');
-        $chat .= html_writer::end_tag('td');
-        echo $chat;
-        
-        $editar = html_writer::start_tag('td');
-        $editar .= html_writer::start_tag('a', array('href' => './cadastroProjeto.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&update=1',));
-        $editar .= html_writer::start_tag('img', array('src' => '../pix/edit.png'));
-        $editar .= html_writer::end_tag('a');
-        $editar .= html_writer::end_tag('td');
-        echo $editar;
-
-        $delete = html_writer::start_tag('td');
-        $delete .= html_writer::start_tag('a', array('href' => './cadastroProjeto.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&delete=1',));
-        $delete .= html_writer::start_tag('img', array('src' => '../pix/delete.png'));
-        $delete .= html_writer::end_tag('a');
-        $delete .= html_writer::end_tag('td');
-        echo $delete;
-        
-    } else {
-        $link = html_writer::start_tag('td');
-        $link .= html_writer::start_tag('a', array('href' => './projetoAluno.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto,));
-        $link .= get_string('visualizar', 'sepex');
-        $link .= html_writer::end_tag('a');
-        $link .= html_writer::end_tag('td');
-        echo $link;
-    }
-    echo '</tr>';
+if (!$table->is_downloading()) {
+    echo $OUTPUT->footer();
 }
 
-echo '</tbody>';
-echo '</table>';
-
-echo $OUTPUT->footer();

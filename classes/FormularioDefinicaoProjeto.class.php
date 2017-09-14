@@ -27,7 +27,6 @@ class FormularioDefinicaoProjeto extends moodleform {
 
 
         // -------------------- DATA PARA APRESENTAÇÃO DO PROJETO -------------------------
-        $mform->addElement('header', 'apresentacao', get_string('dataapresentacao', 'sepex'));
         $mform->addElement('date_time_selector', 'dtapresentacao', get_string('data_definida', 'sepex'));
         $mform->addHelpButton('dtapresentacao', 'dataapresentacao', 'sepex');
 
@@ -37,15 +36,12 @@ class FormularioDefinicaoProjeto extends moodleform {
         foreach ($locais as $local) {
             $locaisapres[$local->idlocalapresentacao] = $local->nomelocalapresentacao;
         }
-        $mform->addElement('header', 'loc_apresentacao', get_string('localapresentacao', 'sepex'));
         $mform->addElement('select', 'idlocalapresentacao', get_string('localapresentacao', 'sepex'), $locaisapres);
         $mform->addRule('idlocalapresentacao', get_string('localapresentacaovazio', 'sepex'), 'required', null, 'client');
         $mform->addHelpButton('idlocalapresentacao', 'localapresentacao', 'sepex');
 
 
         //------------------------ SELEÇÃO AVALIADORES ------------------------------------
-        $mform->addElement('header', 'avaliadores', get_string('avaliadores', 'sepex'));
-
         $orientadores = $projetocontroller->getUsuarioPorCurso('editingteacher', $course);
         $professores = array('' => 'Escolher',);
         foreach ($orientadores as $professor) {

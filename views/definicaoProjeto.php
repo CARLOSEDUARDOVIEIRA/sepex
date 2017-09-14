@@ -9,6 +9,7 @@ require ('../controllers/ProjetoController.class.php');
 require ('../constantes/Constantes.class.php');
 require ('../controllers/ProfessorController.class.php');
 require ('../controllers/ApresentacaoController.class.php');
+require ('../controllers/AlunoController.class.php');
 
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
@@ -39,6 +40,7 @@ $constantes = new Constantes();
 $projetocontroller = new ProjetoController();
 $professorcontroller = new ProfessorController();
 $apresentacaocontroller = new ApresentacaoController();
+$alunocontroller = new AlunoController();
 
 $projeto = $projetocontroller->detail($idprojeto);
 
@@ -53,8 +55,37 @@ $header.= '<b>' . get_string('turno', 'sepex') . '</b>' . ': ' . $projeto[$idpro
 $header.= '<b>' . get_string('periodo', 'sepex') . '</b>' . ': ' . $projeto[$idprojeto]->idperiodo . ' Periodo </br>';
 $header.= '<b>' . get_string('orientadores', 'sepex') . '</b>' . ': ' . implode(',', $professorcontroller->getNameProfessores($idprojeto, 'Orientador'));
 echo $header;
+echo '<hr>';
 
+$alunos = $alunocontroller->getAlunosProjeto($idprojeto);
 
+echo '<table class="forumheaderlist table table-striped">';
+echo '<thead>';
+echo '<tr>';
+echo '<th>' . strtoupper(get_string('aluno', 'sepex')) . '</th>';
+echo '<th>' . get_string('apresentacao', 'sepex') . ' | ' . strtoupper(get_string('avaliadores', 'sepex')) . '</th>';
+echo '</tr>';
+echo '</thead>';
+foreach (explode(';', $alunos) as $i => $matraluno) {
+    $infoaluno = $alunocontroller->getLocalApresentacaoAluno($matraluno);
+    echo '<tbody>';
+    echo '<tr>';
+    echo '<td>' . array_column($infoaluno, 'name')[0] . '</td>';
+    echo '<td>';
+    foreach ($infoaluno as $info) {
+        echo "<a href='definicaoProjeto.php?id={$id}&idprojeto={$info->idprojeto}'";
+        echo ' <br> ' . date("d/m/Y H:i:s", $info->dtapresentacao) . ' - ' . $info->nomelocalapresentacao;
+        echo ' | ' . implode(',', $professorcontroller->getNameProfessores($info->idprojeto, 'Avaliador'));
+        echo '</a>';
+        echo '<br>';
+    }
+    echo '<td>';
+    echo '</td>';
+    echo '</td>';
+    echo '</tr>';
+    echo '</tbody>';
+}
+echo '</table>';
 
 $apresentacao = $apresentacaocontroller->detailApresentacao($idprojeto);
 

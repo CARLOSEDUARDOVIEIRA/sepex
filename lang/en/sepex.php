@@ -232,3 +232,4 @@ $string['alunos_prese_apres'] = 'ALUNOS PRESENTES NA APRESENTAÇÃO';
 $string['alunos_falta_apres'] = 'ALUNOS QUE FALTARAM A APRESENTAÇÃO';
 $string['rel_avaliacao'] = 'Relatorio de avaliaçao dos professores';
 $string['rel_presentes'] = 'Relatorio de alunos presentes na apresentaçao';
+$string['aluno'] = 'Aluno';

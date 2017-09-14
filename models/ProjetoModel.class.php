@@ -213,7 +213,7 @@ class ProjetoModel {
             INNER JOIN mdl_role_assignments ra ON ra.contextid = ct.id
             INNER JOIN mdl_user u ON u.id = ra.userid
             INNER JOIN mdl_role r on r.id = ra.roleid
-            WHERE ct.contextlevel = 50 AND c.id = {$course} AND r.shortname = '{$typeuser}' ORDER BY u.firstname");
+            WHERE ct.contextlevel = 50 AND c.id = {$course} AND r.shortname = '{$typeuser}' OR r.shortname = 'manager' ORDER BY u.firstname");
     }
 
     protected function getProjetosFiltrados($consulta) {
