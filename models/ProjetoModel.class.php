@@ -173,15 +173,16 @@ class ProjetoModel {
         $DB->insert_record("sepex_aluno_projeto", $alunocadastrante);
 
         $demaisalunos = explode(";", $student);
+
         if (count($demaisalunos) > 1) {
             foreach ($demaisalunos as $aluno) {
                 $matraluno = trim($aluno, " \t,"); //remove espacos e retira uma possivel , da ultima matricula informada.
                 $alunovalido = is_numeric($matraluno) && strlen($matraluno) == 10 && $matraluno != $USER->username;
                 if ($alunovalido) {
-                    $aluno = (object) array('matraluno' => $alunovalido,
+                    $alunoinsert = (object) array('matraluno' => $matraluno,
                                 'idprojeto' => $idprojeto
                     );
-                    $DB->insert_record("sepex_aluno_projeto", $aluno);
+                    $DB->insert_record("sepex_aluno_projeto", $alunoinsert);
                 }
             }
         }
