@@ -30,5 +30,5 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->component = 'mod_sepex';
 $plugin->version = 2017031400;
 $plugin->release = 'v0.1';
-$plugin->requires  = 2015051100; 
+$plugin->requires  = 2013051100; 
 $plugin->maturity = MATURITY_STABLE;

@@ -63,6 +63,12 @@ if (!$table->is_downloading()) {
     }
 }
 
+if(!is_numeric($USER->username)){
+    echo $OUTPUT->notification(get_string('semprojeto', 'sepex'));
+    echo $OUTPUT->footer();
+    die();
+}
+
 /* Isso nao eh uma escolha o moodle definiu que essa table_sql so recebe um sql.
   por isso que estou inserindo este sql junto com php na view.
  */
@@ -130,7 +136,7 @@ if (!$showactivity) {
 
 $table->define_columns($columns);
 $table->define_headers($headers);
-$table->define_help_for_headers($help);
+// $table->define_help_for_headers($help);
 $table->sortable(FALSE, 'uniqueid');
 
 $table->define_baseurl("$CFG->wwwroot/mod/sepex/views/aluno.php?id={$id}");
