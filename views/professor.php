@@ -6,7 +6,6 @@ require ('../constantes/Constantes.class.php');
 require ('../classes/ReportProfessores.class.php');
 require '../controllers/AlunoController.class.php';
 require '../controllers/ApresentacaoController.class.php';
-require '../controllers/ProfessorController.class.php';
 
 $id = required_param('id', PARAM_INT);
 $s = optional_param('s', 0, PARAM_INT);
@@ -36,15 +35,9 @@ if (!$table->is_downloading()) {
     $PAGE->set_title(format_string($sepex->name));
     $PAGE->set_heading(format_string($sepex->name));
     echo $OUTPUT->header();
-    $professorcontroller = new ProfessorController();
-    $projetos = $professorcontroller->getProjetosProfessor($USER->username);
 }
 
-
-echo get_string('numeroregistros', 'sepex', count($projetos));
-
-
-if (!is_numeric($USER->username) || !count($projetos)) {
+if(!is_numeric($USER->username)){
     echo $OUTPUT->notification(get_string('semprojeto', 'sepex'));
     echo $OUTPUT->footer();
     die();

@@ -26,7 +26,7 @@ class ProfessorController extends ProfessorModel {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
-
+    
     public function getNameProfessores($idprojeto, $tipo) {
         try {
             return parent::getNameProfessores($idprojeto, $tipo);
@@ -34,13 +34,4 @@ class ProfessorController extends ProfessorModel {
             echo 'Exceção capturada: ', $e->getMessage(), "\n";
         }
     }
-
-    public function getProjetosProfessor($professor) {
-        try {
-            return parent::getProjetosProfessor($professor);
-        } catch (Exception $e) {
-            echo 'Exceção capturada: ', $e->getMessage(), "\n";
-        }
-    }
-
 }

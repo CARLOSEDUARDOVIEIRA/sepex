@@ -35,7 +35,7 @@ if ((!empty($sepex->timeavailablefrom) && $sepex->timeavailablefrom > $timenow) 
 
 $download = optional_param('download', '', PARAM_ALPHA);
 $table = new ReportAlunos('uniqueid', $id, $showactivity);
-$table->is_downloading($download, 'tablealuno', 'tablealuno');
+$table->is_downloading($download, 'tableprofessor', 'tableprofessor');
 
 if (!$table->is_downloading()) {
     $PAGE->set_url('/mod/sepex/views/aluno.php', array('id' => $cm->id));
