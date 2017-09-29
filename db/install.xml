@@ -118,6 +118,12 @@
                 <FIELD NAME="avaliacao4" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
                 <FIELD NAME="avaliacao5" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
                 <FIELD NAME="avaliacao6" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+                <FIELD NAME="avaliacao7" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+                <FIELD NAME="avaliacao8" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+                <FIELD NAME="avaliacao9" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+                <FIELD NAME="avaliacao10" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+                <FIELD NAME="avaliacao11" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>
+                <FIELD NAME="avaliacao12" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" UNSIGNED="true"/>                
                 <FIELD NAME="totalavaliacao" TYPE="number" LENGTH="10" NOTNULL="false" DECIMALS="2" DEFAULT="0" UNSIGNED="true"/>                
             </FIELDS>
             <KEYS>

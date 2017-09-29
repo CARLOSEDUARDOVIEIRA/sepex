@@ -51,9 +51,16 @@ if ($categoria->is_cancelled()) {
 
     $projetos = $projetocontroller->getProjetosPorCategoria($categoria->get_data()->idcategoria);
 
+    if (empty($projetos)) {
+        echo $OUTPUT->header();
+        echo $OUTPUT->notification(get_string('semprojeto', 'sepex'));
+        echo $OUTPUT->footer();
+        die();
+    }
+
     $dtatual = date('Y');
 
-    $footertext = "XXI Semana de Pesquisa e Extensão - Revista de {$constantes->detailCategorias($categoria->get_data()->idcategoria)} do Centro Universitario Catolico de Vitoria do ES - {$dtatual} {PAGE}";
+    $footertext = "Semana de Pesquisa e Extensão - Revista de {$constantes->detailCategorias($categoria->get_data()->idcategoria)} do Centro Universitario Catolico de Vitoria do ES - {$dtatual} {PAGE}";
 
     $PHPWord = new PHPWord();
 

@@ -38,8 +38,7 @@ class Constantes {
         '7' => 'Responsábilidade Social',
         '8' => 'Temas Livres',
         '9' => 'Trabalho de Conclusão de Curso',
-        '10' => 'Mostra de Vídeos',
-        '11' => 'Concurso de Fotografia'
+        '10' => 'Mostra de Vídeos'        
     );
     const cursos = array(
         '' => 'Escolher',
