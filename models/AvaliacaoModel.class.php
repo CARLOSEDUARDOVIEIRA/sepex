@@ -31,6 +31,12 @@ class AvaliacaoModel {
             avaliacao4 = ?,
             avaliacao5 = ?,
             avaliacao6 = ?,
+            avaliacao7 = ?,
+            avaliacao8 = ?,
+            avaliacao9 = ?,
+            avaliacao10 = ?,
+            avaliacao11 = ?,
+            avaliacao12 = ?,
             totalavaliacao = ?
             WHERE spp.matrprofessor = {$USER->username} AND spp.idprojeto = {$idprojeto}", array($notas->resumo1,
             $notas->resumo2,
@@ -44,6 +50,12 @@ class AvaliacaoModel {
             $notas->avaliacao4,
             $notas->avaliacao5,
             $notas->avaliacao6,
+            $notas->avaliacao7,
+            $notas->avaliacao8,
+            $notas->avaliacao9,
+            $notas->avaliacao10,
+            $notas->avaliacao11,
+            $notas->avaliacao12,
             $notas->totalavaliacao
         ));
     }
@@ -70,6 +82,12 @@ class AvaliacaoModel {
             sap.avaliacao4,
             sap.avaliacao5,
             sap.avaliacao6,
+            sap.avaliacao7,
+            sap.avaliacao8,
+            sap.avaliacao9,
+            sap.avaliacao10,
+            sap.avaliacao11,
+            sap.avaliacao12,
             sap.totalavaliacao
             FROM mdl_sepex_professor_projeto spp
             INNER JOIN mdl_sepex_avaliacao_projeto sap
