@@ -173,7 +173,7 @@ class ProjetoModel {
 
         $demaisalunos = explode(";", $student);
 
-        if (count($demaisalunos) > 1) {
+        if (count($demaisalunos) > 0) {
             foreach ($demaisalunos as $aluno) {
                 $matraluno = trim($aluno, " \t,"); //remove espacos e retira uma possivel , da ultima matricula informada.
                 $alunovalido = is_numeric($matraluno) && strlen($matraluno) == 10 && $matraluno != $USER->username;

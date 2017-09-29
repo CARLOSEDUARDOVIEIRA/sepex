@@ -126,11 +126,11 @@ if (isset($idcategoria)) {
 
         if ($notas->update) {
             $notas->totalresumo = empty($notas->resumo1) ? null : $notas->resumo1 + $notas->resumo2 + $notas->resumo3 + $notas->resumo4 + $notas->resumo5;
-            $notas->totalavaliacao = $notas->avaliacao1 + $notas->avaliacao2 + $notas->avaliacao3 + $notas->avaliacao4 + $notas->avaliacao5 + $notas->avaliacao6;
+            $notas->totalavaliacao = $notas->avaliacao1 + $notas->avaliacao2 + $notas->avaliacao3 + $notas->avaliacao4 + $notas->avaliacao5 + $notas->avaliacao6 + $notas->avaliacao7 + $notas->avaliacao8 + $notas->avaliacao9 + $notas->avaliacao10 + $notas->avaliacao11 + $notas->avaliacao12;
             $avaliacaocontroller->update($idprojeto, $notas);
         } else {
             $notas->totalresumo = empty($notas->resumo1) ? null : $notas->resumo1 + $notas->resumo2 + $notas->resumo3 + $notas->resumo4 + $notas->resumo5;
-            $notas->totalavaliacao = empty($notas->avaliacao1) ? null : $notas->avaliacao1 + $notas->avaliacao2 + $notas->avaliacao3 + $notas->avaliacao4 + $notas->avaliacao5 + $notas->avaliacao6;
+            $notas->totalavaliacao = empty($notas->avaliacao1) ? null : $notas->avaliacao1 + $notas->avaliacao2 + $notas->avaliacao3 + $notas->avaliacao4 + $notas->avaliacao5 + $notas->avaliacao6 + $notas->avaliacao7 + $notas->avaliacao8 + $notas->avaliacao9 + $notas->avaliacao10 + $notas->avaliacao11 + $notas->avaliacao12;
             $avaliacaocontroller->save($idprojeto, $notas);
         }
 

@@ -26,7 +26,7 @@ class Integrador extends moodleform {
 
         $mform = $this->_form;
 
-        $placeholder = '20 pontos';
+        $placeholder = '10 pontos';
 
         $idprojeto = $this->_customdata['idprojeto'];
 
@@ -43,6 +43,13 @@ class Integrador extends moodleform {
             $mform->setDefault('avaliacao3', $dataavaliacao->avaliacao3);
             $mform->setDefault('avaliacao4', $dataavaliacao->avaliacao4);
             $mform->setDefault('avaliacao5', $dataavaliacao->avaliacao5);
+            $mform->setDefault('avaliacao6', $dataavaliacao->avaliacao6);
+            $mform->setDefault('avaliacao7', $dataavaliacao->avaliacao7);
+            $mform->setDefault('avaliacao8', $dataavaliacao->avaliacao8);
+            $mform->setDefault('avaliacao9', $dataavaliacao->avaliacao9);
+            $mform->setDefault('avaliacao10', $dataavaliacao->avaliacao10);
+            $mform->setDefault('avaliacao11', $dataavaliacao->avaliacao11);
+            $mform->setDefault('avaliacao12', $dataavaliacao->avaliacao12);
             $mform->setDefault('totalavaliacao', $dataavaliacao->totalavaliacao);
             $mform->addElement('hidden', 'update', true);
         }
@@ -56,6 +63,15 @@ class Integrador extends moodleform {
         Avaliacoes::createCampoAvaliacao($mform, 'avaliacao3', $placeholder, 'conhecimento_apresentacao');
         Avaliacoes::createCampoAvaliacao($mform, 'avaliacao4', $placeholder, 'relevancia_apresentacao');
         Avaliacoes::createCampoAvaliacao($mform, 'avaliacao5', $placeholder, 'interdisc_apresentacao');
+
+        $mform->addElement('header', 'header_banner', get_string('header_banner', 'sepex'));
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao6', $placeholder, 'ortografia');
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao7', '5 pontos', 'relacao_tema');
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao8', '5 pontos', 'introducao');
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao9', $placeholder, 'metodos');
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao10', $placeholder, 'resultados_discussao');
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao11', '5 pontos', 'consideracoes_finais');
+        Avaliacoes::createCampoAvaliacao($mform, 'avaliacao12', '5 pontos', 'referenciais_utilizados');
         $mform->addElement('static', 'totalavaliacao', get_string('total_apresentacao', 'sepex'));
         $mform->setType('totalavaliacao', PARAM_RAW);
 

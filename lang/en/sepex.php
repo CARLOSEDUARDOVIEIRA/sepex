@@ -172,6 +172,15 @@ $string['valorizacao_apresentacao_help'] = 'Use . "Ponto" para separar as casas 
 $string['viabilidade_apresentacao'] = 'Viabilidade do trabalho';
 $string['viabilidade_apresentacao_help'] = 'Use . "Ponto" para separar as casas decimais de sua nota';
 $string['total_apresentacao'] = 'Nota total apresentação';
+//--Avaliar banner
+$string['header_banner'] = 'Avaliação banner';
+$string['ortografia'] = 'Ortografia e Redação Acadêmico-Científica';
+$string['relacao_tema'] = 'Relação com o tema proposto';
+$string['introducao'] = 'Introdução';
+$string['metodos'] = 'Métodos';
+$string['resultados_discussao'] = 'Resultados e Discussão';
+$string['consideracoes_finais'] = 'Considerações finais';
+$string['referenciais_utilizados'] = 'Referenciais utilizados';
 //--Campos de video
 $string['qualidade_video'] = 'Qualidade de finalização';
 $string['qualidade_video_help'] = 'Avaliar: edição, movimentos de câmera, efeitos e qualidade de som.';
