@@ -52,7 +52,7 @@ class ReportProfessores extends table_sql {
             if ($values->notafinal) {
                 return $values->notafinal / 2;
             } else {
-                $values->notafinal;
+                return $values->notafinal;
             }
         }
         return $values->statusresumo == 0 ? "Reprovado" : "Aprovado";
