@@ -8,10 +8,16 @@
  */
 class SendMessage {
 
-    public function send($codprojeto,$titulo, $alunos, $statusresumo, $obsorientador) {
+    public function send($codprojeto, $titulo, $alunos, $statusresumo, $obsorientador) {
         global $USER, $DB;
-        
-        $status = $statusresumo = 0 ? 'Reprovado' : 'Aprovado';
+
+//        $status = $statusresumo = 0 ? 'Reprovado' : 'Aprovado';
+        if ($statusresumo == 0) {
+            $status = 'Reprovado';
+        } elseif ($statusresumo == 1) {
+            $status = 'Aprovado';
+        }
+
 
         foreach (explode(';', $alunos) as $aluno) {
             $user = $DB->get_record('user', array('username' => $aluno));
