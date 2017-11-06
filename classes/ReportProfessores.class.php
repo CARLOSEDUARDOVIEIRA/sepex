@@ -55,7 +55,14 @@ class ReportProfessores extends table_sql {
                 return $values->notafinal;
             }
         }
-        return $values->statusresumo == 0 ? "Reprovado" : "Aprovado";
+
+        if ($values->statusresumo == 0) {
+            return get_string('reprovado', 'sepex');
+        } elseif ($values->statusresumo == 1) {
+            return get_string('aprovado', 'sepex');
+        } elseif ($values->statusresumo == 2) {
+            return get_string('emanalise', 'sepex');
+        }
     }
 
     function col_alunos($values) {

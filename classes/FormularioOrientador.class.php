@@ -36,6 +36,7 @@ class FormularioOrientador extends moodleform {
         $radioarray = array();
         $radioarray[] = $mform->createElement('radio', 'statusresumo', '', get_string('aprovado', 'sepex'), 1);
         $radioarray[] = $mform->createElement('radio', 'statusresumo', '', get_string('reprovado', 'sepex'), 0);
+        $radioarray[] = $mform->createElement('radio', 'statusresumo', '', get_string('emanalise', 'sepex'), 2);
         $mform->addGroup($radioarray, 'radioar', '', array(' '), false);
         if ($statusresumo != null) {
             $mform->setDefault('statusresumo', $this->_customdata['statusresumo']);

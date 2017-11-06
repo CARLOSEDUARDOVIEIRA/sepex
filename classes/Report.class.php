@@ -38,12 +38,7 @@ class Report extends table_sql {
     }
 
     function col_titulo($values) {
-
-        if ($this->is_downloading()) {
-            return $values->titulo;
-        } else {
-            return '<a href="./projetoAluno.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto .'">' . $values->titulo . '</a>';
-        }
+        return '<a href="./definicaoProjeto.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto . '&area=' . $values->areacurso . '&turno=' . $values->turno . '&idcategoria=' . $values->idcategoria . '">' . $values->titulo . '</a>';
     }
 
     function col_resumo($values) {

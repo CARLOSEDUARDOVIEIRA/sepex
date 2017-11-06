@@ -63,7 +63,7 @@
                 <FIELD NAME="alocamesa" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="permite o aluno alocar mesa"/>                    
                 <FIELD NAME="idcategoria" TYPE="int" LENGTH="10" NOTNULL="true"/>
                 <FIELD NAME="idcurso" TYPE="int" LENGTH="10" NOTNULL="true"/>
-                <FIELD NAME="statusresumo" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="true"/>
+                <FIELD NAME="statusresumo" TYPE="int" LENGTH="2" NOTNULL="false" DEFAULT="2" UNSIGNED="true"/>
                 <FIELD NAME="obsorientador" TYPE="text" NOTNULL="false"/>               
             </FIELDS>
             <KEYS>

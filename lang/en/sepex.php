@@ -237,3 +237,4 @@ $string['alunos_falta_apres'] = 'ALUNOS QUE FALTARAM A APRESENTAÇÃO';
 $string['rel_avaliacao'] = 'Relatorio de avaliação dos professores';
 $string['rel_presentes'] = 'Relatorio de alunos presentes na apresentação';
 $string['aluno'] = 'Aluno';
+$string['emanalise'] = 'Em análise';

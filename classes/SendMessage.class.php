@@ -13,9 +13,11 @@ class SendMessage {
 
 //        $status = $statusresumo = 0 ? 'Reprovado' : 'Aprovado';
         if ($statusresumo == 0) {
-            $status = 'Reprovado';
+            $status = get_string('reprovado', 'sepex');
         } elseif ($statusresumo == 1) {
-            $status = 'Aprovado';
+            $status = get_string('aprovado', 'sepex');
+        }elseif($statusresumo == 2){
+            $status = get_string('emanalise', 'sepex');
         }
 
 
