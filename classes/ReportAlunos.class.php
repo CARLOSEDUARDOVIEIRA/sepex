@@ -40,7 +40,7 @@ class ReportAlunos extends table_sql {
             return '<a href="./projetoAluno.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto . '">' . "Visualizar</a>";
         }
     }
-    
+
     function col_codprojeto($values) {
         return $values->codprojeto;
     }
@@ -77,7 +77,13 @@ class ReportAlunos extends table_sql {
 
     function col_statusresumo($values) {
         if (!$this->showactivity) {
-            return $values->statusresumo == 0 ? "Reprovado" : "Aprovado";
+            if ($values->statusresumo == 0) {
+                return get_string('reprovado', 'sepex');
+            } elseif ($values->statusresumo == 1) {
+                return get_string('aprovado', 'sepex');
+            } elseif ($values->statusresumo == 2) {
+                return get_string('emanalise', 'sepex');
+            }
         }
     }
 

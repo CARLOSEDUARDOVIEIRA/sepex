@@ -64,12 +64,9 @@ if (!empty($dados = $filtro->get_data())) {
         $consulta = $consulta . ' AND idcategoria = ' . $dados->idcategoria;
     }
 
-    if ($dados->statusresumo == 2) {
-        $consulta = $consulta . ' AND statusresumo is null';
-    } elseif ($dados->statusresumo != null) {
+    if ($dados->statusresumo != null) {
         $consulta = $consulta . ' AND statusresumo = ' . $dados->statusresumo;
     }
-
 
     $projetos = $projetocontroller->getProjetosFiltrados($consulta);
     echo get_string('numeroregistros', 'sepex', count($projetos));
@@ -88,7 +85,6 @@ if (!empty($dados = $filtro->get_data())) {
     $relavaliacao .= html_writer::end_tag('a');
     echo $relavaliacao;
     echo '<hr>';
-    
 }
 
 echo $OUTPUT->footer();
