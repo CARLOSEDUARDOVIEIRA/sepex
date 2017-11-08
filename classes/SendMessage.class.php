@@ -28,11 +28,11 @@ class SendMessage {
             $message->name = 'instantmessage';
             $message->userfrom = $USER;
             $message->userto = $user;
-            $message->subject = 'message subject 1';
-            $message->fullmessage = 'message body';
+            $message->subject = "Mensagem do orientador de seu projeto {$codprojeto} - SEPEX";
+            $message->fullmessage = $mensagem = "Mensagem referente ao projeto {$codprojeto} - {$titulo}. \n Seu projeto está {$status}. \n Feedback do orientador: {$obsorientador}";
             $message->fullmessageformat = FORMAT_MARKDOWN;
-            $message->fullmessagehtml = '<p>message body</p>';
-            $message->smallmessage = "Mensagem referente ao projeto {$codprojeto} - {$titulo}. \n Seu projeto está {$status}. \n Feedback do orientador: {$obsorientador}";
+            $message->fullmessagehtml = $mensagem;
+            $message->smallmessage = $mensagem;
             $message->notification = '0';
             //$message->contexturl = 'http://GalaxyFarFarAway.com';
             //$message->contexturlname = 'Context name';

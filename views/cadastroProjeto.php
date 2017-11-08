@@ -50,7 +50,7 @@ if (!empty($add)) {
         redirect(VIEW_URL_LINK);
     } else if ($formulario->get_data()) {
         $controller->save($formulario->get_data());
-        // enviar_email($USER, $formulario->get_data());
+        enviar_email($USER, $formulario->get_data());
         redirect(VIEW_URL_LINK);
     } else {
         echo $OUTPUT->box(format_module_intro('sepex', $sepex, $cm->id), 'generalbox', 'intro');
