@@ -43,7 +43,7 @@ if ($filtro->is_cancelled()) {
     redirect("../view.php?id={$id}");
 }
 
-if (!empty($dados = $filtro->get_data())) {
+if ($dados = $filtro->get_data()) {
 
     $consulta = "1 = 1";
 

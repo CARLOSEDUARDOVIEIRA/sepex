@@ -106,7 +106,7 @@ if ($definicao->is_cancelled()) {
     redirect("definirApresentacao.php?id={$id}&area={$area}&turno={$turno}&idcategoria={$idcategoria}");
 }
 
-if (!empty($data = $definicao->get_data())) {
+if ($data = $definicao->get_data()) {
     $data->idprojeto = $idprojeto;
     if (isset($data->update)) {
         $apresentacaocontroller->update($data, $avaliadores);
