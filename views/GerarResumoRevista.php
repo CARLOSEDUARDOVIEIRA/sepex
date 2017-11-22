@@ -81,7 +81,7 @@ if ($categoria->is_cancelled()) {
         $section->addText(implode(", ", $alunocontroller->getNameAlunos($resumo->idprojeto)), array('size' => 12));
         $section->addTextBreak(1);
 
-        $section->addTitle('Orientador:', 2);
+        $section->addTitle('Coautor(a):', 2);
         $section->addText($resumo->orientador, array('size' => 12));
         $section->addTextBreak(2);
 

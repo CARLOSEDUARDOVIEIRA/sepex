@@ -78,8 +78,14 @@ if (isset($projeto)) {
 }
 
 if (isset($projeto[$idprojeto]->statusresumo)) {
-
-    $status = $situacao[$idprojeto]->statusresumo == 0 ? "Reprovado" : "Aprovado";
+     
+    if ($projeto[$idprojeto]->statusresumo == 0) {
+        $status = get_string('reprovado', 'sepex');
+    } elseif ($projeto[$idprojeto]->statusresumo == 1) {
+        $status = get_string('aprovado', 'sepex');
+    } elseif ($projeto[$idprojeto]->statusresumo == 2) {
+        $status = get_string('emanalise', 'sepex');
+    }
 
     echo '<p>' . '<b>' . get_string('status_resumo', 'sepex') . '</b>' . ':  ' . $status . '</p>';
     echo '<p>' . '<b>' . get_string('obs_orientador', 'sepex') . '</b>' . ':  ' . $projeto[$idprojeto]->obsorientador . '</p>';
