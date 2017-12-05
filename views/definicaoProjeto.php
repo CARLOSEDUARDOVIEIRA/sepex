@@ -62,7 +62,7 @@ $alunos = $alunocontroller->getAlunosProjeto($idprojeto);
 echo '<table class="forumheaderlist table table-striped">';
 echo '<thead>';
 echo '<tr>';
-echo '<th>' . strtoupper(get_string('aluno', 'sepex')) . '</th>';
+//echo '<th>' . strtoupper(get_string('aluno', 'sepex')) . '</th>';
 echo '<th>' . get_string('apresentacao', 'sepex') . ' | ' . strtoupper(get_string('avaliadores', 'sepex')) . '</th>';
 echo '</tr>';
 echo '</thead>';
@@ -70,10 +70,11 @@ foreach (explode(';', $alunos) as $i => $matraluno) {
     $infoaluno = $alunocontroller->getLocalApresentacaoAluno($matraluno);
     echo '<tbody>';
     echo '<tr>';
-    echo '<td>' . array_column($infoaluno, 'name')[0] . '</td>';
+    //echo '<td>' . array_column($infoaluno, 'name')[0] . '</td>';
     echo '<td>';
     foreach ($infoaluno as $info) {
-        echo "<a href='definicaoProjeto.php?id={$id}&idprojeto={$info->idprojeto}'";
+	echo $info->name;
+        echo "<a href='definicaoProjeto.php?id={$id}&idprojeto={$info->idprojeto}&area={$area}&turno={$turno}&idcategoria={$idcategoria}'";
         echo ' <br> ' . date("d/m/Y H:i:s", $info->dtapresentacao) . ' - ' . $info->nomelocalapresentacao;
         echo ' | ' . implode(',', $professorcontroller->getNameProfessores($info->idprojeto, 'Avaliador'));
         echo '</a>';
@@ -87,9 +88,10 @@ foreach (explode(';', $alunos) as $i => $matraluno) {
 }
 echo '</table>';
 
+
 $apresentacao = $apresentacaocontroller->detailApresentacao($idprojeto);
 
-if (empty($apresentacao)) {
+if (!$apresentacao) {
     $definicao = new FormularioDefinicaoProjeto("definicaoProjeto.php?id={$id}&idprojeto={$idprojeto}&area={$area}&turno={$turno}&idcategoria={$idcategoria}", array('course' => $cm->course));
 } else {
     $avaliadores = $professorcontroller->getProfessorProjeto($idprojeto, 'Avaliador');

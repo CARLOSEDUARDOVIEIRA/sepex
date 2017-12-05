@@ -25,13 +25,13 @@ class ReportAlunos extends table_sql {
 
     function col_edit($values) {
         if (!$this->is_downloading()) {
-            return '<a href="./cadastroProjeto.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto . '&update=1' . '">' . "<img src='../pix/edit.png'></a>";
+            return '<a href="./cadastroProjeto.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto . '&update=1' . '">' . "Editar</a>";
         }
     }
 
     function col_delete($values) {
         if (!$this->is_downloading()) {
-            return '<a href="./cadastroProjeto.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto . '&delete=1' . '">' . "<img src='../pix/delete.png'></a>";
+            return '<a href="./cadastroProjeto.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto . '&delete=1' . '">' . "Apagar</a>";
         }
     }
 

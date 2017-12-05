@@ -38,7 +38,11 @@ class Report extends table_sql {
     }
 
     function col_titulo($values) {
+	if (!$this->is_downloading()) {
         return '<a href="./definicaoProjeto.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto . '&area=' . $values->areacurso . '&turno=' . $values->turno . '&idcategoria=' . $values->idcategoria . '">' . $values->titulo . '</a>';
+	}else{
+		return $values->titulo;
+	}
     }
 
     function col_resumo($values) {
@@ -116,6 +120,14 @@ class Report extends table_sql {
             return date("d/m/Y H:i:s", $date);
         }
         return 'Nao definido';
+    }
+
+    function col_notafinal ($values){
+	if($values->notafinal){
+		return $values->notafinal/4;	
+	}else{
+		return '';
+	}
     }
 
 }

@@ -19,7 +19,7 @@ class Constantes {
             '7' => 'Sétimo Período',
             '8' => 'Oitavo Período',
             '9' => 'Nono Período',
-            '10' => 'Décimo Período',
+            '10' => 'Décimo Período'
         );
     }
 
@@ -27,7 +27,7 @@ class Constantes {
         return array(
             '' => 'Escolher',
             'Matutino' => 'Matutino',
-            'Noturno' => 'Noturno',
+            'Noturno' => 'Noturno'
         );
     }
 
@@ -84,7 +84,8 @@ class Constantes {
     }
 
     public static function detailCategorias($idcategoria) {
-        $categoria = array(
+
+	$categorias = array(
             '' => 'Escolher',
             '1' => 'Egressos',
             '2' => 'Estágios',
@@ -97,11 +98,11 @@ class Constantes {
             '9' => 'Trabalho de Conclusão de Curso',
             '10' => 'Mostra de Vídeos'
         );
-        return $categoria[$idcategoria];
+	return $categorias[$idcategoria];
     }
 
     public static function detailCursos($idcurso) {
-        $cursos = array(
+	$cursos = array(
             '' => 'Escolher',
             '1' => 'Administração',
             '2' => 'Arquitetura e Urbanismo',
@@ -124,12 +125,12 @@ class Constantes {
             '19' => 'Tecnologia em Análise e Desenvolvimento de Sistemas',
             '20' => 'Tecnologia em Logística',
             '21' => 'Tecnologia em Redes de Computadores'
-        );
-        return $cursos[$idcurso];
+                );
+	return $cursos[$idcurso];
     }
 
     public static function getAreaCurso($idcurso) {
-        $area = array(
+        $areacurso = array(
             '' => 'Escolher',
             '1' => 1,
             '2' => 1,
@@ -152,18 +153,17 @@ class Constantes {
             '19' => 2,
             '20' => 2,
             '21' => 2
-        );
-        return $area[$idcurso];
+                );
+	return $areacurso[$idcurso];
     }
 
     public static function detailAreas($area) {
-        $areas = array(
+	$areas = array(
             '' => 'Escolher',
             '1' => 'Ciências Sociais e Aplicadas',
             '2' => 'Exatas',
             '3' => 'Saúde'
-        );
-        return $areas[$area];
+                );
+	return $areas[$area];
     }
-
 }

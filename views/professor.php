@@ -36,10 +36,10 @@ if (!$table->is_downloading()) {
     $PAGE->set_title(format_string($sepex->name));
     $PAGE->set_heading(format_string($sepex->name));
     echo $OUTPUT->header();
-    $professorcontroller = new ProfessorController();
-    $projetos = $professorcontroller->getProjetosProfessor($USER->username);
+    
 }
-
+$professorcontroller = new ProfessorController();
+$projetos = $professorcontroller->getProjetosProfessor($USER->username);
 
 echo get_string('numeroregistros', 'sepex', count($projetos));
 
@@ -49,6 +49,8 @@ if (!is_numeric($USER->username) || !count($projetos)) {
     echo $OUTPUT->footer();
     die();
 }
+
+$table->set_count_sql("SELECT COUNT(1) FROM mdl_sepex_professor_projeto WHERE matrprofessor = {$USER->username}");
 
 /* Isso nao eh uma escolha o moodle definiu que essa table_sql so recebe um sql.
   por isso que estou inserindo este sql junto com php na view.

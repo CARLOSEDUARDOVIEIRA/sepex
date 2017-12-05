@@ -1,5 +1,6 @@
 <?php
 
+
 /* PAGINA DE EXIBICAO DOS RELATORIOS DOS PROJETOS */
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
@@ -32,12 +33,14 @@ $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('header_relatorios', 'sepex'), 3);
 
+
 $filtro = new FormularioPesquisa("relProjetos.php?id={$id}");
 $filtro->display();
 
 $projetocontroller = new ProjetoController();
 $constantes = new Constantes();
 $professorcontroller = new ProfessorController();
+
 
 if ($filtro->is_cancelled()) {
     redirect("../view.php?id={$id}");
@@ -68,6 +71,7 @@ if ($dados = $filtro->get_data()) {
         $consulta = $consulta . ' AND statusresumo = ' . $dados->statusresumo;
     }
 
+
     $projetos = $projetocontroller->getProjetosFiltrados($consulta);
     echo get_string('numeroregistros', 'sepex', count($projetos));
     echo '<br><br>';
@@ -85,6 +89,8 @@ if ($dados = $filtro->get_data()) {
     $relavaliacao .= html_writer::end_tag('a');
     echo $relavaliacao;
     echo '<hr>';
+
 }
+
 
 echo $OUTPUT->footer();

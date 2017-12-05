@@ -92,8 +92,8 @@ $headers = array();
 
 if ($showactivity) {
 
-    $columns[] = 'chat';
-    $headers[] = format_string('');
+   // $columns[] = 'chat';
+    //$headers[] = format_string('');
 
     $columns[] = 'edit';
     $headers[] = format_string('');

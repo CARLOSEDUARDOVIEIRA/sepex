@@ -17,7 +17,11 @@ class ReportAvaliacao extends table_sql {
     }
 
     function col_titulo($values) {
+	if (!$this->is_downloading()) {
         return '<a href="./definicaoProjeto.php?id=' . $this->id . '&idprojeto=' . $values->idprojeto . '&area=' . $values->areacurso . '&turno=' . $values->turno . '&idcategoria=' . $values->idcategoria . '">' . $values->titulo . '</a>';
+	}else{
+		return $values->titulo;
+	}
     }
 
     function col_nomeprofessor($values) {

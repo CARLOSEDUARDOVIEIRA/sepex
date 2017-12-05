@@ -68,12 +68,13 @@ if ($categoria->is_cancelled()) {
 
     $PHPWord->addTitleStyle(1, array('size' => 14, 'color' => 'black', 'bold' => true));
     $PHPWord->addTitleStyle(2, array('size' => 12, 'color' => 'black', 'bold' => true));
-
+    
     foreach ($projetos as $resumo) {
-
-        $header = $section->createHeader();
-        $header->addPreserveText($constantes->detailCursos($resumo->idcurso), array('size' => 12, 'italic' => true));
-
+        
+        
+        $section->addText($constantes->detailCursos($resumo->idcurso), array('size' => 12, 'italic' => true), array('align'=>'right'));
+        $section->addTextBreak(1);
+        
         $section->addTitle(mb_strtoupper($resumo->titulo), 1);
         $section->addTextBreak(2);
 
@@ -86,7 +87,8 @@ if ($categoria->is_cancelled()) {
         $section->addTextBreak(2);
 
         $section->addTitle('Resumo', 2);
-        $section->addText(strip_tags(mb_convert_encoding($resumo->resumo, 'UTF-8')), array('align' => 'justify', 'size' => 12));
+        $re = preg_replace("/&#?[a-z0-9]{2,8};/i","",$resumo->resumo);
+        $section->addText(strip_tags(mb_convert_encoding($re, 'UTF-8')), array('size' => 12), array('align'=>'justify'));
         $section->addTextBreak(1);
 
         $tags = $section->createTextRun(null);
@@ -105,7 +107,7 @@ if ($categoria->is_cancelled()) {
     $file = "Revista{$constantes->detailCategorias($categoria->get_data()->idcategoria)}.docx";
     header("Content-Disposition: attachment; filename={$file}");
     header("Content-Length: " . filesize($file));
-    header("Content-Type: application/octet-stream;");
+    header("Content-Type: text/html; charset=UTF-8");
     readfile($file);
     unlink($file);
 }

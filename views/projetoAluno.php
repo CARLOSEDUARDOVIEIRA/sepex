@@ -78,14 +78,14 @@ if (isset($projeto)) {
 }
 
 if (isset($projeto[$idprojeto]->statusresumo)) {
-     
-    if ($projeto[$idprojeto]->statusresumo == 0) {
-        $status = get_string('reprovado', 'sepex');
-    } elseif ($projeto[$idprojeto]->statusresumo == 1) {
-        $status = get_string('aprovado', 'sepex');
-    } elseif ($projeto[$idprojeto]->statusresumo == 2) {
-        $status = get_string('emanalise', 'sepex');
-    }
+
+	if ($projeto[$idprojeto]->statusresumo == 0) {
+		$status = get_string('reprovado', 'sepex');
+	} elseif ($projeto[$idprojeto]->statusresumo == 1) {
+		$status = get_string('aprovado', 'sepex');
+	} elseif ($projeto[$idprojeto]->statusresumo == 2) {
+		$status = get_string('emanalise', 'sepex');
+	}
 
     echo '<p>' . '<b>' . get_string('status_resumo', 'sepex') . '</b>' . ':  ' . $status . '</p>';
     echo '<p>' . '<b>' . get_string('obs_orientador', 'sepex') . '</b>' . ':  ' . $projeto[$idprojeto]->obsorientador . '</p>';
@@ -95,7 +95,7 @@ if (isset($projeto[$idprojeto]->statusresumo)) {
 }
 
 echo '<p>' . '</br></br>' . get_string('local_apresentacao', 'sepex') . '</p></br>';
-if ($projeto->alocamesa) {
+if ($projeto[$idprojeto]->alocamesa) {
     echo '<p>' . '<b>' . strtoupper(get_string('solicita_mesa', 'sepex')) . '</b>' . ':  ' . get_string('projeto_solicita_mesa', 'sepex') . '</p>';
 } else {
     echo '<p>' . '<b>' . strtoupper(get_string('solicita_mesa', 'sepex')) . '</b>' . ':  ' . get_string('projeto_nao_solicita_mesa', 'sepex') . '</p>';
