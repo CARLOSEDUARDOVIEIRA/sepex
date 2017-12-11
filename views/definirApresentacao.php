@@ -90,7 +90,7 @@ if ($filtro->get_data()) {
                 echo '<td>' . '</td>';
             }
             $btnEditar = html_writer::start_tag('td');
-            $btnEditar .= html_writer::start_tag('a', array('href' => 'definicaoProjeto.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&area=' . $dados->areacurso . '&turno=' . $dados->turno . '&idcategoria=' . $dados->idcategoria,));
+            $btnEditar .= html_writer::start_tag('a', array('href' => 'definicaoProjeto.php?id=' . $id . '&idprojeto=' . $projeto->idprojeto . '&area=' . $filtro->get_data()->areacurso . '&turno=' . $filtro->get_data()->turno . '&idcategoria=' . $filtro->get_data()->idcategoria,));
             $btnEditar .= html_writer::start_tag('button', array('type' => 'button', 'id' => 'editar', 'class' => 'btn btn-link'));
             $btnEditar .= get_string('editar', 'sepex');
             $btnEditar .= html_writer::end_tag('button');

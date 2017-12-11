@@ -29,20 +29,20 @@ $PAGE->set_context($context);
 
 $download = optional_param('download', '', PARAM_ALPHA);
 $table = new ReportProfessores('uniqueid', $id);
-$table->is_downloading($download, 'tableprofessor', 'tableprofessor');
+$table->is_downloading($download, 'professor', 'professor');
 
 if (!$table->is_downloading()) {
     $PAGE->set_url('/mod/sepex/views/professor.php', array('id' => $cm->id));
     $PAGE->set_title(format_string($sepex->name));
     $PAGE->set_heading(format_string($sepex->name));
     echo $OUTPUT->header();
-    
 }
 $professorcontroller = new ProfessorController();
 $projetos = $professorcontroller->getProjetosProfessor($USER->username);
 
-echo get_string('numeroregistros', 'sepex', count($projetos));
-
+if (!$table->is_downloading()) {
+    echo get_string('numeroregistros', 'sepex', count($projetos));
+}
 
 if (!is_numeric($USER->username) || !count($projetos)) {
     echo $OUTPUT->notification(get_string('semprojeto', 'sepex'));
@@ -68,7 +68,7 @@ $table->set_sql(
         INNER JOIN mdl_sepex_projeto sp ON spp.idprojeto = sp.idprojeto
         LEFT JOIN mdl_sepex_avaliacao_projeto sap ON spp.idprofessorprojeto = sap.idprofessorprojeto
         ", "spp.matrprofessor = {$USER->username}
-        GROUP BY sp.idprojeto, sp.titulo, sp.idcategoria, sp.idcurso, sp.statusresumo, spp.tipo"
+        GROUP BY sp.idprojeto, sp.titulo, sp.idcategoria, sp.idcurso, sp.statusresumo, spp.tipo ORDER BY spp.tipo"
 );
 
 // Define table columns.
