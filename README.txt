@@ -1,5 +1,7 @@
-**MOODLE PLUGIN - CENTRO UNIVERSITÁRIO CATÓLICO DE VITÓRIA**
-@copyright  2017 Carlos Eduardo Vieira <dullvieira@gmail.com>
+# MOODLE PLUGIN - CENTRO UNIVERSITÁRIO 
 
+Carlos Eduardo Vieira
 
-Boa sorte!
+Plugin para o Centro Universitário de Vitória no ES,
+desenvolvido para gerenciamento do maior evento institucional.
+
